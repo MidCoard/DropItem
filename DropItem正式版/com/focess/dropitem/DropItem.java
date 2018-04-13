@@ -179,10 +179,10 @@ public class DropItem extends JavaPlugin {
     public void onEnable() {
         new AnxiCode(this);
         DropItem.anxiCode = AnxiCode.getCode(DropItem.class, this);
+        this.loadConfig();
         if (this.getConfig().getBoolean("Debug", false))
             Debug.debug(this, DropItem.anxiCode);
         this.getLogger().info("DropItem插件载入成功");
-        this.loadConfig();
         DropItemInfo.register(this, DropItem.anxiCode);
         CraftDropItem.loadItem(this);
         this.pluginManager.registerEvents(new EntityDeathListener(this), this);
