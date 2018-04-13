@@ -1,12 +1,12 @@
-AfterClean: ¡ìb¡ìlÇåÀíµôÂäÎïÍê±Ï
-AfterCleanAll: ¡ìb¡ìlÇåÀíµôÂäÎïÍê±Ï
-CommandClean: ¡ìa¡ìlÊ¹ÓÃ/DropItem clean or /di clean ÇåÀíÒÑÖªµÄµôÂäÎï
-CommandCleanAll: ¡ìa¡ìlÊ¹ÓÃ/DropItem cleanall or /di cleanall ÇåÀíÀàËÆÓÚµôÂäÎïµÄËùÓĞµôÂäÎï£¨²»°²È«£¬½öÔÚÎïÆ·¼ÓÔØ´íÎóÊ±Ê¹ÓÃ£©
-CommandDisable: ¡ìa¡ìlÊ¹ÓÃ/DropItem disable or /di disable °²È«ÎŞÒÅÁôĞ¶ÔØDropItem²å¼ş
-CommandReload: ¡ìa¡ìlÊ¹ÓÃ/DropItem reload or /di reload °²È«ÖØÔØDropItem²å¼ş
-CommandUnregister: ¡ìc¡ìlÎ´ÖªÖ¸Áî
-Disabling: ¡ìb¡ìlĞ¶ÔØDropItem²å¼ş...
-HaveNoPermission: ¡ìc¡ìlÄãÃ»ÓĞÈ¨ÏŞ
-InvaildArg: ¡ìc¡ìlÎŞĞ§µÄ²ÎÊı
-Reloading: ¡ìb¡ìlÖØÔØDropItem²å¼ş
-Welcome: ¡ìa¡ìl»¶Ó­Ê¹ÓÃDropItem²å¼ş
+AfterClean: Â§bÂ§læ¸…ç†æ‰è½ç‰©å®Œæ¯•
+AfterCleanAll: Â§bÂ§læ¸…ç†æ‰è½ç‰©å®Œæ¯•
+CommandClean: Â§aÂ§lä½¿ç”¨/DropItem clean or /di clean æ¸…ç†å·²çŸ¥çš„æ‰è½ç‰©
+CommandCleanAll: Â§aÂ§lä½¿ç”¨/DropItem cleanall or /di cleanall æ¸…ç†ç±»ä¼¼äºæ‰è½ç‰©çš„æ‰€æœ‰æ‰è½ç‰©ï¼ˆä¸å®‰å…¨ï¼Œä»…åœ¨ç‰©å“åŠ è½½é”™è¯¯æ—¶ä½¿ç”¨ï¼‰
+CommandDisable: Â§aÂ§lä½¿ç”¨/DropItem disable or /di disable å®‰å…¨æ— é—ç•™å¸è½½DropItemæ’ä»¶
+CommandReload: Â§aÂ§lä½¿ç”¨/DropItem reload or /di reload å®‰å…¨é‡è½½DropItemæ’ä»¶
+CommandUnregister: Â§cÂ§læœªçŸ¥æŒ‡ä»¤
+Disabling: Â§bÂ§lå¸è½½DropItemæ’ä»¶...
+HaveNoPermission: Â§cÂ§lä½ æ²¡æœ‰æƒé™
+InvaildArg: Â§cÂ§læ— æ•ˆçš„å‚æ•°
+Reloading: Â§bÂ§lé‡è½½DropItemæ’ä»¶
+Welcome: Â§aÂ§læ¬¢è¿ä½¿ç”¨DropItemæ’ä»¶

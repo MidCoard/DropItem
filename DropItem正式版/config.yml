@@ -1,31 +1,31 @@
 DropForm: normal
-#������Ʒ������ʽ��normal: �����ڵ��Ϻ����廯��w-spawn: �����������廯��Ĭ��Ϊnormal��
+#设置物品掉落形式。normal: 掉落在地上后立体化。w-spawn: 掉落立即立体化。默认为normal。
 PickForm: normal
-#������Ʒʰ����ʽ��normal: �Ҽ�����shift+�ƶ�ʰȡ��w-move: ��ҿ���ʰȡ��right-click��ֻ���Ҽ�ʰȡ��Ĭ��Ϊnormal��
+#设置物品拾起形式。normal: 右键或者shift+移动拾取。w-move: 玩家靠近拾取。right-click：只能右键拾取。默认为normal。
 PitchX: 100
 PitchY: 135
 PitchZ: 100
-#������Ʒ���нǶȡ�Ĭ��Ϊ100��135��100�����Ϊ360��
+#设置物品持有角度。默认为100，135，100。最大为360。
 ShowItemInfo: true
-#�Ƿ���ʾ��Ʒ��Ϣ��Ĭ��Ϊtrue��
+#是否显示物品信息。默认为true。
 DropItemAI: true
-#�Ƿ��������Ż�AI��Ĭ��Ϊtrue��
+#是否开启性能优化AI。默认为true。
 Debug: true
-#�Ƿ���Debug���ܣ��ù�����̽��󲿷ֲ�������������ɴ��󱨸档Ĭ��Ϊtrue��
+#是否开启Debug功能，该功能能探测大部分插件本身错误并生成错误报告。默认为true。
 Language: zhs
-#����������Ʒ��ʾ�������ԡ�zhs����ʾ����Ϊ���ļ��塣zht����ʾ����Ϊ���ķ��塣en����ʾ����ΪӢ�ġ�Ĭ��Ϊzhs��
+#设置生成物品显示名字语言。zhs：显示名字为中文简体。zht：显示为中文繁体。en：显示名字为英文。默认为zhs。
 NaturalSpawn: true
-#������Ȼ���ɣ������е��䷽ʽ������Ʒ�Ƿ����廯��true����Ȼ���ɣ������е��䷽ʽ������Ʒ���廯��false����Ȼ���ɣ������е��䷽ʽ������Ʒ�����廯��Ĭ��Ϊtrue��Ϊtrueʱ����һ���AllowedPlayer��Ĭ�Ͻ���Ч��
+#设置自然生成（即所有掉落方式）的物品是否立体化。true：自然生成（即所有掉落方式）的物品立体化。false：自然生成（即所有掉落方式）的物品不立体化。默认为true。为true时后面一项（即AllowedPlayer）默认将无效。
 AllowedPlayer: true
-#�����Ƿ�����������ҵ�����Ʒ���廯��true������������ҵ�����Ʒ���廯��false��������������ҵ�����Ʒ���廯��Ĭ��Ϊtrue��Ϊtrueʱ����һ���AllowedPlayers��Ĭ�Ͻ���Ч��
+#设置是否允许所有玩家掉落物品立体化。true：允许所有玩家掉落物品立体化。false：不允许所有玩家掉落物品立体化。默认为true。为true时后面一项（即AllowedPlayers）默认将无效。
 AllowedPlayers: MidCoard
-#���õ�AllowedPlayerΪfalseʱ�İ�������ҡ�Ĭ��ΪMidCoard������Minecraft������������������á�,������Ӣ��״̬�µĶ��ţ�������
+#设置当AllowedPlayer为false时的白名单玩家。默认为MidCoard（作者Minecraft玩家名）。多个玩家请用“,”（即英文状态下的逗号）隔开。
 BanItem: AIR
-#��������ʱ�������廯����Ʒ��Ĭ��ΪAIR�������Ʒ���á�,������Ӣ��״̬�µĶ��ţ�������
+#设置生成时不需立体化的物品。默认为AIR（请使用大写，可以使用数字）。多个物品请用“,”（即英文状态下的逗号）隔开。
 RefreshTime: 300
-#������Ʒ������ʧʱ�䡣�����Ʒ����ʧ����Ϊfalse��Ĭ��Ϊ300������λΪ�룩
+#设置物品掉落消失时间。如果物品不消失，则为false。默认为300。（单位为秒）
 Height: 0.3
-#������Ʒ���ո߶ȡ�Ĭ��Ϊ0.3������ΧΪ1-0֮�䣩
+#设置物品悬空高度。默认为0.3。（范围为1-0之间）
 Angles: 
   - AIR 100 135 100
-#����ĳ����Ʒ���нǶȡ�Ĭ��Ϊ AIR 100 135 100�������Ʒ����в��ԡ�-��������
+#设置某种物品持有角度。默认为 AIR（请使用大写，可以使用数字） 100 135 100。多个物品请分行并以“-”隔开。
