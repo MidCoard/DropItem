@@ -121,6 +121,7 @@ public class DropItem extends JavaPlugin {
             final File bugs = new File(this.getDataFolder(), "bugs");
             if (!bugs.exists())
                 bugs.mkdir();
+            this.getLanguage();
         } catch (final Exception e) {
             Debug.debug(e, "Something wrong in loading config.");
         }
@@ -202,8 +203,6 @@ public class DropItem extends JavaPlugin {
                 .add(this.bukkitScheduler.runTaskTimer(this, (Runnable) new PlayerStandDropItem(this), 0L, 1L));
         this.craftAIListener = new CraftAIListener(this, DropItem.anxiCode);
         this.commandMap.register(this.getDescription().getName(), new DropItemCommand("", "", DropItem.anxiCode, this));
-        if (this.getConfig().getString("Language", "zh").equals("zh"))
-            this.getLanguage();
     }
 
     private void registerPermission() {
