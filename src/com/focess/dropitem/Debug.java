@@ -71,7 +71,7 @@ public class Debug {
 		if (Debug.anxiCode != anxiCode)
 			AnxiCode.shut(Debug.class);
 		if (Debug.debug) {
-			System.err.println("DropItemDebug“—æ≠∆Ù∂Ø");
+			System.err.println("DropItemDebugÂ∑≤ÁªèÂä†ËΩΩ");
 			AnxiCode.shut(Debug.class);
 		}
 		Debug.debug = true;
@@ -126,7 +126,7 @@ public class Debug {
 				Debug.debug(e, "Something wrong in creating File Debug(Path = \"" + bug.getPath() + "\").");
 			}
 			exception.printStackTrace();
-			System.err.println("¥ÌŒÛ/Warnning: " + exception.toString());
+			System.err.println("ÈîôËØØ/Warnning: " + exception.toString());
 			System.err.println("DropItem: " + bug.getPath());
 		} else
 			exception.printStackTrace();

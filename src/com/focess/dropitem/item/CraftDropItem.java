@@ -228,14 +228,12 @@ public class CraftDropItem {
             String customName = itemStack.getType().name().toLowerCase() + " × " + itemStack.getAmount();
             if (DropItem.Slanguages.get(itemStack.getType().name()) == null)
                 System.out.println("对不起，我们暂时还没有物品类型为：" + itemStack.getType().name() + "的中文译名");
-            else if (CraftDropItem.drop.getConfig().getString("Language", "zhs").equals("zhs")
-                    && (itemStack.getItemMeta().getDisplayName() == null))
-                customName = DropItem.Slanguages.get(itemStack.getType().name()) + " × " + itemStack.getAmount();
-            else if (CraftDropItem.drop.getConfig().getString("Language", "zhs").equals("zht")
-                    && (itemStack.getItemMeta().getDisplayName() == null))
-                customName = DropItem.Tlanguages.get(itemStack.getType().name()) + " × " + itemStack.getAmount();
-            else
+            else if (itemStack.hasItemMeta() && itemStack.getItemMeta().hasDisplayName())
                 customName = itemStack.getItemMeta().getDisplayName();
+            else if (CraftDropItem.drop.getConfig().getString("Language", "zhs").equals("zhs"))
+                customName = DropItem.Slanguages.get(itemStack.getType().name()) + " × " + itemStack.getAmount();
+            else if (CraftDropItem.drop.getConfig().getString("Language", "zhs").equals("zht"))
+                customName = DropItem.Tlanguages.get(itemStack.getType().name()) + " × " + itemStack.getAmount();
             dropItem.setCustomName(customName);
             CraftDropItem.droppedItems.add(dropItem);
             if (iscalled) {
