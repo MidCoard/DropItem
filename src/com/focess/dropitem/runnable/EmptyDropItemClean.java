@@ -11,6 +11,7 @@ import com.focess.dropitem.item.CraftDropItem;
 import com.focess.dropitem.item.EntityDropItem;
 import com.focess.dropitem.util.AnxiCode;
 import com.focess.dropitem.util.Array;
+import com.focess.dropitem.util.DropItemUtil;
 
 public class EmptyDropItemClean extends BukkitRunnable {
 	private static int anxiCode;
@@ -31,19 +32,23 @@ public class EmptyDropItemClean extends BukkitRunnable {
 				final ItemStack boots = dropItem.getBoots();
 				final ItemStack hand = dropItem.getItemInHand();
 				if ((head != null) && (head.getType().compareTo(Material.AIR) != 0)) {
-					CraftDropItem.spawnItem(head, dropItem.getLocation());
+					if (DropItemUtil.checkBanItems(head))
+					    CraftDropItem.spawnItem(head, dropItem.getLocation());
 					dropItem.setHelmet(new ItemStack(Material.AIR));
 				}
 				if ((chest != null) && (chest.getType().compareTo(Material.AIR) != 0)) {
-					CraftDropItem.spawnItem(chest, dropItem.getLocation());
+				    if (DropItemUtil.checkBanItems(chest))
+				        CraftDropItem.spawnItem(chest, dropItem.getLocation());
 					dropItem.setChestplate(new ItemStack(Material.AIR));
 				}
 				if ((leg != null) && (leg.getType().compareTo(Material.AIR) != 0)) {
-					CraftDropItem.spawnItem(leg, dropItem.getLocation());
+				    if (DropItemUtil.checkBanItems(leg))
+				        CraftDropItem.spawnItem(leg, dropItem.getLocation());
 					dropItem.setLeggings(new ItemStack(Material.AIR));
 				}
 				if ((boots != null) && (boots.getType().compareTo(Material.AIR) != 0)) {
-					CraftDropItem.spawnItem(boots, dropItem.getLocation());
+					if (DropItemUtil.checkBanItems(boots))
+					    CraftDropItem.spawnItem(boots, dropItem.getLocation());
 					dropItem.setBoots(new ItemStack(Material.AIR));
 				}
 				if ((hand == null) || (hand.getType().compareTo(Material.AIR) == 0))

@@ -29,6 +29,7 @@ import com.focess.dropitem.runnable.VisibleDropItemName;
 import com.focess.dropitem.test.Test;
 import com.focess.dropitem.util.AnxiCode;
 import com.focess.dropitem.util.Array;
+import com.focess.dropitem.util.DropItemUtil;
 
 public class Debug {
 
@@ -64,6 +65,7 @@ public class Debug {
 		Debug.ownerClass.add(Test.class.getName());
 		Debug.ownerClass.add(EntityDropItem.class.getName());
 		Debug.ownerClass.add(PlayerInteractListener.class.getName());
+		Debug.ownerClass.add(DropItemUtil.class.getName());
 	}
 
 	protected static void debug(final DropItem drop, final int anxiCode) {

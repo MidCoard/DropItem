@@ -1,6 +1,7 @@
 package com.focess.dropitem.commnad;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -30,10 +31,17 @@ public class DropItemCommand extends Command {
 	private final Array<String> messages = new Array<>(true);
 
 	private boolean flag = true;
+	
+	private static List<String> getAliases(DropItem drop) {
+	    boolean flag = drop.getConfig().getBoolean("EnableAliases");
+	    if(flag)
+	        return new Array<String>(new String[]{"di"}).toArrayList();
+	    return new ArrayList<>();
+	}
 
 	public DropItemCommand(final String description, final String usageMessage, final int anxiCode,
 			final DropItem dropItem) {
-		super("DropItem", description, usageMessage, new Array<>(new String[] { "di" }).toArrayList());
+		super("DropItem", description, usageMessage, getAliases(dropItem));
 		try {
 			this.drop = dropItem;
 			this.anxiCode = AnxiCode.getCode(DropItemCommand.class, dropItem);

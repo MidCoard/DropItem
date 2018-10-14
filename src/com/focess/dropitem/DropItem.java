@@ -41,6 +41,7 @@ import com.focess.dropitem.runnable.SpawnDropItem;
 import com.focess.dropitem.runnable.VisibleDropItemName;
 import com.focess.dropitem.util.AnxiCode;
 import com.focess.dropitem.util.Array;
+import com.focess.dropitem.util.DropItemUtil;
 
 public class DropItem extends JavaPlugin {
     private static int anxiCode;
@@ -184,6 +185,7 @@ public class DropItem extends JavaPlugin {
         if (this.getConfig().getBoolean("Debug", false))
             Debug.debug(this, DropItem.anxiCode);
         this.getLogger().info("DropItem插件载入成功");
+        DropItemUtil.loadDefault(this);
         DropItemInfo.register(this, DropItem.anxiCode);
         CraftDropItem.loadItem(this);
         this.pluginManager.registerEvents(new EntityDeathListener(this), this);

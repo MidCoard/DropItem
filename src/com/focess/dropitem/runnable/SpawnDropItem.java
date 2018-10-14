@@ -17,37 +17,14 @@ import com.focess.dropitem.Debug;
 import com.focess.dropitem.DropItem;
 import com.focess.dropitem.item.CraftDropItem;
 import com.focess.dropitem.item.EntityDropItem;
-import com.focess.dropitem.util.Array;
+import com.focess.dropitem.util.DropItemUtil;
 
 public class SpawnDropItem extends BukkitRunnable {
-	private final Array<Material> BanItems = new Array<>();
+    
 	private final boolean naturalSpawn;
 
 	public SpawnDropItem(final DropItem dropItem) {
 		this.naturalSpawn = dropItem.getConfig().getBoolean("NaturalSpawn", true);
-		this.getBanItems(dropItem);
-	}
-
-	@SuppressWarnings("deprecation")
-    private void getBanItems(final DropItem drop) {
-		try {
-			final String banItems = drop.getConfig().getString("BanItem");
-			for (final String banItem : banItems.split(",")){
-			    try {
-			        int id = Integer.parseInt(banItem);
-			        if (Material.getMaterial(id) == null)
-			            continue;
-			        this.BanItems.add(Material.getMaterial(id));
-			    }
-			    catch(Exception e) {
-			        if (Material.getMaterial(banItem) == null)
-			            continue;
-			        this.BanItems.add(Material.getMaterial(banItem));
-			    }
-			}
-		} catch (final Exception e) {
-			Debug.debug(e, "Something wrong in getting BanItems.");
-		}
 	}
 
 	private boolean isNull(final String string) {
@@ -91,7 +68,7 @@ public class SpawnDropItem extends BukkitRunnable {
 							entityDropItem.setCustomNameVisible(false);
 					} else if (this.naturalSpawn && (entity instanceof Item) && !entity.isDead() && entity.isOnGround()
 							&& this.isNull(((Item) entity).getItemStack().getItemMeta().getDisplayName())
-							&& !this.BanItems.contains(((Item) entity).getItemStack().getType().name()))
+							&& DropItemUtil.checkBanItems(((Item) entity).getItemStack()))
 						CraftDropItem.spawnItem((Item) entity);
 			}
 		} catch (final Exception e) {

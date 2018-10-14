@@ -28,6 +28,7 @@ public class AnxiCode {
 		AnxiCode.safeClass.put(Debug.class, false);
 		AnxiCode.safeClass.put(DropItemInfo.class, false);
 		AnxiCode.safeClass.put(PlayerMoveListener.class, false);
+		AnxiCode.safeClass.put(DropItemUtil.class, false);
 	}
 
 	public static int getCode(final Class<?> c, final DropItem dropItem) {

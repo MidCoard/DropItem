@@ -6,6 +6,8 @@ PitchX: 100
 PitchY: 135
 PitchZ: 100
 #设置物品持有角度。默认为100，135，100。最大为360。
+EnableAliases: true
+#是否启用子指令。默认为true。
 ShowItemInfo: true
 #是否显示物品信息。默认为true。
 DropItemAI: true

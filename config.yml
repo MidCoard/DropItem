@@ -3,6 +3,7 @@ PickForm: normal
 PitchX: 100
 PitchY: 135
 PitchZ: 100
+EnableAliases: true
 ShowItemInfo: true
 DropItemAI: true
 Debug: true
