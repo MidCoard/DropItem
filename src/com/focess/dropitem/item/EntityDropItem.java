@@ -132,7 +132,7 @@ public abstract class EntityDropItem {
 
 	public abstract List<Entity> getNearbyEntities(final double d, final double e, final double g);
 
-	protected abstract UUID getUniqueId();
+	public abstract UUID getUniqueId();
 
 	public World getWorld() {
 		return this.getLocation().getWorld();
@@ -146,11 +146,11 @@ public abstract class EntityDropItem {
 
 	public abstract void setBoots(final ItemStack itemStack);
 
-	protected abstract void setCanPickupItems(final boolean b);
+	public abstract void setCanPickupItems(final boolean b);
 
 	public abstract void setChestplate(final ItemStack itemStack);
 
-	protected abstract void setCustomName(final String customName);
+	public abstract void setCustomName(final String customName);
 
 	public abstract void setCustomNameVisible(boolean b);
 
@@ -158,7 +158,7 @@ public abstract class EntityDropItem {
 
 	public abstract void setLeggings(final ItemStack itemStack);
 
-	protected abstract void setRightArmPose(final EulerAngle eulerAngle);
+	public abstract void setRightArmPose(final EulerAngle eulerAngle);
 
 	protected abstract void setUp();
 
