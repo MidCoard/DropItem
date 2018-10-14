@@ -104,7 +104,7 @@ public class EntityDropItem1_8_p extends EntityDropItem {
 	}
 
 	@Override
-	protected UUID getUniqueId() {
+    public UUID getUniqueId() {
 		return this.dropitem.getUniqueId();
 	}
 
@@ -129,7 +129,7 @@ public class EntityDropItem1_8_p extends EntityDropItem {
 	}
 
 	@Override
-	protected void setCanPickupItems(final boolean b) {
+    protected void setCanPickupItems(final boolean b) {
 		((LivingEntity) this.dropitem).setCanPickupItems(b);
 
 	}
@@ -140,7 +140,7 @@ public class EntityDropItem1_8_p extends EntityDropItem {
 	}
 
 	@Override
-	protected void setCustomName(final String customName) {
+    public void setCustomName(final String customName) {
 		this.dropitem.setCustomName(customName);
 
 	}
@@ -161,7 +161,7 @@ public class EntityDropItem1_8_p extends EntityDropItem {
 	}
 
 	@Override
-	protected void setRightArmPose(final EulerAngle eulerAngle) {
+    public void setRightArmPose(final EulerAngle eulerAngle) {
 		((ArmorStand) this.dropitem).setRightArmPose(eulerAngle);
 	}
 

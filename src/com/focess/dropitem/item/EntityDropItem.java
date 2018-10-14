@@ -146,7 +146,7 @@ public abstract class EntityDropItem {
 
 	public abstract void setBoots(final ItemStack itemStack);
 
-	public abstract void setCanPickupItems(final boolean b);
+	protected abstract void setCanPickupItems(final boolean b);
 
 	public abstract void setChestplate(final ItemStack itemStack);
 
