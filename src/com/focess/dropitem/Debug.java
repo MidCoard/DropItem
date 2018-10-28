@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import com.focess.dropitem.commnad.DropItemCommand;
 import com.focess.dropitem.event.DropItemDeathEvent;
@@ -28,7 +30,6 @@ import com.focess.dropitem.runnable.SpawnDropItem;
 import com.focess.dropitem.runnable.VisibleDropItemName;
 import com.focess.dropitem.test.Test;
 import com.focess.dropitem.util.AnxiCode;
-import com.focess.dropitem.util.Array;
 import com.focess.dropitem.util.DropItemUtil;
 
 public class Debug {
@@ -37,7 +38,7 @@ public class Debug {
 	private static boolean debug = false;
 	private static DropItem drop;
 	private static String filePath;
-	private static Array<String> ownerClass = new Array<>();
+	private static List<String> ownerClass = new ArrayList<>();
 
 	static {
 		Debug.ownerClass.add(Debug.class.getName());
@@ -59,7 +60,6 @@ public class Debug {
 		Debug.ownerClass.add(SpawnDropItem.class.getName());
 		Debug.ownerClass.add(VisibleDropItemName.class.getName());
 		Debug.ownerClass.add(AnxiCode.class.getName());
-		Debug.ownerClass.add(Array.class.getName());
 		Debug.ownerClass.add(DropItemInfo.class.getName());
 		Debug.ownerClass.add(PlayerJoinListener.class.getName());
 		Debug.ownerClass.add(Test.class.getName());
@@ -93,7 +93,7 @@ public class Debug {
 				} catch (final IOException e) {
 					Debug.debug(e, "File Debug(Path = \"" + bug.getPath() + "\") cannot be created.");
 				}
-				final Array<String> errinfos = new Array<>();
+				final List<String> errinfos = new ArrayList<>();
 				errinfos.add("Message: " + message);
 				errinfos.add("Cause: " + exception.toString());
 				final StackTraceElement[] errs = exception.getStackTrace();

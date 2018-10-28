@@ -13,7 +13,6 @@ import com.focess.dropitem.event.HopperGottenEvent;
 import com.focess.dropitem.item.CraftDropItem;
 import com.focess.dropitem.item.EntityDropItem;
 import com.focess.dropitem.util.AnxiCode;
-import com.focess.dropitem.util.Array;
 
 public class CallDropItemDeath extends BukkitRunnable {
 	private static int anxiCode;
@@ -27,9 +26,7 @@ public class CallDropItemDeath extends BukkitRunnable {
 	@Override
 	public void run() {
 		try {
-			final Array<EntityDropItem> dropItems = CraftDropItem.getDropItems(CallDropItemDeath.anxiCode);
-			for (int i = 0; i < dropItems.size(); i++) {
-				final EntityDropItem dropItem = dropItems.get(i);
+			for (EntityDropItem dropItem:CraftDropItem.getDropItems(CallDropItemDeath.anxiCode)) {
 				final Location location = dropItem.getLocation();
 				location.setY(location.getY() - 1.0D);
 				if ((dropItem != null) && !dropItem.isDead())

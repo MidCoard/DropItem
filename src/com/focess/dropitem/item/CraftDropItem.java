@@ -1,8 +1,10 @@
 package com.focess.dropitem.item;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -18,7 +20,6 @@ import com.focess.dropitem.event.DropItemDeathEvent;
 import com.focess.dropitem.event.DropItemDeathEvent.DeathCause;
 import com.focess.dropitem.event.DropItemSpawnEvent;
 import com.focess.dropitem.util.AnxiCode;
-import com.focess.dropitem.util.Array;
 
 public class CraftDropItem {
     static class ItemStackAngle {
@@ -53,15 +54,15 @@ public class CraftDropItem {
 
     private static int anxiCode;
     private static DropItem drop;
-    private static Array<EntityDropItem> droppedItems = new Array<>();
+    private static List<EntityDropItem> droppedItems = new CopyOnWriteArrayList<>();
     private static String PickForm;
     private static int pitchX;
     private static int pitchY;
     private static int pitchZ;
     private static double height;
-    private static Array<String> uuids = new Array<>();
+    private static List<String> uuids = new ArrayList<>();
 
-    private static Array<ItemStackAngle> isas = new Array<>();
+    private static List<ItemStackAngle> isas = new ArrayList<>();
 
     public static EntityDropItem getDropItem(final Entity entity) {
         for (final EntityDropItem d : CraftDropItem.droppedItems)
@@ -70,7 +71,7 @@ public class CraftDropItem {
         return null;
     }
 
-    public static Array<EntityDropItem> getDropItems(final int anxiCode) {
+    public static List<EntityDropItem> getDropItems(final int anxiCode) {
         try {
             if (CraftDropItem.anxiCode == anxiCode)
                 return CraftDropItem.droppedItems;

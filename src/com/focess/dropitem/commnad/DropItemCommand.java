@@ -2,7 +2,9 @@ package com.focess.dropitem.commnad;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
@@ -22,20 +24,20 @@ import com.focess.dropitem.event.DropItemDeathEvent;
 import com.focess.dropitem.item.CraftDropItem;
 import com.focess.dropitem.item.EntityDropItem;
 import com.focess.dropitem.util.AnxiCode;
-import com.focess.dropitem.util.Array;
+import com.focess.dropitem.util.Util;
 
 public class DropItemCommand extends Command {
 	private static YamlConfiguration yaml;
 	private int anxiCode;
 	private DropItem drop;
-	private final Array<String> messages = new Array<>(true);
+	private final Map<String,String> messages = new HashMap<>();
 
 	private boolean flag = true;
 	
 	private static List<String> getAliases(DropItem drop) {
 	    boolean flag = drop.getConfig().getBoolean("EnableAliases");
 	    if(flag)
-	        return new Array<String>(new String[]{"di"}).toArrayList();
+	        return Util.toList(new String[]{"di"});
 	    return new ArrayList<>();
 	}
 
@@ -132,12 +134,10 @@ public class DropItemCommand extends Command {
 
 	private String getMessage(final String message) {
 		try {
-			final Object[] messages = this.messages.getValue(message);
-			if (messages == null)
-				return "";
-			if (messages.length == 1)
-				return (String) messages[0];
-			return "";
+			String ret = this.messages.get(message);
+			if (ret == null)
+			    return "";
+			else return ret;
 		} catch (final Exception e) {
 			Debug.debug(e, "Something wrong in getting File Message(Path = \"" + DropItemCommand.yaml.getCurrentPath()
 					+ "\").");
@@ -149,7 +149,7 @@ public class DropItemCommand extends Command {
 		try {
 			final Set<String> keys = DropItemCommand.yaml.getKeys(false);
 			for (final String key : keys)
-				this.messages.setValue(this.messages.add(key), DropItemCommand.yaml.getString(key));
+				this.messages.put(key, DropItemCommand.yaml.getString(key));
 		} catch (final Exception e) {
 			Debug.debug(e, "Something wrong in loading File Message(Path = \"" + DropItemCommand.yaml.getCurrentPath()
 					+ "\").");
@@ -159,24 +159,24 @@ public class DropItemCommand extends Command {
 	@Override
 	public List<String> tabComplete(final CommandSender commandSender, final String alias, final String[] args) {
 		try {
-			final Array<String> defaults = new Array<>(new String[] { "clean", "cleanall", "disable", "reload" });
+			final List<String> defaults = Util.toList(new String[] { "clean", "cleanall", "disable", "reload" });
 			if (args == null)
-				return defaults.toArrayList();
+				return defaults;
 			else if (args.length == 1) {
-				final Array<String> temp = new Array<>();
+				final List<String> temp = new ArrayList<>();
 				for (final String arg : defaults)
 					if (arg.startsWith(args[0]))
 						temp.add(arg);
-				return temp.toArrayList();
+				return temp;
 			}
-			return new Array<String>().toArrayList();
+			return new ArrayList<>();
 		} catch (final Exception e) {
 			final StringBuilder sargs = new StringBuilder();
 			for (final String s : args)
 				sargs.append(s + " ");
 			Debug.debug(e, "Something wrong in showing infomation about Command DropItem(CommandSender = "
 					+ commandSender.getName() + ", Args = " + sargs.toString() + ").");
-			return new Array<String>().toArrayList();
+			return new ArrayList<>();
 		}
 	}
 

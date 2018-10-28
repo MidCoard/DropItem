@@ -1,5 +1,8 @@
 package com.focess.dropitem.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -8,7 +11,7 @@ import com.focess.dropitem.DropItem;
 
 public class DropItemUtil {
     
-    private final static Array<Material> BanItems = new Array<>();
+    private final static List<Material> BanItems = new ArrayList<>();
     
     @SuppressWarnings("unused")
     private static int anxiCode;

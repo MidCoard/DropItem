@@ -1,5 +1,6 @@
 package com.focess.dropitem.item;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +18,6 @@ import org.bukkit.scheduler.BukkitTask;
 import com.focess.dropitem.Debug;
 import com.focess.dropitem.DropItem;
 import com.focess.dropitem.util.AnxiCode;
-import com.focess.dropitem.util.Array;
 
 public class CraftAIListener {
 	private class DropItemAI extends BukkitRunnable {
@@ -27,8 +27,7 @@ public class CraftAIListener {
 		@Override
 		public void run() {
 			try {
-				for (int i = 0; i < CraftDropItem.getDropItems(CraftAIListener.anxiCode).size(); i++) {
-					final EntityDropItem dropItem = CraftDropItem.getDropItems(CraftAIListener.anxiCode).get(i);
+				for (EntityDropItem dropItem: CraftDropItem.getDropItems(CraftAIListener.anxiCode)) {
 					if (!dropItem.isDead()) {
 						final List<Entity> entities = dropItem.getNearbyEntities(12.0D, 12.0D, 12.0D);
 						boolean flag = false;
@@ -56,7 +55,7 @@ public class CraftAIListener {
 		@Override
 		public void run() {
 			try {
-				final Array<Location> locations = new Array<>();
+				final List<Location> locations = new ArrayList<>();
 				final List<World> worlds = Bukkit.getWorlds();
 				for (final World world : worlds) {
 					final Collection<Entity> players = world.getEntitiesByClasses(Player.class);

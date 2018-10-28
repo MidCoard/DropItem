@@ -10,7 +10,6 @@ import com.focess.dropitem.event.DropItemDeathEvent;
 import com.focess.dropitem.item.CraftDropItem;
 import com.focess.dropitem.item.EntityDropItem;
 import com.focess.dropitem.util.AnxiCode;
-import com.focess.dropitem.util.Array;
 import com.focess.dropitem.util.DropItemUtil;
 
 public class EmptyDropItemClean extends BukkitRunnable {
@@ -23,9 +22,7 @@ public class EmptyDropItemClean extends BukkitRunnable {
 	@Override
 	public void run() {
 		try {
-			final Array<EntityDropItem> dropItems = CraftDropItem.getDropItems(EmptyDropItemClean.anxiCode);
-			for (int i = 0; i < dropItems.size(); i++) {
-				final EntityDropItem dropItem = dropItems.get(i);
+		    for (EntityDropItem dropItem:CraftDropItem.getDropItems(EmptyDropItemClean.anxiCode)) {
 				final ItemStack head = dropItem.getHelmet();
 				final ItemStack chest = dropItem.getChestplate();
 				final ItemStack leg = dropItem.getLeggings();

@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -40,12 +41,12 @@ import com.focess.dropitem.runnable.PlayerStandDropItem;
 import com.focess.dropitem.runnable.SpawnDropItem;
 import com.focess.dropitem.runnable.VisibleDropItemName;
 import com.focess.dropitem.util.AnxiCode;
-import com.focess.dropitem.util.Array;
 import com.focess.dropitem.util.DropItemUtil;
+import com.focess.dropitem.util.Util;
 
 public class DropItem extends JavaPlugin {
     private static int anxiCode;
-    private static Array<BukkitTask> bukkitTasks = new Array<>();
+    private static List<BukkitTask> bukkitTasks = new ArrayList<>();
     public static HashMap<String, String> Slanguages = new HashMap<>();
     public static HashMap<String, String> Tlanguages = new HashMap<>();
 
@@ -232,7 +233,7 @@ public class DropItem extends JavaPlugin {
                         ((Player) player).addAttachment(this).setPermission("dropitem.use", false);
                 }
             }
-            final Array<String> allowedPlayers = new Array<>(this.getConfig().getString("AllowedPlayer").split(","));
+            final List<String> allowedPlayers = Util.toList(this.getConfig().getString("AllowedPlayer").split(","));
             final List<World> worlds = Bukkit.getWorlds();
             for (final World world : worlds) {
                 final Collection<Entity> players = world.getEntitiesByClasses(Player.class);

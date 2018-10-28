@@ -3,6 +3,7 @@ package com.focess.dropitem.listener;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -23,7 +24,6 @@ import com.focess.dropitem.Debug;
 import com.focess.dropitem.DropItem;
 import com.focess.dropitem.event.PlayerPlaceBlockOverEntityEvent;
 import com.focess.dropitem.item.CraftDropItem;
-import com.focess.dropitem.util.Array;
 import com.focess.dropitem.util.NMSManager;
 
 public class PlayerInteractListener implements Listener {
@@ -31,7 +31,7 @@ public class PlayerInteractListener implements Listener {
 	@SuppressWarnings("deprecation")
 	private void buildBlock(final Player player, final ItemStack itemStack) {
 		try {
-			final Array<Block> blocks = new Array<>();
+			final List<Block> blocks = new ArrayList<>();
 			final BlockIterator i = new BlockIterator(player, 4);
 			while (i.hasNext())
 				blocks.add(i.next());

@@ -68,11 +68,10 @@ public class AnxiCode {
 
 	public AnxiCode(final DropItem dropItem) {
 		if ((dropItem != null) && dropItem.getName().equals("DropItem") && !AnxiCode.flag) {
-			final int[] code = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 			final StringBuilder stringBuilder = new StringBuilder();
 			for (int i = 0; i < 6; i++) {
 				final int index = (int) (Math.random() * 10.0D);
-				stringBuilder.append(code[index]);
+				stringBuilder.append(index);
 			}
 			this.code = stringBuilder.toString().hashCode();
 			AnxiCode.anxiCode[0] = this;

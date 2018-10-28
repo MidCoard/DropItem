@@ -1,12 +1,14 @@
 package com.focess.dropitem.item;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.focess.dropitem.Debug;
 import com.focess.dropitem.DropItem;
 import com.focess.dropitem.event.DropItemDeathEvent.DeathCause;
 import com.focess.dropitem.util.AnxiCode;
-import com.focess.dropitem.util.Array;
 
 public class DropItemInfo {
 
@@ -15,7 +17,7 @@ public class DropItemInfo {
 		@Override
 		public void run() {
 			try {
-				final Array<DropItemInfo> temp = new Array<>();
+				final List<DropItemInfo> temp = new ArrayList<>();
 				for (final DropItemInfo dropItemInfo : DropItemInfo.dropItemInfos) {
 					dropItemInfo.time++;
 					if (DropItemInfo.isRefresh)
@@ -42,7 +44,7 @@ public class DropItemInfo {
 
 	private static DropItem drop;
 
-	private static Array<DropItemInfo> dropItemInfos = new Array<>();
+	private static List<DropItemInfo> dropItemInfos = new ArrayList<>();
 
 	protected static DropItemInfo getDropItemInfo(final EntityDropItem d) {
 		try {
