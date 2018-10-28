@@ -9,8 +9,8 @@ import com.focess.dropitem.item.CraftAIListener;
 import com.focess.dropitem.item.CraftDropItem;
 import com.focess.dropitem.item.DropItemInfo;
 import com.focess.dropitem.listener.PlayerMoveListener;
-import com.focess.dropitem.runnable.CallDropItemDeath;
-import com.focess.dropitem.runnable.EmptyDropItemClean;
+import com.focess.dropitem.runnable.DropItemRunnable;
+import com.focess.dropitem.runnable.PlayerAroundDropItemRunnable;
 
 public class AnxiCode {
 	private static final AnxiCode[] anxiCode = new AnxiCode[1];
@@ -21,9 +21,9 @@ public class AnxiCode {
 	static {
 		AnxiCode.safeClass.put(CraftDropItem.class, false);
 		AnxiCode.safeClass.put(DropItem.class, false);
-		AnxiCode.safeClass.put(EmptyDropItemClean.class, false);
+		AnxiCode.safeClass.put(DropItemRunnable.class, false);
 		AnxiCode.safeClass.put(CraftAIListener.class, false);
-		AnxiCode.safeClass.put(CallDropItemDeath.class, false);
+		AnxiCode.safeClass.put(PlayerAroundDropItemRunnable.class, false);
 		AnxiCode.safeClass.put(DropItemCommand.class, false);
 		AnxiCode.safeClass.put(Debug.class, false);
 		AnxiCode.safeClass.put(DropItemInfo.class, false);

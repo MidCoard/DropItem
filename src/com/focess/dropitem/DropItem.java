@@ -35,11 +35,9 @@ import com.focess.dropitem.listener.PlayerDropItemListener;
 import com.focess.dropitem.listener.PlayerInteractListener;
 import com.focess.dropitem.listener.PlayerJoinListener;
 import com.focess.dropitem.listener.PlayerMoveListener;
-import com.focess.dropitem.runnable.CallDropItemDeath;
-import com.focess.dropitem.runnable.EmptyDropItemClean;
-import com.focess.dropitem.runnable.PlayerStandDropItem;
-import com.focess.dropitem.runnable.SpawnDropItem;
-import com.focess.dropitem.runnable.VisibleDropItemName;
+import com.focess.dropitem.runnable.DropItemRunnable;
+import com.focess.dropitem.runnable.PlayerAroundDropItemRunnable;
+import com.focess.dropitem.runnable.SpawnDropItemRunnable;
 import com.focess.dropitem.util.AnxiCode;
 import com.focess.dropitem.util.DropItemUtil;
 import com.focess.dropitem.util.Util;
@@ -196,14 +194,10 @@ public class DropItem extends JavaPlugin {
         this.pluginManager.registerEvents(new PlayerInteractListener(), this);
         this.registerPermission();
         DropItem.bukkitTasks
-                .add(this.bukkitScheduler.runTaskTimer(this, (Runnable) new CallDropItemDeath(this), 0L, 10L));
-        DropItem.bukkitTasks.add(this.bukkitScheduler.runTaskTimer(this, (Runnable) new SpawnDropItem(this), 0L, 5L));
+                .add(this.bukkitScheduler.runTaskTimer(this, (Runnable) new PlayerAroundDropItemRunnable(this), 0L, 10L));
+        DropItem.bukkitTasks.add(this.bukkitScheduler.runTaskTimer(this, (Runnable) new SpawnDropItemRunnable(this), 0L, 5L));
         DropItem.bukkitTasks
-                .add(this.bukkitScheduler.runTaskTimer(this, (Runnable) new EmptyDropItemClean(this), 0L, 5L));
-        DropItem.bukkitTasks
-                .add(this.bukkitScheduler.runTaskTimer(this, (Runnable) new VisibleDropItemName(this), 0L, 2L));
-        DropItem.bukkitTasks
-                .add(this.bukkitScheduler.runTaskTimer(this, (Runnable) new PlayerStandDropItem(this), 0L, 1L));
+                .add(this.bukkitScheduler.runTaskTimer(this, (Runnable) new DropItemRunnable(this), 0L, 5L));
         this.craftAIListener = new CraftAIListener(this, DropItem.anxiCode);
         this.commandMap.register(this.getDescription().getName(), new DropItemCommand("", "", DropItem.anxiCode, this));
     }

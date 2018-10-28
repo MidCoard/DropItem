@@ -71,7 +71,7 @@ public class DropItemCommand extends Command {
 				this.usage(commandSender);
 			else if (args.length == 1) {
 				if (args[0].equalsIgnoreCase("clean")) {
-					final List<EntityDropItem> dropItems = CraftDropItem.getDropItems(this.anxiCode).toArrayList();
+					final List<EntityDropItem> dropItems = CraftDropItem.getDropItems(this.anxiCode);
 					for (final EntityDropItem dropItem : dropItems)
 						CraftDropItem.remove(dropItem, DropItemDeathEvent.DeathCause.SYSTEM_CLEAN);
 					final File drops = new File(this.drop.getDataFolder(), "drops");
@@ -82,7 +82,7 @@ public class DropItemCommand extends Command {
 				} else if (args[0].equalsIgnoreCase("disable")) {
 					commandSender.sendMessage(this.getMessage("Disabling"));
 					this.drop.getPluginLoader().disablePlugin(this.drop);
-					final List<EntityDropItem> dropItems = CraftDropItem.getDropItems(this.anxiCode).toArrayList();
+					final List<EntityDropItem> dropItems = CraftDropItem.getDropItems(this.anxiCode);
 					for (final EntityDropItem dropItem : dropItems) {
 						dropItem.getLocation().getWorld().dropItem(dropItem.getLocation(), dropItem.getItemInHand());
 						CraftDropItem.remove(dropItem, false);
@@ -94,7 +94,7 @@ public class DropItemCommand extends Command {
 					commandSender.sendMessage(this.getMessage("Reloading"));
 					this.drop.loadConfig();
 				} else if (args[0].equalsIgnoreCase("cleanall")) {
-					final List<EntityDropItem> dropItems = CraftDropItem.getDropItems(this.anxiCode).toArrayList();
+					final List<EntityDropItem> dropItems = CraftDropItem.getDropItems(this.anxiCode);
 					for (final EntityDropItem dropItem : dropItems)
 						CraftDropItem.remove(dropItem, DropItemDeathEvent.DeathCause.SYSTEM_CLEAN);
 					final File drops = new File(this.drop.getDataFolder(), "drops");
