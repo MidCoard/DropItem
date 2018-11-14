@@ -43,6 +43,13 @@ public class DropItemUtil {
         }
     }
     
+    public static List<String> toList(String[] list) {
+        List<String> ret = new ArrayList<>();
+        for (int i = 0;i<list.length;i++)
+            ret.add(list[i]);
+        return ret;
+    }
+    
     public static boolean checkBanItems(ItemStack itemStack) {
         if (BanItems.contains(itemStack.getType()))
             return false;

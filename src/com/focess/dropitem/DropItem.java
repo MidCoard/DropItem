@@ -40,7 +40,6 @@ import com.focess.dropitem.runnable.PlayerAroundDropItemRunnable;
 import com.focess.dropitem.runnable.SpawnDropItemRunnable;
 import com.focess.dropitem.util.AnxiCode;
 import com.focess.dropitem.util.DropItemUtil;
-import com.focess.dropitem.util.Util;
 
 public class DropItem extends JavaPlugin {
     private static int anxiCode;
@@ -227,7 +226,7 @@ public class DropItem extends JavaPlugin {
                         ((Player) player).addAttachment(this).setPermission("dropitem.use", false);
                 }
             }
-            final List<String> allowedPlayers = Util.toList(this.getConfig().getString("AllowedPlayer").split(","));
+            final List<String> allowedPlayers = DropItemUtil.toList(this.getConfig().getString("AllowedPlayer").split(","));
             final List<World> worlds = Bukkit.getWorlds();
             for (final World world : worlds) {
                 final Collection<Entity> players = world.getEntitiesByClasses(Player.class);

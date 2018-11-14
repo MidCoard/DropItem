@@ -24,7 +24,7 @@ import com.focess.dropitem.event.DropItemDeathEvent;
 import com.focess.dropitem.item.CraftDropItem;
 import com.focess.dropitem.item.EntityDropItem;
 import com.focess.dropitem.util.AnxiCode;
-import com.focess.dropitem.util.Util;
+import com.focess.dropitem.util.DropItemUtil;
 
 public class DropItemCommand extends Command {
 	private static YamlConfiguration yaml;
@@ -37,7 +37,7 @@ public class DropItemCommand extends Command {
 	private static List<String> getAliases(DropItem drop) {
 	    boolean flag = drop.getConfig().getBoolean("EnableAliases");
 	    if(flag)
-	        return Util.toList(new String[]{"di"});
+	        return DropItemUtil.toList(new String[]{"di"});
 	    return new ArrayList<>();
 	}
 
@@ -159,7 +159,7 @@ public class DropItemCommand extends Command {
 	@Override
 	public List<String> tabComplete(final CommandSender commandSender, final String alias, final String[] args) {
 		try {
-			final List<String> defaults = Util.toList(new String[] { "clean", "cleanall", "disable", "reload" });
+			final List<String> defaults = DropItemUtil.toList(new String[] { "clean", "cleanall", "disable", "reload" });
 			if (args == null)
 				return defaults;
 			else if (args.length == 1) {

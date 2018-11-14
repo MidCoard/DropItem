@@ -9,7 +9,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 import com.focess.dropitem.Debug;
 import com.focess.dropitem.DropItem;
-import com.focess.dropitem.util.Util;
+import com.focess.dropitem.util.DropItemUtil;
 
 public class PlayerJoinListener implements Listener {
 
@@ -19,7 +19,7 @@ public class PlayerJoinListener implements Listener {
 
 	public PlayerJoinListener(final DropItem drop) {
 		this.allowedPlayer = drop.getConfig().getBoolean("AllowedPlayer", false);
-		this.allowedPlayers = Util.toList(drop.getConfig().getString("AllowedPlayers").split(","));
+		this.allowedPlayers = DropItemUtil.toList(drop.getConfig().getString("AllowedPlayers").split(","));
 		this.drop = drop;
 	}
 
