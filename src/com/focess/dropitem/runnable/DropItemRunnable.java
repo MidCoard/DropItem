@@ -2,6 +2,7 @@ package com.focess.dropitem.runnable;
 
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Hopper;
@@ -57,9 +58,18 @@ public class DropItemRunnable extends BukkitRunnable {
                 if (dropItem.isDead())
                     return;
                 Location loc = dropItem.getLocation();
-                if (loc.getBlock().getType().equals(Material.AIR)) {
-                    loc.setY((location.getBlockY() - 1) + DropItemUtil.getHeight());
-                    dropItem.teleport(loc);
+                if (loc.getBlock().getType().equals(Material.AIR))  {
+                    Location loc2 = loc;
+                    loc2.setY(loc2.getY() - 1);
+                    if (loc2.getBlock().getType().equals(Material.AIR))
+                        EntityDropItem.setNBT(dropItem.getEntity(), "NoGravity", false);
+                    else {
+                        
+                        //NBT is slower than teleport
+                        EntityDropItem.setNBT(dropItem.getEntity(), "NoGravity", true);
+                        loc.setY(loc.getBlockY() - 1 + DropItemUtil.getHeight());
+                        dropItem.teleport(loc);
+                    }
                 }
                 List<Entity> entities = dropItem.getNearbyEntities(2, 2, 2);
                 boolean flag = true;

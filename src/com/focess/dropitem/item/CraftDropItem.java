@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Timer;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.bukkit.Location;

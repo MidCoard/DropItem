@@ -41,6 +41,7 @@ public class EntityDropItem1_8_p extends EntityDropItem {
         this.getEntity().setRemoveWhenFarAway(false);
         this.getEntity().setCustomNameVisible(false);
         this.getEntity().setCanPickupItems(false);
+        setNBT(this.getEntity(),"NoGravity",true);
     }
 
 }

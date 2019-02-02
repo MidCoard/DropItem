@@ -67,7 +67,7 @@ public abstract class EntityDropItem {
 			return null;
 	}
 
-	protected static void setNBT(final LivingEntity entity, final String nbtName, final boolean value) {
+	public static void setNBT(final LivingEntity entity, final String nbtName, final boolean value) {
 		EntityDropItem.setNBT(entity, nbtName, value == true ? 1 : 0);
 	}
 
@@ -100,7 +100,7 @@ public abstract class EntityDropItem {
 	    return this.dropitem.getCustomName();
 	}
 
-	protected LivingEntity getEntity() {
+	public LivingEntity getEntity() {
 	    return this.dropitem;
 	}
 
