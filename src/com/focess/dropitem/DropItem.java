@@ -36,6 +36,7 @@ import com.focess.dropitem.listener.PlayerMoveListener;
 import com.focess.dropitem.listener.RemoveDropItemListener;
 import com.focess.dropitem.listener.SpawnDropItemListener;
 import com.focess.dropitem.runnable.DropItemRunnable;
+import com.focess.dropitem.runnable.SpawnDropItemRunnable;
 import com.focess.dropitem.util.AnxiCode;
 import com.focess.dropitem.util.DropItemUtil;
 
@@ -190,6 +191,7 @@ public class DropItem extends JavaPlugin {
         this.pluginManager.registerEvents(new DropItemPermissionListener(this), this);
         this.pluginManager.registerEvents(new PlayerInteractListener(), this);
         this.registerPermission();
+        DropItem.bukkitTasks.add(this.bukkitScheduler.runTaskTimer(this, (Runnable)new SpawnDropItemRunnable(), 0, 10l));
         DropItem.bukkitTasks
                 .add(this.bukkitScheduler.runTaskTimer(this, (Runnable) new DropItemRunnable(this), 0L, 10L));
         this.craftAIListener = new CraftAIListener(this, DropItem.anxiCode);

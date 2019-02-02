@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Timer;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.bukkit.Location;
@@ -20,6 +21,7 @@ import com.focess.dropitem.DropItem;
 import com.focess.dropitem.event.DropItemDeathEvent;
 import com.focess.dropitem.event.DropItemDeathEvent.DeathCause;
 import com.focess.dropitem.event.DropItemSpawnEvent;
+import com.focess.dropitem.runnable.SpawnDropItemRunnable;
 import com.focess.dropitem.util.AnxiCode;
 import com.focess.dropitem.util.DropItemUtil;
 
@@ -183,12 +185,14 @@ public class CraftDropItem {
 
     public static void spawnItem(final Item item) {
         try {
-            final ItemStack itemStack = item.getItemStack();
-            final Location location = item.getLocation();
-            if (!item.isDead()) {
+            if (DropItemUtil.checkDropForm("w-spawn")) {
+                final ItemStack itemStack = item.getItemStack();
+                final Location location = item.getLocation();
                 item.remove();
                 CraftDropItem.spawnItem(itemStack, location);
             }
+            else
+                SpawnDropItemRunnable.addItem(item);
         } catch (final Exception e) {
             Debug.debug(e, "Something wrong in spawning ItemStack(Type = " + item.getItemStack().getType().name()
                     + ",Count = " + item.getItemStack().getAmount() + ").");

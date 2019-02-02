@@ -118,6 +118,10 @@ public class DropItemUtil {
     public static boolean checkPickForm(String form) {
         return pickForm.equals(form);
     }
+    
+    public static boolean checkDropForm(String form) {
+        return dropForm.equals(form);
+    }
 
     public static boolean naturalSpawn() {
         return naturalSpawn;
