@@ -11,6 +11,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.EulerAngle;
 
@@ -131,7 +132,7 @@ public class CraftDropItem {
     public static void loadItem(final Entity dropItem, final int anxiCode) {
         if (anxiCode == CraftDropItem.anxiCode) {
             if (CraftDropItem.uuids.contains(dropItem.getUniqueId().toString())) {
-                final EntityDropItem entityDropItem = EntityDropItem.getEntityDropItem(dropItem);
+                final EntityDropItem entityDropItem = EntityDropItem.createEntityDropItem((LivingEntity) dropItem);
                 CraftDropItem.droppedItems.add(entityDropItem);
                 DropItemInfo.registerInfo(entityDropItem);
                 CraftDropItem.uuids.remove(dropItem.getUniqueId().toString());
@@ -207,8 +208,8 @@ public class CraftDropItem {
             location.setY((location.getBlockY() - 1) + CraftDropItem.height);
             EntityDropItem dropItem = null;
             if (!CraftDropItem.drop.islower)
-                dropItem = EntityDropItem.getEntityDropItem(
-                        location.getWorld().spawnEntity(location, EntityType.ARMOR_STAND), itemStack);
+                dropItem = EntityDropItem.createEntityDropItem(
+                        (LivingEntity) location.getWorld().spawnEntity(location, EntityType.ARMOR_STAND), itemStack);
             dropItem.setUp();
             if (!CraftDropItem.drop.islower) {
                 boolean flag = false;

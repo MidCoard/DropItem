@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.EulerAngle;
@@ -52,25 +53,25 @@ public abstract class EntityDropItem {
 		}
 	}
 
-	public static EntityDropItem getEntityDropItem(final Entity entity) {
+	public static EntityDropItem createEntityDropItem(final LivingEntity entity) {
 		if (!EntityDropItem.drop.islower)
 			return new EntityDropItem1_8_p(entity);
 		else
 			return null;
 	}
 
-	protected static EntityDropItem getEntityDropItem(final Entity entity, final ItemStack itemStack) {
+	protected static EntityDropItem createEntityDropItem(final LivingEntity entity, final ItemStack itemStack) {
 		if (!EntityDropItem.drop.islower)
 			return new EntityDropItem1_8_p(entity, itemStack);
 		else
 			return null;
 	}
 
-	protected static void setNBT(final Entity entity, final String nbtName, final boolean value) {
+	protected static void setNBT(final LivingEntity entity, final String nbtName, final boolean value) {
 		EntityDropItem.setNBT(entity, nbtName, value == true ? 1 : 0);
 	}
 
-	private static void setNBT(final Entity entity, final String nbtName, final int value) {
+	private static void setNBT(final LivingEntity entity, final String nbtName, final int value) {
 		try {
 			final Object nmsEntity = EntityDropItem.getHandle.invoke(entity);
 			final Object tag = EntityDropItem.nbtTagClass.newInstance();
@@ -82,15 +83,15 @@ public abstract class EntityDropItem {
 		}
 	}
 
-	protected Entity dropitem;
+	protected LivingEntity dropitem;
 
 	protected ItemStack itemStack;
 
-	EntityDropItem(final Entity entity) {
+	EntityDropItem(final LivingEntity entity) {
 		this.dropitem = entity;
 	}
 
-	EntityDropItem(final Entity entity, final ItemStack itemStack) {
+	EntityDropItem(final LivingEntity entity, final ItemStack itemStack) {
 		this.dropitem = entity;
 		this.itemStack = itemStack;
 	}
@@ -118,7 +119,7 @@ public abstract class EntityDropItem {
 
 	protected abstract String getCustomName();
 
-	protected abstract Entity getEntity();
+	protected abstract LivingEntity getEntity();
 
 	public abstract int getFireTicks();
 

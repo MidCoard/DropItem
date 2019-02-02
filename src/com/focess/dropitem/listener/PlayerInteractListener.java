@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -16,13 +15,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.BlockIterator;
 
 import com.focess.dropitem.Debug;
 import com.focess.dropitem.DropItem;
-import com.focess.dropitem.event.PlayerPlaceBlockOverEntityEvent;
 import com.focess.dropitem.item.CraftDropItem;
 import com.focess.dropitem.util.NMSManager;
 
@@ -97,8 +96,8 @@ public class PlayerInteractListener implements Listener {
 	private Block getTargetBlock(final LivingEntity entity) {
 		final int maxLength = 1;
 		int maxDistance = 4;
-		if (maxDistance > 120)
-			maxDistance = 120;
+//		if (maxDistance > 120)
+//			maxDistance = 120;
 		final ArrayList<Block> blocks = new ArrayList<>();
 		final BlockIterator itr = new BlockIterator(entity, maxDistance);
 		while (itr.hasNext()) {
@@ -113,22 +112,22 @@ public class PlayerInteractListener implements Listener {
 		return blocks.get(0);
 	}
 
-	@SuppressWarnings("deprecation")
 	@EventHandler()
 	public void onPlayerInteract(final PlayerInteractEvent event) {
 		try {
 			if (((event.getAction() == Action.RIGHT_CLICK_AIR) || (event.getAction() == Action.RIGHT_CLICK_BLOCK))
 					&& (event.getPlayer().getItemInHand() != null)
-					&& event.getPlayer().getItemInHand().getType().isBlock()) {
-				final PlayerPlaceBlockOverEntityEvent e = new PlayerPlaceBlockOverEntityEvent(event.getPlayer(),
-						event.getItem());
-				Bukkit.getServer().getPluginManager().callEvent(e);
-				if (!e.isCancelled())
-					this.buildBlock(event.getPlayer(), event.getPlayer().getItemInHand());
+					&& event.getPlayer().getItemInHand().getType().isBlock()) { 
+				this.buildBlock(event.getPlayer(), event.getPlayer().getItemInHand());
 			}
 		} catch (final Exception e) {
 			Debug.debug(e, "Something wrong in calling Event PlayerInteractEvent.");
 		}
+	}
+	
+	@EventHandler
+	public void onPlayerInteractEntity(final PlayerInteractEntityEvent event) {
+	    event.getPlayer().sendMessage("that's ok.");
 	}
 
 	private void playSound(final Player player, final Block block) {
