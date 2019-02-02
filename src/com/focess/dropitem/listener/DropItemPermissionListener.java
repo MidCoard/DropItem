@@ -1,7 +1,5 @@
 package com.focess.dropitem.listener;
 
-import java.util.List;
-
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -11,15 +9,10 @@ import com.focess.dropitem.Debug;
 import com.focess.dropitem.DropItem;
 import com.focess.dropitem.util.DropItemUtil;
 
-public class PlayerJoinListener implements Listener {
-
-	private final boolean allowedPlayer;
-	private final List<String> allowedPlayers;
+public class DropItemPermissionListener implements Listener {
 	private final DropItem drop;
 
-	public PlayerJoinListener(final DropItem drop) {
-		this.allowedPlayer = drop.getConfig().getBoolean("AllowedPlayer", false);
-		this.allowedPlayers = DropItemUtil.toList(drop.getConfig().getString("AllowedPlayers").split(","));
+	public DropItemPermissionListener(final DropItem drop) {
 		this.drop = drop;
 	}
 
@@ -27,9 +20,9 @@ public class PlayerJoinListener implements Listener {
 	public void onPlayerJoin(final PlayerJoinEvent event) {
 		try {
 			final Player player = event.getPlayer();
-			if (this.allowedPlayer)
+			if (DropItemUtil.allowedPlayer())
 				player.addAttachment(this.drop).setPermission("dropitem.use", true);
-			else if (this.allowedPlayers.contains(player.getName()))
+			else if (DropItemUtil.checkAllowedPlayer(player.getName()))
 				player.addAttachment(this.drop).setPermission("dropitem.use", true);
 		} catch (final Exception e) {
 			Debug.debug(e, "Something wrong in calling Event PlayerJoinEvent.");

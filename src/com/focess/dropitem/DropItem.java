@@ -30,14 +30,12 @@ import com.focess.dropitem.commnad.DropItemCommand;
 import com.focess.dropitem.item.CraftAIListener;
 import com.focess.dropitem.item.CraftDropItem;
 import com.focess.dropitem.item.DropItemInfo;
-import com.focess.dropitem.listener.EntityDeathListener;
-import com.focess.dropitem.listener.PlayerDropItemListener;
+import com.focess.dropitem.listener.DropItemPermissionListener;
 import com.focess.dropitem.listener.PlayerInteractListener;
-import com.focess.dropitem.listener.PlayerJoinListener;
 import com.focess.dropitem.listener.PlayerMoveListener;
+import com.focess.dropitem.listener.RemoveDropItemListener;
+import com.focess.dropitem.listener.SpawnDropItemListener;
 import com.focess.dropitem.runnable.DropItemRunnable;
-import com.focess.dropitem.runnable.PlayerAroundDropItemRunnable;
-import com.focess.dropitem.runnable.SpawnDropItemRunnable;
 import com.focess.dropitem.util.AnxiCode;
 import com.focess.dropitem.util.DropItemUtil;
 
@@ -186,17 +184,14 @@ public class DropItem extends JavaPlugin {
         DropItemUtil.loadDefault(this);
         DropItemInfo.register(this, DropItem.anxiCode);
         CraftDropItem.loadItem(this);
-        this.pluginManager.registerEvents(new EntityDeathListener(this), this);
+        this.pluginManager.registerEvents(new RemoveDropItemListener(), this);
         this.pluginManager.registerEvents(new PlayerMoveListener(this), this);
-        this.pluginManager.registerEvents(new PlayerDropItemListener(this), this);
-        this.pluginManager.registerEvents(new PlayerJoinListener(this), this);
+        this.pluginManager.registerEvents(new SpawnDropItemListener(), this);
+        this.pluginManager.registerEvents(new DropItemPermissionListener(this), this);
         this.pluginManager.registerEvents(new PlayerInteractListener(), this);
         this.registerPermission();
         DropItem.bukkitTasks
-                .add(this.bukkitScheduler.runTaskTimer(this, (Runnable) new PlayerAroundDropItemRunnable(this), 0L, 10L));
-        DropItem.bukkitTasks.add(this.bukkitScheduler.runTaskTimer(this, (Runnable) new SpawnDropItemRunnable(this), 0L, 5L));
-        DropItem.bukkitTasks
-                .add(this.bukkitScheduler.runTaskTimer(this, (Runnable) new DropItemRunnable(this), 0L, 5L));
+                .add(this.bukkitScheduler.runTaskTimer(this, (Runnable) new DropItemRunnable(this), 0L, 10L));
         this.craftAIListener = new CraftAIListener(this, DropItem.anxiCode);
         this.commandMap.register(this.getDescription().getName(), new DropItemCommand("", "", DropItem.anxiCode, this));
     }
@@ -226,7 +221,8 @@ public class DropItem extends JavaPlugin {
                         ((Player) player).addAttachment(this).setPermission("dropitem.use", false);
                 }
             }
-            final List<String> allowedPlayers = DropItemUtil.toList(this.getConfig().getString("AllowedPlayer").split(","));
+            final List<String> allowedPlayers = DropItemUtil
+                    .toList(this.getConfig().getString("AllowedPlayer").split(","));
             final List<World> worlds = Bukkit.getWorlds();
             for (final World world : worlds) {
                 final Collection<Entity> players = world.getEntitiesByClasses(Player.class);

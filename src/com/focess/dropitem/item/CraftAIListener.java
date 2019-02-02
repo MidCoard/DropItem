@@ -36,7 +36,7 @@ public class CraftAIListener {
 									|| (((Player) entity).getGameMode().compareTo(GameMode.SPECTATOR) != 0)))
 								flag = true;
 						if (!flag) {
-							CraftAIListener.ais.put(dropItem.getLocation(), dropItem.getItemInHand());
+							CraftAIListener.ais.put(dropItem.getLocation(), dropItem.getItemStack());
 							CraftAIListener.aiInfos.put(dropItem.getLocation(), DropItemInfo.getDropItemInfo(dropItem));
 							CraftDropItem.remove(dropItem, false);
 						}

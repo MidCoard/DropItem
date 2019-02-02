@@ -83,9 +83,9 @@ public abstract class EntityDropItem {
 		}
 	}
 
-	protected LivingEntity dropitem;
+	private LivingEntity dropitem;
 
-	protected ItemStack itemStack;
+	private ItemStack itemStack;
 
 	EntityDropItem(final LivingEntity entity) {
 		this.dropitem = entity;
@@ -96,73 +96,66 @@ public abstract class EntityDropItem {
 		this.itemStack = itemStack;
 	}
 
-	@Override
-	public boolean equals(final Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (this.getClass() != obj.getClass())
-			return false;
-		final EntityDropItem other = (EntityDropItem) obj;
-		if (this.dropitem == null) {
-			if (other.dropitem != null)
-				return false;
-		} else if (!this.dropitem.equals(other.dropitem))
-			return false;
-		return true;
+	protected String getCustomName() {
+	    return this.dropitem.getCustomName();
 	}
 
-	public abstract ItemStack getBoots();
+	protected LivingEntity getEntity() {
+	    return this.dropitem;
+	}
 
-	public abstract ItemStack getChestplate();
+	public int getFireTicks() {
+	    return this.dropitem.getFireTicks();
+	}
 
-	protected abstract String getCustomName();
+	public ItemStack getItemStack() {
+	    return this.itemStack;
+	};
 
-	protected abstract LivingEntity getEntity();
+	public Location getLocation() {
+	    return this.dropitem.getLocation();
+	}
 
-	public abstract int getFireTicks();
+	public List<Entity> getNearbyEntities(final double d, final double e, final double g) {
+	    return this.dropitem.getNearbyEntities(d, e, g);
+	}
 
-	public abstract ItemStack getHelmet();
-
-	public abstract ItemStack getItemInHand();
-
-	public abstract ItemStack getLeggings();
-
-	public abstract Location getLocation();
-
-	public abstract List<Entity> getNearbyEntities(final double d, final double e, final double g);
-
-	public abstract UUID getUniqueId();
+	public UUID getUniqueId() {
+	    return this.dropitem.getUniqueId();
+	}
 
 	public World getWorld() {
 		return this.getLocation().getWorld();
 	}
 
-	public abstract boolean isDead();
+	public boolean isDead() {
+	    return this.dropitem.isDead();
+	}
 
 	public abstract boolean isVisible();
 
-	protected abstract void remove();
+	protected void remove() {
+	    this.dropitem.remove();
+	}
 
-	public abstract void setBoots(final ItemStack itemStack);
+	public void setCustomName(final String customName) {
+	    this.dropitem.setCustomName(customName);
+	}
 
-	protected abstract void setCanPickupItems(final boolean b);
-
-	public abstract void setChestplate(final ItemStack itemStack);
-
-	public abstract void setCustomName(final String customName);
-
-	public abstract void setCustomNameVisible(boolean b);
-
-	public abstract void setHelmet(final ItemStack itemStack);
-
-	public abstract void setLeggings(final ItemStack itemStack);
+	public void setCustomNameVisible(boolean flag) {
+	    this.dropitem.setCustomNameVisible(flag);
+	}
 
 	public abstract void setRightArmPose(final EulerAngle eulerAngle);
 
 	protected abstract void setUp();
 
-	public abstract void teleport(Location location);
+	public void teleport(Location location) {
+	    this.dropitem.teleport(location);
+	}
+
+    public void setItemStack(ItemStack itemStack) {
+        this.itemStack = itemStack;
+    }
 
 }

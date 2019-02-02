@@ -84,7 +84,7 @@ public class DropItemCommand extends Command {
 					this.drop.getPluginLoader().disablePlugin(this.drop);
 					final List<EntityDropItem> dropItems = CraftDropItem.getDropItems(this.anxiCode);
 					for (final EntityDropItem dropItem : dropItems) {
-						dropItem.getLocation().getWorld().dropItem(dropItem.getLocation(), dropItem.getItemInHand());
+						dropItem.getLocation().getWorld().dropItem(dropItem.getLocation(), dropItem.getItemStack());
 						CraftDropItem.remove(dropItem, false);
 					}
 					this.unregister(this.drop.commandMap);

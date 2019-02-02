@@ -21,6 +21,7 @@ import com.focess.dropitem.event.DropItemDeathEvent;
 import com.focess.dropitem.event.DropItemDeathEvent.DeathCause;
 import com.focess.dropitem.event.DropItemSpawnEvent;
 import com.focess.dropitem.util.AnxiCode;
+import com.focess.dropitem.util.DropItemUtil;
 
 public class CraftDropItem {
     static class ItemStackAngle {
@@ -56,11 +57,9 @@ public class CraftDropItem {
     private static int anxiCode;
     private static DropItem drop;
     private static List<EntityDropItem> droppedItems = new CopyOnWriteArrayList<>();
-    private static String PickForm;
     private static int pitchX;
     private static int pitchY;
     private static int pitchZ;
-    private static double height;
     private static List<String> uuids = new ArrayList<>();
 
     private static List<ItemStackAngle> isas = new ArrayList<>();
@@ -99,8 +98,6 @@ public class CraftDropItem {
             CraftDropItem.pitchX = CraftDropItem.drop.getConfig().getInt("PitchX");
             CraftDropItem.pitchY = CraftDropItem.drop.getConfig().getInt("PitchY");
             CraftDropItem.pitchZ = CraftDropItem.drop.getConfig().getInt("PitchZ");
-            CraftDropItem.PickForm = CraftDropItem.drop.getConfig().getString("PickForm");
-            CraftDropItem.height = CraftDropItem.drop.getConfig().getDouble("Height");
             final File drops = new File(CraftDropItem.drop.getDataFolder(), "drops");
             final File[] files = drops.listFiles();
             for (final File file : files)
@@ -142,8 +139,7 @@ public class CraftDropItem {
     }
 
     public static void remove(final Entity dropItem, final DeathCause death) {
-        final EntityDropItem d = CraftDropItem.getDropItem(dropItem);
-        CraftDropItem.remove(d, death);
+        CraftDropItem.remove(CraftDropItem.getDropItem(dropItem), death);
     }
 
     public static void remove(final EntityDropItem dropItem, final boolean iscalled) {
@@ -159,8 +155,8 @@ public class CraftDropItem {
         } catch (final Exception e) {
             Debug.debug(e,
                     "Something wrong in removing EntityDropItem(Name = " + dropItem.getCustomName() + ",Type = "
-                            + dropItem.getItemInHand().getType().name() + ",Count = "
-                            + dropItem.getItemInHand().getAmount() + ").");
+                            + dropItem.getItemStack().getType().name() + ",Count = "
+                            + dropItem.getItemStack().getAmount() + ").");
         }
     }
 
@@ -180,8 +176,8 @@ public class CraftDropItem {
         } catch (final Exception e) {
             Debug.debug(e,
                     "Something wrong in removing EntityDropItem(Name = " + dropItem.getCustomName() + ",Type = "
-                            + dropItem.getItemInHand().getType().name() + ",Count = "
-                            + dropItem.getItemInHand().getAmount() + ").");
+                            + dropItem.getItemStack().getType().name() + ",Count = "
+                            + dropItem.getItemStack().getAmount() + ").");
         }
     }
 
@@ -205,7 +201,7 @@ public class CraftDropItem {
 
     public static EntityDropItem spawnItem(final ItemStack itemStack, final Location location, final boolean iscalled) {
         try {
-            location.setY((location.getBlockY() - 1) + CraftDropItem.height);
+            location.setY((location.getBlockY() - 1) + DropItemUtil.getHeight());
             EntityDropItem dropItem = null;
             if (!CraftDropItem.drop.islower)
                 dropItem = EntityDropItem.createEntityDropItem(
@@ -225,8 +221,6 @@ public class CraftDropItem {
                     dropItem.setRightArmPose(eulerAngle);
                 }
             }
-            if (CraftDropItem.PickForm.equals("w-move"))
-                dropItem.setCanPickupItems(false);
             String customName = itemStack.getType().name().toLowerCase() + " × " + itemStack.getAmount();
             if (DropItem.Slanguages.get(itemStack.getType().name()) == null)
                 System.out.println("对不起，我们暂时还没有物品类型为：" + itemStack.getType().name() + "的中文译名");

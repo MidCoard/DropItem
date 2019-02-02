@@ -1,9 +1,12 @@
 package com.focess.dropitem.runnable;
 
+import java.util.List;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.block.Hopper;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -29,58 +32,45 @@ public class DropItemRunnable extends BukkitRunnable {
     public void run() {
         try {
             for (EntityDropItem dropItem : CraftDropItem.getDropItems(anxiCode)) {
-                final ItemStack head = dropItem.getHelmet();
-                final ItemStack chest = dropItem.getChestplate();
-                final ItemStack leg = dropItem.getLeggings();
-                final ItemStack boots = dropItem.getBoots();
-                final ItemStack hand = dropItem.getItemInHand();
-                if ((head != null) && (head.getType().compareTo(Material.AIR) != 0)) {
-                    if (DropItemUtil.checkBanItems(head))
-                        CraftDropItem.spawnItem(head, dropItem.getLocation());
-                    dropItem.setHelmet(new ItemStack(Material.AIR));
-                }
-                if ((chest != null) && (chest.getType().compareTo(Material.AIR) != 0)) {
-                    if (DropItemUtil.checkBanItems(chest))
-                        CraftDropItem.spawnItem(chest, dropItem.getLocation());
-                    dropItem.setChestplate(new ItemStack(Material.AIR));
-                }
-                if ((leg != null) && (leg.getType().compareTo(Material.AIR) != 0)) {
-                    if (DropItemUtil.checkBanItems(leg))
-                        CraftDropItem.spawnItem(leg, dropItem.getLocation());
-                    dropItem.setLeggings(new ItemStack(Material.AIR));
-                }
-                if ((boots != null) && (boots.getType().compareTo(Material.AIR) != 0)) {
-                    if (DropItemUtil.checkBanItems(boots))
-                        CraftDropItem.spawnItem(boots, dropItem.getLocation());
-                    dropItem.setBoots(new ItemStack(Material.AIR));
-                }
-                if ((hand == null) || (hand.getType().compareTo(Material.AIR) == 0))
-                    CraftDropItem.remove(dropItem, DropItemDeathEvent.DeathCause.PLAYER_GOTTEN);
-                
-                if (dropItem.isDead())
-                    return;
                 final Location location = dropItem.getLocation();
-                location.setY(location.getY() - 1.0D);
-                if (location.getBlock().getType().compareTo(Material.HOPPER) == 0) {
+                if (location.getBlock().getType().equals(Material.HOPPER)) {
                     final Hopper hopper = (Hopper) location.getBlock().getState();
-                    final HopperGottenEvent event = new HopperGottenEvent(dropItem.getItemInHand(), hopper);
+                    final HopperGottenEvent event = new HopperGottenEvent(dropItem.getItemStack(), hopper);
                     this.drop.getServer().getPluginManager().callEvent(event);
                     if (!event.isCancelled()) {
                         CraftDropItem.remove(dropItem, DropItemDeathEvent.DeathCause.HOPPER_GOTTEN);
-                        hopper.getInventory().addItem(new ItemStack[] { dropItem.getItemInHand() });
+                        hopper.getInventory().addItem(new ItemStack[] { dropItem.getItemStack() });
                     }
-                } else if (dropItem.getFireTicks() > 0)
-                    CraftDropItem.remove(dropItem, DropItemDeathEvent.DeathCause.FIRE_TICK);
-                
+                }
                 if (dropItem.isDead())
                     return;
-                final Block block = dropItem.getLocation().getBlock();
-                if (block.getType().compareTo(Material.AIR) == 0)
-                    dropItem.teleport(location);
-                final Location loc = dropItem.getLocation();
-                loc.setY(loc.getBlockY() + 1);
-                if (loc.getBlock().getType().compareTo(Material.AIR) != 0)
+                if (DropItemUtil.checkPickForm("w-move")) {
+                    List<Entity> entities = dropItem.getNearbyEntities(0.75, 0.75, 0.75);
+                    for (Entity entity : entities)
+                        if (entity instanceof Player) {
+                            Player player = (Player) entity;
+                            if (DropItemUtil.naturalSpawn() || DropItemUtil.allowedPlayer()
+                                    || DropItemUtil.checkPlayerPermission(player))
+                                DropItemUtil.fillPlayerInventory(player, CraftDropItem.getDropItem(entity));
+                        }
+                }
+                if (dropItem.isDead())
+                    return;
+                Location loc = dropItem.getLocation();
+                if (loc.getBlock().getType().equals(Material.AIR)) {
+                    loc.setY((location.getBlockY() - 1) + DropItemUtil.getHeight());
                     dropItem.teleport(loc);
+                }
+                List<Entity> entities = dropItem.getNearbyEntities(2, 2, 2);
+                boolean flag = true;
+                for (Entity entity : entities)
+                    if (entity instanceof Player && DropItemUtil.showItemInfo()) {
+                        dropItem.setCustomNameVisible(true);
+                        flag = false;
+                        break;
+                    }
+                if (flag)
+                    dropItem.setCustomNameVisible(false);
             }
         } catch (final Exception e) {
             Debug.debug(e, "Something wrong in running Runnable DropItemRunnable.");
