@@ -2,6 +2,7 @@ package com.focess.dropitem.util;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -16,74 +17,63 @@ import com.focess.dropitem.item.CraftDropItem;
 import com.focess.dropitem.item.EntityDropItem;
 
 public class DropItemUtil {
-    
-    private static List<String> allowedPlayers;
 
-    private static final List<Material> BanItems = new ArrayList<>();
-    
-    private static String pickForm;
-    
-    private static String dropForm;
+    private static boolean allowedPlayer = false;
+
+    private static List<String> allowedPlayers;
 
     @SuppressWarnings("unused")
     private static int anxiCode;
 
-    private static boolean naturalSpawn;
+    private static final List<Material> BanItems = new ArrayList<>();
 
-    private static boolean allowedPlayer = false;
+    private static String dropForm;
 
-    private static boolean showItemInfo;
-    
     private static double height;
 
-    public static void loadDefault(DropItem drop) {
-        anxiCode = AnxiCode.getCode(DropItemUtil.class, drop);
-        height = drop.getConfig().getDouble("Height");
-        pickForm = drop.getConfig().getString("PickForm");
-        dropForm = drop.getConfig().getString("DropForm");
-        showItemInfo = drop.getConfig().getBoolean("ShowItemInfo");
-        naturalSpawn = drop.getConfig().getBoolean("NaturalSpawn", true);
-        if (!naturalSpawn)
-            allowedPlayer  = drop.getConfig().getBoolean("AllowedPlayer", false);
-        allowedPlayers = toList(drop.getConfig().getString("AllowedPlayers").split(","));
-        getBanItems(drop);
+    private static boolean naturalSpawn;
+
+    private static String pickForm;
+
+    private static boolean showItemInfo;
+
+    public static boolean allowedPlayer() {
+        return DropItemUtil.allowedPlayer;
     }
 
-    @SuppressWarnings("deprecation")
-    private static void getBanItems(final DropItem drop) {
-        try {
-            final String banItems = drop.getConfig().getString("BanItem");
-            for (final String banItem : banItems.split(",")) {
-                try {
-                    int id = Integer.parseInt(banItem);
-                    if (Material.getMaterial(id) == null)
-                        continue;
-                    BanItems.add(Material.getMaterial(id));
-                } catch (Exception e) {
-                    if (Material.getMaterial(banItem) == null)
-                        continue;
-                    BanItems.add(Material.getMaterial(banItem));
-                }
-            }
-        } catch (final Exception e) {
-            Debug.debug(e, "Something wrong in getting BanItems.");
-        }
+    public static boolean checkAllowedPlayer(final String name) {
+        return DropItemUtil.allowedPlayers.contains(name);
     }
 
-    public static List<String> toList(String[] list) {
-        List<String> ret = new ArrayList<>();
-        for (int i = 0; i < list.length; i++)
-            ret.add(list[i]);
-        return ret;
-    }
-
-    public static boolean checkBanItems(ItemStack itemStack) {
-        if (BanItems.contains(itemStack.getType()))
+    public static boolean checkBanItems(final ItemStack itemStack) {
+        if (DropItemUtil.BanItems.contains(itemStack.getType()))
             return false;
         return true;
     }
 
-    public static void fillPlayerInventory(Player player, EntityDropItem entityDropItem) {
+    public static boolean checkDropForm(final String form) {
+        return DropItemUtil.dropForm.equals(form);
+    }
+
+    public static boolean checkNull(final String name) {
+        if (name != null) {
+            if (!name.startsWith(ChatColor.RED + "QuickShop") && !name.contains("GSCompleXMoneyFromMobzzzzzzzzz")
+                    && !name.contains("XXXPlayer777MoneyXXX"))
+                return true;
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean checkPickForm(final String form) {
+        return DropItemUtil.pickForm.equals(form);
+    }
+
+    public static boolean checkPlayerPermission(final Player player) {
+        return player.hasPermission("dropitem.use");
+    }
+
+    public static void fillPlayerInventory(final Player player, final EntityDropItem entityDropItem) {
         if (player.getInventory().firstEmpty() != -1) {
             final PlayerGottenEvent event_gotten = new PlayerGottenEvent(entityDropItem.getItemStack(), player);
             Bukkit.getServer().getPluginManager().callEvent(event_gotten);
@@ -115,46 +105,56 @@ public class DropItemUtil {
         }
     }
 
-    public static boolean checkPickForm(String form) {
-        return pickForm.equals(form);
+    @SuppressWarnings("deprecation")
+    private static void getBanItems(final DropItem drop) {
+        try {
+            final String banItems = drop.getConfig().getString("BanItem");
+            for (final String banItem : banItems.split(","))
+                try {
+                    final int id = Integer.parseInt(banItem);
+                    if (Material.getMaterial(id) == null)
+                        continue;
+                    DropItemUtil.BanItems.add(Material.getMaterial(id));
+                } catch (final Exception e) {
+                    if (Material.getMaterial(banItem) == null)
+                        continue;
+                    DropItemUtil.BanItems.add(Material.getMaterial(banItem));
+                }
+        } catch (final Exception e) {
+            Debug.debug(e, "Something wrong in getting BanItems.");
+        }
     }
-    
-    public static boolean checkDropForm(String form) {
-        return dropForm.equals(form);
+
+    public static double getHeight() {
+        return DropItemUtil.height;
+    }
+
+    public static void loadDefault(final DropItem drop) {
+        DropItemUtil.anxiCode = AnxiCode.getCode(DropItemUtil.class, drop);
+        DropItemUtil.height = drop.getConfig().getDouble("Height");
+        DropItemUtil.pickForm = drop.getConfig().getString("PickForm");
+        DropItemUtil.dropForm = drop.getConfig().getString("DropForm");
+        DropItemUtil.showItemInfo = drop.getConfig().getBoolean("ShowItemInfo");
+        DropItemUtil.naturalSpawn = drop.getConfig().getBoolean("NaturalSpawn", true);
+        if (!DropItemUtil.naturalSpawn)
+            DropItemUtil.allowedPlayer = drop.getConfig().getBoolean("AllowedPlayer", false);
+        DropItemUtil.allowedPlayers = DropItemUtil.toList(drop.getConfig().getString("AllowedPlayers").split(","));
+        DropItemUtil.getBanItems(drop);
     }
 
     public static boolean naturalSpawn() {
-        return naturalSpawn;
-    }
-    
-    public static boolean allowedPlayer() {
-        return allowedPlayer;
-    }
-
-    public static boolean checkPlayerPermission(Player player) {
-        return player.hasPermission("dropitem.use");
-    }
-    
-    public static boolean checkNull(String name) {
-        if (name != null) {
-            if (!name.startsWith(ChatColor.RED + "QuickShop") && !name.contains("GSCompleXMoneyFromMobzzzzzzzzz")
-                    && !name.contains("XXXPlayer777MoneyXXX"))
-                return true;
-            return false;
-        }
-        return true;
-    }
-
-    public static boolean checkAllowedPlayer(String name) {
-        return allowedPlayers.contains(name);
+        return DropItemUtil.naturalSpawn;
     }
 
     public static boolean showItemInfo() {
-        return showItemInfo;
+        return DropItemUtil.showItemInfo;
     }
-    
-    public static double getHeight() {
-        return height;
+
+    public static List<String> toList(final String[] list) {
+        final List<String> ret = new ArrayList<>();
+        for (final String element : list)
+            ret.add(element);
+        return ret;
     }
 
 }

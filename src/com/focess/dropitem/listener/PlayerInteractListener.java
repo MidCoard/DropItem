@@ -93,7 +93,7 @@ public class PlayerInteractListener implements Listener {
 
     private Block getTargetBlock(final LivingEntity entity) {
         final int maxLength = 1;
-        int maxDistance = 4;
+        final int maxDistance = 4;
         final ArrayList<Block> blocks = new ArrayList<>();
         final BlockIterator itr = new BlockIterator(entity, maxDistance);
         while (itr.hasNext()) {
@@ -113,9 +113,8 @@ public class PlayerInteractListener implements Listener {
         try {
             if (((event.getAction() == Action.RIGHT_CLICK_AIR) || (event.getAction() == Action.RIGHT_CLICK_BLOCK))
                     && (event.getPlayer().getItemInHand() != null)
-                    && event.getPlayer().getItemInHand().getType().isBlock()) {
+                    && event.getPlayer().getItemInHand().getType().isBlock())
                 this.buildBlock(event.getPlayer(), event.getPlayer().getItemInHand());
-            }
         } catch (final Exception e) {
             Debug.debug(e, "Something wrong in calling Event PlayerInteractEvent.");
         }
@@ -126,12 +125,12 @@ public class PlayerInteractListener implements Listener {
         try {
             if (CraftDropItem.include(event.getRightClicked())) {
                 event.setCancelled(true);
-                if ((DropItemUtil.naturalSpawn() || DropItemUtil.allowedPlayer()
+                if (((DropItemUtil.naturalSpawn() || DropItemUtil.allowedPlayer()
                         || DropItemUtil.checkPlayerPermission(event.getPlayer()))
-                        && event.getPlayer().getItemInHand() == null
+                        && (event.getPlayer().getItemInHand() == null))
                         || event.getPlayer().getItemInHand().getType().equals(Material.AIR)) {
-                    EntityDropItem dropItem = CraftDropItem.getDropItem(event.getRightClicked());
-                    PlayerGottenEvent e = new PlayerGottenEvent(dropItem.getItemStack(), event.getPlayer());
+                    final EntityDropItem dropItem = CraftDropItem.getDropItem(event.getRightClicked());
+                    final PlayerGottenEvent e = new PlayerGottenEvent(dropItem.getItemStack(), event.getPlayer());
                     Bukkit.getServer().getPluginManager().callEvent(e);
                     if (e.isCancelled())
                         return;

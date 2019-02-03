@@ -2,10 +2,13 @@ package com.focess.dropitem.item;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -57,25 +60,22 @@ public class CraftDropItem {
 
     private static int anxiCode;
     private static DropItem drop;
-    private static List<EntityDropItem> droppedItems = new CopyOnWriteArrayList<>();
+    private static Map<UUID, EntityDropItem> droppedItems = new ConcurrentHashMap<>();
+    private static List<ItemStackAngle> isas = new ArrayList<>();
     private static int pitchX;
     private static int pitchY;
     private static int pitchZ;
+
     private static List<String> uuids = new ArrayList<>();
 
-    private static List<ItemStackAngle> isas = new ArrayList<>();
-
     public static EntityDropItem getDropItem(final Entity entity) {
-        for (final EntityDropItem d : CraftDropItem.droppedItems)
-            if (entity.getUniqueId().equals(d.getUniqueId()))
-                return d;
-        return null;
+        return CraftDropItem.droppedItems.get(entity.getUniqueId());
     }
 
-    public static List<EntityDropItem> getDropItems(final int anxiCode) {
+    public static Collection<EntityDropItem> getDropItems(final int anxiCode) {
         try {
             if (CraftDropItem.anxiCode == anxiCode)
-                return CraftDropItem.droppedItems;
+                return CraftDropItem.droppedItems.values();
             AnxiCode.shut(CraftDropItem.class);
             return null;
         } catch (final Exception e) {
@@ -84,11 +84,25 @@ public class CraftDropItem {
         }
     }
 
+    public static void hide(final EntityDropItem dropItem) {
+        try {
+            if (CraftDropItem.include(dropItem.getEntity())) {
+                final File uuidFile = new File(
+                        CraftDropItem.drop.getDataFolder() + "/drops/" + dropItem.getUniqueId().toString());
+                uuidFile.delete();
+                dropItem.remove();
+                CraftDropItem.droppedItems.remove(dropItem);
+            }
+        } catch (final Exception e) {
+            Debug.debug(e,
+                    "Something wrong in hiding EntityDropItem(Name = " + dropItem.getCustomName() + ",Type = "
+                            + dropItem.getItemStack().getType().name() + ",Count = "
+                            + dropItem.getItemStack().getAmount() + ").");
+        }
+    }
+
     public static boolean include(final Entity dropItem) {
-        for (final EntityDropItem d : CraftDropItem.droppedItems)
-            if (d.getUniqueId().equals(dropItem.getUniqueId()))
-                return true;
-        return false;
+        return CraftDropItem.getDropItem(dropItem) != null;
     }
 
     @SuppressWarnings("deprecation")
@@ -109,12 +123,12 @@ public class CraftDropItem {
                 if (temp.length != 4)
                     continue;
                 try {
-                    int id = Integer.parseInt(temp[0]);
+                    final int id = Integer.parseInt(temp[0]);
                     if (Material.getMaterial(id) == null)
                         continue;
                     CraftDropItem.isas.add(new ItemStackAngle(Material.getMaterial(id), Integer.parseInt(temp[1]),
                             Integer.parseInt(temp[2]), Integer.parseInt(temp[3])));
-                } catch (Exception e) {
+                } catch (final Exception e) {
                     if (Material.getMaterial(temp[0]) == null)
                         continue;
                     CraftDropItem.isas.add(new ItemStackAngle(Material.getMaterial(temp[0]), Integer.parseInt(temp[1]),
@@ -131,7 +145,7 @@ public class CraftDropItem {
         if (anxiCode == CraftDropItem.anxiCode) {
             if (CraftDropItem.uuids.contains(dropItem.getUniqueId().toString())) {
                 final EntityDropItem entityDropItem = EntityDropItem.createEntityDropItem((LivingEntity) dropItem);
-                CraftDropItem.droppedItems.add(entityDropItem);
+                CraftDropItem.droppedItems.put(dropItem.getUniqueId(), entityDropItem);
                 DropItemInfo.registerInfo(entityDropItem);
                 CraftDropItem.uuids.remove(dropItem.getUniqueId().toString());
             }
@@ -148,11 +162,12 @@ public class CraftDropItem {
             if (CraftDropItem.include(dropItem.getEntity()) && !iscalled) {
                 final File uuidFile = new File(
                         CraftDropItem.drop.getDataFolder() + "/drops/" + dropItem.getUniqueId().toString());
+                DropItemInfo.remove(dropItem.getUniqueId());
                 uuidFile.delete();
-                dropItem.remove();
+                if (dropItem.isDead())
+                    dropItem.remove();
                 CraftDropItem.droppedItems.remove(dropItem);
-            } else
-                CraftDropItem.remove(dropItem, DropItemDeathEvent.DeathCause.UNKNOWN);
+            }
         } catch (final Exception e) {
             Debug.debug(e,
                     "Something wrong in removing EntityDropItem(Name = " + dropItem.getCustomName() + ",Type = "
@@ -170,8 +185,10 @@ public class CraftDropItem {
                     return;
                 final File uuidFile = new File(
                         CraftDropItem.drop.getDataFolder() + "/drops/" + dropItem.getUniqueId().toString());
+                DropItemInfo.remove(dropItem.getUniqueId());
                 uuidFile.delete();
-                dropItem.remove();
+                if (dropItem.isDead())
+                    dropItem.remove();
                 CraftDropItem.droppedItems.remove(dropItem);
             }
         } catch (final Exception e) {
@@ -189,8 +206,7 @@ public class CraftDropItem {
                 final Location location = item.getLocation();
                 item.remove();
                 CraftDropItem.spawnItem(itemStack, location);
-            }
-            else
+            } else
                 SpawnDropItemRunnable.addItem(item);
         } catch (final Exception e) {
             Debug.debug(e, "Something wrong in spawning ItemStack(Type = " + item.getItemStack().getType().name()
@@ -203,26 +219,28 @@ public class CraftDropItem {
     }
 
     public static EntityDropItem spawnItem(final ItemStack itemStack, final Location location, final boolean iscalled) {
+        return CraftDropItem.spawnItem(itemStack, location, iscalled, true);
+    }
+
+    public static EntityDropItem spawnItem(final ItemStack itemStack, final Location location, final boolean iscalled,
+            final boolean isregistered) {
         try {
             location.setY((location.getBlockY() - 1) + DropItemUtil.getHeight());
             EntityDropItem dropItem = null;
-            if (!CraftDropItem.drop.islower)
-                dropItem = EntityDropItem.createEntityDropItem(
-                        (LivingEntity) location.getWorld().spawnEntity(location, EntityType.ARMOR_STAND), itemStack);
+            dropItem = EntityDropItem.createEntityDropItem(
+                    (LivingEntity) location.getWorld().spawnEntity(location, EntityType.ARMOR_STAND), itemStack);
             dropItem.setUp();
-            if (!CraftDropItem.drop.islower) {
-                boolean flag = false;
-                for (final ItemStackAngle isa : CraftDropItem.isas)
-                    if (isa.getMaterial().equals(itemStack.getType())) {
-                        flag = true;
-                        final EulerAngle eulerAngle = new EulerAngle(isa.getPx(), isa.getPy(), isa.getPz());
-                        dropItem.setRightArmPose(eulerAngle);
-                    }
-                if (!flag) {
-                    final EulerAngle eulerAngle = new EulerAngle(CraftDropItem.pitchX, CraftDropItem.pitchY,
-                            CraftDropItem.pitchZ);
+            boolean flag = false;
+            for (final ItemStackAngle isa : CraftDropItem.isas)
+                if (isa.getMaterial().equals(itemStack.getType())) {
+                    flag = true;
+                    final EulerAngle eulerAngle = new EulerAngle(isa.getPx(), isa.getPy(), isa.getPz());
                     dropItem.setRightArmPose(eulerAngle);
                 }
+            if (!flag) {
+                final EulerAngle eulerAngle = new EulerAngle(CraftDropItem.pitchX, CraftDropItem.pitchY,
+                        CraftDropItem.pitchZ);
+                dropItem.setRightArmPose(eulerAngle);
             }
             String customName = itemStack.getType().name().toLowerCase() + " × " + itemStack.getAmount();
             if (DropItem.Slanguages.get(itemStack.getType().name()) == null)
@@ -234,16 +252,18 @@ public class CraftDropItem {
             else if (CraftDropItem.drop.getConfig().getString("Language", "zhs").equals("zht"))
                 customName = DropItem.Tlanguages.get(itemStack.getType().name()) + " × " + itemStack.getAmount();
             dropItem.setCustomName(customName);
-            CraftDropItem.droppedItems.add(dropItem);
+            CraftDropItem.droppedItems.put(dropItem.getUniqueId(), dropItem);
             if (iscalled) {
                 final DropItemSpawnEvent event = new DropItemSpawnEvent(dropItem);
                 CraftDropItem.drop.getServer().getPluginManager().callEvent(event);
                 if (event.isCancelled()) {
                     CraftDropItem.droppedItems.remove(dropItem);
                     dropItem.remove();
+                    return null;
                 }
             }
-            DropItemInfo.registerInfo(dropItem);
+            if (isregistered)
+                DropItemInfo.registerInfo(dropItem);
             return dropItem;
         } catch (final Exception e) {
             Debug.debug(e, "Something wrong in spawning ItemStack(Type = " + itemStack.getType().name() + ",Count = "
@@ -255,16 +275,18 @@ public class CraftDropItem {
     public static void uploadItems(final int anxiCode) {
         try {
             if (CraftDropItem.anxiCode == anxiCode) {
-                final HashMap<Location, ItemStack> ais = CraftDropItem.drop.getCraftAIListener(anxiCode)
+                final Map<UUID, Pair<Location, ItemStack>> ais = CraftDropItem.drop.getCraftAIListener(anxiCode)
                         .getAIs(anxiCode);
-                for (final Location location : ais.keySet()) {
-                    final ItemStack itemStack = ais.get(location);
+                for (final UUID uuid : ais.keySet()) {
+                    final Pair<Location, ItemStack> pair = ais.get(uuid);
+                    final Location location = pair.getKey();
+                    final ItemStack itemStack = pair.getValue();
                     final Location temp = new Location(location.getWorld(), location.getBlockX(),
                             location.getBlockY() + 1, location.getBlockZ());
                     if (itemStack != null)
                         CraftDropItem.spawnItem(itemStack, temp, false);
                 }
-                for (final EntityDropItem dropItem : CraftDropItem.droppedItems) {
+                for (final EntityDropItem dropItem : CraftDropItem.droppedItems.values()) {
                     final File uuidFile = new File(
                             CraftDropItem.drop.getDataFolder() + "/drops/" + dropItem.getUniqueId().toString());
                     uuidFile.createNewFile();

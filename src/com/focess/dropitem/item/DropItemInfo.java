@@ -1,7 +1,8 @@
 package com.focess.dropitem.item;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -12,108 +13,118 @@ import com.focess.dropitem.util.AnxiCode;
 
 public class DropItemInfo {
 
-	private class DropItemLive extends BukkitRunnable {
+    private static class DropItemLive extends BukkitRunnable {
 
-		@Override
-		public void run() {
-			try {
-				final List<DropItemInfo> temp = new ArrayList<>();
-				for (final DropItemInfo dropItemInfo : DropItemInfo.dropItemInfos) {
-					dropItemInfo.time++;
-					if (DropItemInfo.isRefresh)
-						if (dropItemInfo.time > DropItemInfo.refreshTime) {
-							temp.add(dropItemInfo);
-							CraftAIListener.remove(dropItemInfo);
-							CraftDropItem.remove(dropItemInfo.dropItem, DeathCause.DEATH);
-						}
-				}
-				for (final DropItemInfo dropItemInfo : temp)
-					DropItemInfo.dropItemInfos.remove(dropItemInfo);
-			} catch (final Exception e) {
-				Debug.debug(e, "Something wrong in running Runnable DropItemLive.");
-			}
-		}
+        @Override
+        public void run() {
+            try {
+                for (final UUID uuid : DropItemInfo.dropItemInfos.keySet()) {
+                    final DropItemInfo dropItemInfo = DropItemInfo.dropItemInfos.get(uuid);
+                    dropItemInfo.time++;
+                    if (dropItemInfo.time > DropItemInfo.refreshTime) {
+                        DropItemInfo.dropItemInfos.remove(uuid);
+                        if (!dropItemInfo.alive)
+                            CraftAIListener.remove(dropItemInfo.getUUID());
+                        CraftDropItem.remove(dropItemInfo.dropItem, DeathCause.DEATH);
+                    }
+                }
+            } catch (final Exception e) {
+                Debug.debug(e, "Something wrong in running Runnable DropItemLive.");
+            }
+        }
 
-	}
+    }
 
-	private static int refreshTime = 300;
+    private static int anxiCode;
 
-	private static boolean isRefresh = true;
+    private static DropItem drop;
 
-	private static int anxiCode;
+    private static Map<UUID, DropItemInfo> dropItemInfos = new ConcurrentHashMap<>();
 
-	private static DropItem drop;
+    private static boolean isRefresh = true;
 
-	private static List<DropItemInfo> dropItemInfos = new ArrayList<>();
+    private static int refreshTime = 300;
 
-	protected static DropItemInfo getDropItemInfo(final EntityDropItem d) {
-		try {
-			for (final DropItemInfo dropItemInfo : DropItemInfo.dropItemInfos)
-				if (dropItemInfo.dropItem.getUniqueId().toString().equals(d.getUniqueId().toString()))
-					return dropItemInfo;
-			return null;
-		} catch (final Exception e) {
-			Debug.debug(e, "Something wrong in getting DropItemInfo.");
-			return null;
-		}
-	}
+    protected static DropItemInfo getDropItemInfo(final UUID uuid) {
+        return DropItemInfo.dropItemInfos.get(uuid);
+    }
 
-	public static void register(final DropItem drop, final int anxiCode) {
-		try {
-			DropItemInfo.anxiCode = AnxiCode.getCode(DropItemInfo.class, drop);
-			if (DropItemInfo.anxiCode == anxiCode) {
-				DropItemInfo.drop = drop;
-				final String temp = drop.getConfig().getString("RefreshTime");
-				try {
-					DropItemInfo.refreshTime = Integer.parseInt(temp);
-				} catch (final Exception e) {
-					DropItemInfo.isRefresh = Boolean.getBoolean(temp);
-				}
-				DropItemInfo.drop.getServer().getScheduler().runTaskTimer(drop,
-						(Runnable) new DropItemInfo().new DropItemLive(), 0, 20);
-			} else
-				AnxiCode.shut(DropItemInfo.class);
-		} catch (final Exception e) {
-			Debug.debug(e, "Something wrong in starting to check DropItem living time.");
-		}
-	}
+    public static void register(final DropItem drop, final int anxiCode) {
+        try {
+            DropItemInfo.anxiCode = AnxiCode.getCode(DropItemInfo.class, drop);
+            if (DropItemInfo.anxiCode == anxiCode) {
+                DropItemInfo.drop = drop;
+                final String temp = drop.getConfig().getString("RefreshTime");
+                try {
+                    DropItemInfo.refreshTime = Integer.parseInt(temp);
+                } catch (final Exception e) {
+                    DropItemInfo.isRefresh = Boolean.getBoolean(temp);
+                }
+                if (DropItemInfo.isRefresh)
+                    DropItemInfo.drop.getServer().getScheduler().runTaskTimer(drop, (Runnable) new DropItemLive(), 0,
+                            20);
+            } else
+                AnxiCode.shut(DropItemInfo.class);
+        } catch (final Exception e) {
+            Debug.debug(e, "Something wrong in starting to check DropItem living time.");
+        }
+    }
 
-	protected static void registerInfo(final EntityDropItem dropItem) {
-		new DropItemInfo(dropItem);
-	}
+    protected static void registerInfo(final EntityDropItem dropItem) {
+        new DropItemInfo(dropItem);
+    }
 
-	private EntityDropItem dropItem;
+    public static void remove(final UUID uuid) {
+        DropItemInfo.dropItemInfos.remove(uuid);
+    }
 
-	private int time = 0;
+    private boolean alive = true;
 
-	private DropItemInfo() {
-	}
+    private EntityDropItem dropItem;
 
-	private DropItemInfo(final EntityDropItem dropItem) {
-		this.dropItem = dropItem;
-		DropItemInfo.dropItemInfos.add(this);
-	}
+    private int time = 0;
 
-	@Override
-	public boolean equals(final Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (this.getClass() != obj.getClass())
-			return false;
-		final DropItemInfo other = (DropItemInfo) obj;
-		if (this.dropItem == null) {
-			if (other.dropItem != null)
-				return false;
-		} else if (!this.dropItem.equals(other.dropItem))
-			return false;
-		return true;
-	}
+    private UUID uuid;
 
-	protected DropItemInfo setDropItem(final EntityDropItem dropItem) {
-		this.dropItem = dropItem;
-		return this;
-	}
+    private DropItemInfo(final EntityDropItem dropItem) {
+        this.dropItem = dropItem;
+        this.uuid = dropItem.getUniqueId();
+        DropItemInfo.dropItemInfos.put(dropItem.getUniqueId(), this);
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (this.getClass() != obj.getClass())
+            return false;
+        final DropItemInfo other = (DropItemInfo) obj;
+        if (this.dropItem == null) {
+            if (other.dropItem != null)
+                return false;
+        } else if (!this.dropItem.equals(other.dropItem))
+            return false;
+        return true;
+    }
+
+    public EntityDropItem getDropItem() {
+        return this.dropItem;
+    }
+
+    public UUID getUUID() {
+        return this.uuid;
+    }
+
+    public void setAlive(final boolean alive) {
+        this.alive = alive;
+    }
+
+    protected void setDropItem(final EntityDropItem dropItem) {
+        this.dropItem = dropItem;
+        this.uuid = dropItem.getUniqueId();
+        DropItemInfo.dropItemInfos.put(dropItem.getUniqueId(), this);
+    }
 
 }

@@ -11,29 +11,29 @@ import com.focess.dropitem.item.CraftDropItem;
 import com.focess.dropitem.util.DropItemUtil;
 
 public class SpawnDropItemListener implements Listener {
-    
-    
-    @EventHandler
-    public void onSpawnDropItem(ItemSpawnEvent event) {
+
+    @EventHandler(ignoreCancelled = true)
+    public void onPlayerDropItem(final PlayerDropItemEvent event) {
         try {
-            ItemStack itemStack = event.getEntity().getItemStack();
-            if (DropItemUtil.naturalSpawn()&&DropItemUtil.checkNull(itemStack.getItemMeta().getDisplayName())&&DropItemUtil.checkBanItems(itemStack))
-                CraftDropItem.spawnItem(event.getEntity());
+            if (DropItemUtil.checkNull(event.getItemDrop().getItemStack().getItemMeta().getDisplayName())
+                    && DropItemUtil.checkBanItems(event.getItemDrop().getItemStack())
+                    && (DropItemUtil.checkPlayerPermission(event.getPlayer()) || DropItemUtil.allowedPlayer())
+                    && !DropItemUtil.naturalSpawn())
+                CraftDropItem.spawnItem(event.getItemDrop());
+        } catch (final Exception e) {
+            Debug.debug(e, "Something wrong in calling Event PlayerDropItemEvent.");
         }
-        catch (final Exception e) {
+    }
+
+    @EventHandler
+    public void onSpawnDropItem(final ItemSpawnEvent event) {
+        try {
+            final ItemStack itemStack = event.getEntity().getItemStack();
+            if (DropItemUtil.naturalSpawn() && DropItemUtil.checkNull(itemStack.getItemMeta().getDisplayName())
+                    && DropItemUtil.checkBanItems(itemStack))
+                CraftDropItem.spawnItem(event.getEntity());
+        } catch (final Exception e) {
             Debug.debug(e, "Something wrong in calling Event ItemSpawnEvent.");
         }
     }
-	
-	@EventHandler(ignoreCancelled = true)
-	public void onPlayerDropItem(final PlayerDropItemEvent event) {
-		try {
-			if (DropItemUtil.checkNull(event.getItemDrop().getItemStack().getItemMeta().getDisplayName())
-					&& DropItemUtil.checkBanItems(event.getItemDrop().getItemStack())
-					&& (DropItemUtil.checkPlayerPermission(event.getPlayer()) ||DropItemUtil.allowedPlayer()) && !DropItemUtil.naturalSpawn())
-				CraftDropItem.spawnItem(event.getItemDrop());
-		} catch (final Exception e) {
-			Debug.debug(e, "Something wrong in calling Event PlayerDropItemEvent.");
-		}
-	}
 }

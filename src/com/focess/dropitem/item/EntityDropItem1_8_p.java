@@ -6,7 +6,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.EulerAngle;
 
 public class EntityDropItem1_8_p extends EntityDropItem {
- 
+
     EntityDropItem1_8_p(final LivingEntity armorStand) {
         super(armorStand);
         this.check(armorStand);
@@ -17,19 +17,19 @@ public class EntityDropItem1_8_p extends EntityDropItem {
         super(armorStand, itemStack);
         this.check(armorStand);
         ((ArmorStand) this.getEntity()).setItemInHand(itemStack);
-//        EntityDropItem.setNBT(this.getEntity(), "NoGravity", true);
+        // EntityDropItem.setNBT(this.getEntity(), "NoGravity", true);
     }
 
     private void check(final LivingEntity armorStand) {
         if (!(armorStand instanceof ArmorStand))
             throw new ClassCastException();
     }
-    
+
     @Override
     public boolean isVisible() {
         return ((ArmorStand) this.getEntity()).isVisible();
     }
-    
+
     @Override
     public void setRightArmPose(final EulerAngle eulerAngle) {
         ((ArmorStand) this.getEntity()).setRightArmPose(eulerAngle);
@@ -41,7 +41,7 @@ public class EntityDropItem1_8_p extends EntityDropItem {
         this.getEntity().setRemoveWhenFarAway(false);
         this.getEntity().setCustomNameVisible(false);
         this.getEntity().setCanPickupItems(false);
-        setNBT(this.getEntity(),"NoGravity",true);
+        EntityDropItem.setNBT(this.getEntity(), "NoGravity", true);
     }
 
 }

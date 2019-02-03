@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -55,15 +54,10 @@ public class DropItem extends JavaPlugin {
     private final BukkitScheduler bukkitScheduler = this.getServer().getScheduler();
     public CommandMap commandMap;
     private CraftAIListener craftAIListener;
-    public final boolean islower;
 
     private final PluginManager pluginManager = this.getServer().getPluginManager();
 
     {
-        if (DropItem.getVersion() < 8)
-            this.islower = true;
-        else
-            this.islower = false;
         try {
             this.getCommandMap();
         } catch (final Exception e) {
@@ -71,11 +65,11 @@ public class DropItem extends JavaPlugin {
         }
     }
 
-    private void getCommandMap() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+    private void getCommandMap() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+            NoSuchMethodException, SecurityException {
         final Class<?> c = Bukkit.getServer().getClass();
-        for (final Method method : c.getDeclaredMethods())
-            if (method.getName().equals("getCommandMap"))
-                this.commandMap = (CommandMap) method.invoke(this.getServer(), new Object[0]);
+        this.commandMap = (CommandMap) c.getDeclaredMethod("getCommandMap", new Class[0]).invoke(this.getServer(),
+                new Object[0]);
     }
 
     public CraftAIListener getCraftAIListener(final int anxiCode) {
@@ -191,7 +185,7 @@ public class DropItem extends JavaPlugin {
         this.pluginManager.registerEvents(new DropItemPermissionListener(this), this);
         this.pluginManager.registerEvents(new PlayerInteractListener(), this);
         this.registerPermission();
-        DropItem.bukkitTasks.add(this.bukkitScheduler.runTaskTimer(this, (Runnable)new SpawnDropItemRunnable(), 0, 10l));
+        DropItem.bukkitTasks.add(this.bukkitScheduler.runTaskTimer(this, new SpawnDropItemRunnable(), 0, 10l));
         DropItem.bukkitTasks
                 .add(this.bukkitScheduler.runTaskTimer(this, (Runnable) new DropItemRunnable(this), 0L, 10L));
         this.craftAIListener = new CraftAIListener(this, DropItem.anxiCode);

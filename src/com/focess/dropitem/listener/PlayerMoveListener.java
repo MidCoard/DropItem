@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
+
 import com.focess.dropitem.Debug;
 import com.focess.dropitem.DropItem;
 import com.focess.dropitem.item.CraftDropItem;
@@ -17,11 +18,9 @@ import com.focess.dropitem.util.DropItemUtil;
 
 public class PlayerMoveListener implements Listener {
     private final int anxiCode;
-    private final DropItem drop;
 
-    public PlayerMoveListener(final DropItem entity) {
-        this.anxiCode = AnxiCode.getCode(PlayerMoveListener.class, entity);
-        this.drop = entity;
+    public PlayerMoveListener(final DropItem drop) {
+        this.anxiCode = AnxiCode.getCode(PlayerMoveListener.class, drop);
     }
 
     @EventHandler
@@ -31,10 +30,10 @@ public class PlayerMoveListener implements Listener {
             final List<Entity> entities_load = player.getNearbyEntities(12, 12, 12);
             for (final Entity entity : entities_load)
                 if (!CraftDropItem.include(entity) && !entity.isDead())
-                    if (!this.drop.islower && (entity instanceof ArmorStand))
+                    if (entity instanceof ArmorStand)
                         if (!((ArmorStand) entity).isVisible())
                             CraftDropItem.loadItem(entity, this.anxiCode);
-            if (!this.drop.islower && (player.getGameMode().compareTo(GameMode.SPECTATOR) == 0))
+            if (player.getGameMode().compareTo(GameMode.SPECTATOR) == 0)
                 return;
             final List<Entity> entities = player.getNearbyEntities(1.0D, 1.0D, 1.0D);
             for (final Entity entity : entities)

@@ -10,18 +10,18 @@ import org.bukkit.inventory.ItemStack;
 import com.focess.dropitem.item.CraftDropItem;
 
 public class SpawnDropItemRunnable implements Runnable {
-    
+
     private static List<Item> items = new CopyOnWriteArrayList<>();
-    
-    public static void addItem(Item item) {
-        items.add(item);
+
+    public static void addItem(final Item item) {
+        SpawnDropItemRunnable.items.add(item);
     }
 
     @Override
     public void run() {
-        for (Item item:items) {
-            if (item.isDead()){
-                items.remove(item);
+        for (final Item item : SpawnDropItemRunnable.items) {
+            if (item.isDead()) {
+                SpawnDropItemRunnable.items.remove(item);
                 continue;
             }
             if (item.isOnGround()) {
@@ -33,4 +33,4 @@ public class SpawnDropItemRunnable implements Runnable {
         }
     }
 
-} 
+}
