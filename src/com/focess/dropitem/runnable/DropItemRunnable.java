@@ -34,7 +34,6 @@ public class DropItemRunnable extends BukkitRunnable {
             for (final EntityDropItem dropItem : CraftDropItem.getDropItems(DropItemRunnable.anxiCode)) {
                 final Location location = dropItem.getLocation();
                 location.setY(location.getY() - DropItemUtil.getHeight());
-               System.out.println(location.getBlockY());
                 if (location.getBlock().getType().equals(Material.HOPPER)) {
                     final Hopper hopper = (Hopper) location.getBlock().getState();
                     final HopperGottenEvent event = new HopperGottenEvent(dropItem.getItemStack(), hopper);
@@ -60,15 +59,15 @@ public class DropItemRunnable extends BukkitRunnable {
                 }
                 final Location loc = dropItem.getLocation();
                 if (loc.getBlock().getType().equals(Material.AIR)) {
-                    final Location loc2 = loc;
+                    final Location loc2 = loc.clone();
                     loc2.setY(loc2.getY() - 1);
                     if (loc2.getBlock().getType().equals(Material.AIR))
                         EntityDropItem.setNBT(dropItem.getEntity(), "NoGravity", false);
                     else {
                         // NBT is slower than teleport
                         EntityDropItem.setNBT(dropItem.getEntity(), "NoGravity", true);
-//                        loc.setY((loc.getBlockY() - 1) + DropItemUtil.getHeight());
-//                        dropItem.teleport(loc);
+                        loc.setY((loc.getBlockY() - 1) + DropItemUtil.getHeight());
+                        dropItem.teleport(loc);
                     }
                 }
                 final List<Entity> entities = dropItem.getNearbyEntities(2, 2, 2);
