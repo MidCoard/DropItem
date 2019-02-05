@@ -18,7 +18,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.EulerAngle;
 
-import com.focess.dropitem.Debug;
+import com.focess.dropitem.Debug; 
 import com.focess.dropitem.DropItem;
 import com.focess.dropitem.event.DropItemDeathEvent;
 import com.focess.dropitem.event.DropItemDeathEvent.DeathCause;
@@ -91,7 +91,7 @@ public class CraftDropItem {
                         CraftDropItem.drop.getDataFolder() + "/drops/" + dropItem.getUniqueId().toString());
                 uuidFile.delete();
                 dropItem.remove();
-                CraftDropItem.droppedItems.remove(dropItem);
+                CraftDropItem.droppedItems.remove(dropItem.getUniqueId());
             }
         } catch (final Exception e) {
             Debug.debug(e,
@@ -164,9 +164,9 @@ public class CraftDropItem {
                         CraftDropItem.drop.getDataFolder() + "/drops/" + dropItem.getUniqueId().toString());
                 DropItemInfo.remove(dropItem.getUniqueId());
                 uuidFile.delete();
-                if (dropItem.isDead())
+                if (!dropItem.isDead())
                     dropItem.remove();
-                CraftDropItem.droppedItems.remove(dropItem);
+                CraftDropItem.droppedItems.remove(dropItem.getUniqueId());
             }
         } catch (final Exception e) {
             Debug.debug(e,
@@ -187,9 +187,9 @@ public class CraftDropItem {
                         CraftDropItem.drop.getDataFolder() + "/drops/" + dropItem.getUniqueId().toString());
                 DropItemInfo.remove(dropItem.getUniqueId());
                 uuidFile.delete();
-                if (dropItem.isDead())
+                if (!dropItem.isDead())
                     dropItem.remove();
-                CraftDropItem.droppedItems.remove(dropItem);
+                CraftDropItem.droppedItems.remove(dropItem.getUniqueId());
             }
         } catch (final Exception e) {
             Debug.debug(e,

@@ -93,7 +93,7 @@ public class DropItemUtil {
                         count += itemStack.getAmount();
                         amount++;
                     }
-            if (((amount * entityDropItem.getItemStack().getMaxStackSize()) - count) != 0) {
+            if (((amount * entityDropItem.getItemStack().getMaxStackSize()) - count - is.getAmount()) > 0) {
                 final PlayerGottenEvent event_gotten = new PlayerGottenEvent(entityDropItem.getItemStack(), player);
                 Bukkit.getServer().getPluginManager().callEvent(event_gotten);
                 if (!event_gotten.isCancelled()) {

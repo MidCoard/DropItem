@@ -127,4 +127,10 @@ public class DropItemInfo {
         DropItemInfo.dropItemInfos.put(dropItem.getUniqueId(), this);
     }
 
+    public static void clear(int anxiCode) {
+        if (DropItemInfo.anxiCode == anxiCode)
+            dropItemInfos.clear();
+        else AnxiCode.shut(DropItemInfo.class);
+    }
+
 }

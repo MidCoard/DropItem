@@ -21,6 +21,7 @@ import com.focess.dropitem.Debug;
 import com.focess.dropitem.DropItem;
 import com.focess.dropitem.event.DropItemDeathEvent;
 import com.focess.dropitem.item.CraftDropItem;
+import com.focess.dropitem.item.DropItemInfo;
 import com.focess.dropitem.item.EntityDropItem;
 import com.focess.dropitem.util.AnxiCode;
 import com.focess.dropitem.util.DropItemUtil;
@@ -79,6 +80,7 @@ public class DropItemCommand extends Command {
                     for (final File file : drops.listFiles())
                         file.delete();
                     this.drop.getCraftAIListener(this.anxiCode).clear(this.anxiCode);
+                    DropItemInfo.clear(this.anxiCode);
                     commandSender.sendMessage(this.getMessage("AfterClean"));
                 } else if (args[0].equalsIgnoreCase("disable")) {
                     commandSender.sendMessage(this.getMessage("Disabling"));

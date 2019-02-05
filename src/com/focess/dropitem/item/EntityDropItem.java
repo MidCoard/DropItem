@@ -62,7 +62,7 @@ public abstract class EntityDropItem {
     }
 
     public static void setNBT(final LivingEntity entity, final String nbtName, final boolean value) {
-        EntityDropItem.setNBT(entity, nbtName, value == true ? 1 : 0);
+        EntityDropItem.setNBT(entity, nbtName, value ? 1 : 0);
     }
 
     private static void setNBT(final LivingEntity entity, final String nbtName, final int value) {
