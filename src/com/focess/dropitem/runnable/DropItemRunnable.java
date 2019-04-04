@@ -18,6 +18,7 @@ import com.focess.dropitem.item.CraftDropItem;
 import com.focess.dropitem.item.EntityDropItem;
 import com.focess.dropitem.util.AnxiCode;
 import com.focess.dropitem.util.DropItemUtil;
+import com.focess.dropitem.util.NMSManager;
 
 public class DropItemRunnable extends BukkitRunnable {
     private static int anxiCode;
@@ -62,10 +63,10 @@ public class DropItemRunnable extends BukkitRunnable {
                     final Location loc2 = loc.clone();
                     loc2.setY(loc2.getY() - 1);
                     if (loc2.getBlock().getType().equals(Material.AIR))
-                        EntityDropItem.setNBT(dropItem.getEntity(), "NoGravity", false);
+                        NMSManager.setNBTBoolean(dropItem.getEntity(), "NoGravity", false);
                     else {
                         // NBT is slower than teleport
-                        EntityDropItem.setNBT(dropItem.getEntity(), "NoGravity", true);
+                        NMSManager.setNBTBoolean(dropItem.getEntity(), "NoGravity", true);
                         loc.setY((loc.getBlockY() - 1) + DropItemUtil.getHeight());
                         dropItem.teleport(loc);
                     }

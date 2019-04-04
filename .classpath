@@ -3,5 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="D:/000/[1.8.00]craftbukkit by boge/bukkit.jar"/>
+	<classpathentry kind="lib" path="D:/000/[1.8.00]craftbukkit by boge/1.12.jar"/>
 	<classpathentry kind="output" path="src2"/>
 </classpath>

@@ -5,6 +5,8 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.EulerAngle;
 
+import com.focess.dropitem.util.NMSManager;
+
 public class EntityDropItem1_8_p extends EntityDropItem {
 
     EntityDropItem1_8_p(final LivingEntity armorStand) {
@@ -41,7 +43,7 @@ public class EntityDropItem1_8_p extends EntityDropItem {
         this.getEntity().setRemoveWhenFarAway(false);
         this.getEntity().setCustomNameVisible(false);
         this.getEntity().setCanPickupItems(false);
-        EntityDropItem.setNBT(this.getEntity(), "NoGravity", true);
+        NMSManager.setNBTBoolean(this.getEntity(), "NoGravity", true);;
     }
 
 }

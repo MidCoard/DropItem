@@ -7,26 +7,41 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
+import com.focess.dropitem.DropItem;
+
 public class NMSManager {
-    // public static Constructor<?> ConstructorEntityPlayer;
-    public static Constructor<?> ConstructorPlayerInteractManager;
-    public final static Class<?> CraftServer;
-    public final static Class<?> CraftWorld;
-    public final static Class<?> EntityPlayer;
+
+    // basic
     private final static Map<Class<?>, Map<String, Field>> loadedFields = new HashMap<>();
     private final static Map<Class<?>, Map<String, Method>> loadedMethods = new HashMap<>();
     private final static Map<String, Class<?>> loadedNMSClasses = new HashMap<>();
-    public final static Class<?> MinecraftServer;
 
-    // public final static Class<?> PlayerInteractManager;
+    // basic class
+    public final static Class<?> CraftServer;
+    public final static Class<?> CraftWorld;
+    public final static Class<?> EntityPlayer;
+    public final static Class<?> MinecraftServer;
+    public final static Class<?> World;
+    public final static Class<?> WorldServer;
+    public final static Class<?> CraftEntity;
+    public final static Class<?> NBTTagCompound;
+    public final static Class<?> Entity;
 
     private static String versionString;
-    public final static Class<?> World;
 
-    public final static Class<?> WorldServer;
-
+    // NBT Builder
+    private final static Method e;
+    // getNBT from an entity
+    private final static Method f;
+    // setNBT to an entity
+    private final static Method getHandle;
+    private final static Method setInt;
+    private final static Method setBoolean;
+    private final static Method hasKey;
+    private final static Method getBoolean;
     static {
         World = NMSManager.getNMSClass("World");
         MinecraftServer = NMSManager.getNMSClass("MinecraftServer");
@@ -34,19 +49,80 @@ public class NMSManager {
         CraftWorld = NMSManager.getCraftClass("CraftWorld");
         CraftServer = NMSManager.getCraftClass("CraftServer");
         EntityPlayer = NMSManager.getNMSClass("EntityPlayer");
-        // PlayerInteractManager =
-        // NMSManager.getNMSClass("PlayerInteractManager");
+        CraftEntity = NMSManager.getCraftClass("entity.CraftEntity");
+        Entity = NMSManager.getNMSClass("Entity");
+        NBTTagCompound = NMSManager.getNMSClass("NBTTagCompound");
+        getHandle = NMSManager.getMethod(CraftEntity, "getHandle", new Class[] {});
+        setInt = NMSManager.getMethod(NBTTagCompound, "setInt", new Class[] { String.class, Integer.TYPE });
+        setBoolean = NMSManager.getMethod(NBTTagCompound, "setBoolean", new Class[] { String.class, Boolean.TYPE });
+        hasKey = NMSManager.getMethod(NBTTagCompound, "hasKey", new Class[] { String.class });
+        getBoolean = NMSManager.getMethod(NBTTagCompound, "getBoolean", new Class[] { String.class });
+        f = NMSManager.getMethod(Entity, "f", new Class[] { NBTTagCompound });
+        if (DropItem.getVersion() < 12)
+            e = NMSManager.getMethod(Entity, "e", new Class[] { NBTTagCompound });
+        else
+            e = NMSManager.getMethod(Entity, "save", new Class[] { NBTTagCompound });
+    }
+
+    private static Object getNBT(LivingEntity entity) {
+        Object tag = null;
         try {
-            // NMSManager.ConstructorEntityPlayer = NMSManager.EntityPlayer
-            // .getConstructor(new Class[] { NMSManager.MinecraftServer,
-            // NMSManager.WorldServer, GameProfile.class,
-            // NMSManager.PlayerInteractManager });
-            // NMSManager.ConstructorPlayerInteractManager =
-            // NMSManager.PlayerInteractManager
-            // .getConstructor(new Class[] { NMSManager.World });
-        } catch (final Exception e) {
+            final Object nmsEntity = getHandle.invoke(entity);
+            tag = NBTTagCompound.newInstance();
+            e.invoke(nmsEntity, tag);
+        } catch (Exception e) {
             e.printStackTrace();
         }
+        return tag;
+    }
+
+    private static void saveNBT(LivingEntity entity, Object tag) {
+        try {
+            final Object nmsEntity = getHandle.invoke(entity);
+            f.invoke(nmsEntity, tag);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void setNBTBoolean(final LivingEntity entity, final String nbtName, final boolean value) {
+        try {
+            Object tag = getNBT(entity);
+            setBoolean.invoke(tag, nbtName, value);
+            saveNBT(entity, tag);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void setNBTInt(final LivingEntity entity, final String nbtName, final int value) {
+        try {
+            Object tag = getNBT(entity);
+            setInt.invoke(tag, nbtName, value);
+            saveNBT(entity, tag);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static boolean hasNBT(LivingEntity entity, String nbtName) {
+        try {
+            Object tag = getNBT(entity);
+            return (boolean) hasKey.invoke(tag, nbtName);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public static boolean getNBTBoolean(LivingEntity entity, String nbtName) {
+        try {
+            Object tag = getNBT(entity);
+            return (boolean) getBoolean.invoke(tag, nbtName);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     public static Object getConnection(final Player player) {
@@ -90,9 +166,7 @@ public class NMSManager {
     public static Field getField(final Class<?> clazz, final String fieldName) {
         if (!NMSManager.loadedFields.containsKey(clazz))
             NMSManager.loadedFields.put(clazz, new HashMap<String, Field>());
-
         final Map<String, Field> fields = NMSManager.loadedFields.get(clazz);
-
         if (fields.containsKey(fieldName))
             return fields.get(fieldName);
         try {
@@ -113,7 +187,7 @@ public class NMSManager {
         if (!NMSManager.loadedMethods.containsKey(clazz))
             NMSManager.loadedMethods.put(clazz, new HashMap<String, Method>());
         final Map<String, Method> methods = NMSManager.loadedMethods.get(clazz);
-        if (methods.containsKey(methodName))
+        if (methods.containsKey(methodName) && methods.get(methodName).getParameterTypes().equals(params))
             return methods.get(methodName);
         try {
             final Method method = clazz.getDeclaredMethod(methodName, params);
@@ -132,13 +206,11 @@ public class NMSManager {
     public static Class<?> getNMSClass(final String nmsClassName) {
         if (NMSManager.loadedNMSClasses.containsKey(nmsClassName))
             return NMSManager.loadedNMSClasses.get(nmsClassName);
-
         final String clazzName = "net.minecraft.server." + NMSManager.getVersion() + nmsClassName;
         Class<?> clazz;
         try {
             clazz = Class.forName(clazzName);
         } catch (final Throwable t) {
-
             t.printStackTrace();
             return NMSManager.loadedNMSClasses.put(nmsClassName, null);
         }
