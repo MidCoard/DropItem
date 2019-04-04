@@ -1,17 +1,10 @@
 package com.focess.dropitem;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -65,8 +58,7 @@ public class DropItem extends JavaPlugin {
         }
     }
 
-    private void getCommandMap() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException,
-            NoSuchMethodException, SecurityException {
+    private void getCommandMap() throws Exception {
         final Class<?> c = Bukkit.getServer().getClass();
         this.commandMap = (CommandMap) c.getDeclaredMethod("getCommandMap", new Class[0]).invoke(this.getServer(),
                 new Object[0]);
@@ -104,9 +96,9 @@ public class DropItem extends JavaPlugin {
                 this.saveDefaultConfig();
                 this.reloadConfig();
             }
-            this.loadFile(new File(this.getDataFolder(), "message.yml"), "message.yml");
-            this.loadFile(new File(this.getDataFolder(), "language-zhs.yml"), "language-zhs.yml");
-            this.loadFile(new File(this.getDataFolder(), "language-zht.yml"), "language-zht.yml");
+            this.saveResource("message.yml", false);
+            this.saveResource("language-zhs.yml", false);
+            this.saveResource("language-zht.yml", false);
             final File drops = new File(this.getDataFolder(), "drops");
             if (!drops.exists())
                 drops.mkdir();
@@ -116,37 +108,6 @@ public class DropItem extends JavaPlugin {
             this.getLanguage();
         } catch (final Exception e) {
             Debug.debug(e, "Something wrong in loading config.");
-        }
-    }
-
-    private void loadFile(final File targetFile, final String loadingFile) {
-        try {
-            if (targetFile.exists())
-                return;
-            String jarFilePath = this.getClass().getProtectionDomain().getCodeSource().getLocation().getFile();
-            try {
-                jarFilePath = URLDecoder.decode(jarFilePath, "UTF-8");
-                final JarFile jar = new JarFile(jarFilePath);
-                InputStream is = null;
-                final Enumeration<JarEntry> entries = jar.entries();
-                while (entries.hasMoreElements()) {
-                    final JarEntry entry = entries.nextElement();
-                    if (entry.getName().equals(loadingFile)) {
-                        is = jar.getInputStream(entry);
-                        break;
-                    }
-                }
-                final FileOutputStream out = new FileOutputStream(targetFile);
-                int c = 0;
-                while ((c = is.read()) != -1)
-                    out.write(c);
-                out.close();
-                jar.close();
-            } catch (final Exception e) {
-                e.printStackTrace();
-            }
-        } catch (final Exception e) {
-            Debug.debug(e, "Something wrong in loading JarFile.");
         }
     }
 
