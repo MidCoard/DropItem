@@ -22,7 +22,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.BlockIterator;
 
 import com.focess.dropitem.Debug;
-import com.focess.dropitem.DropItem;
 import com.focess.dropitem.event.DropItemDeathEvent.DeathCause;
 import com.focess.dropitem.event.PlayerGottenEvent;
 import com.focess.dropitem.item.CraftDropItem;
@@ -149,7 +148,7 @@ public class PlayerInteractListener implements Listener {
                     new Class[] { Block.class }).invoke(null, block);
             final Field stepSound = NMSManager.getField(NMSManager.getNMSClass("Block"), "stepSound");
             final Object sound = stepSound.get(nmsblock);
-            final int version = DropItem.getVersion();
+            final int version = NMSManager.getVersionInt();
             final Object nmsWorld = NMSManager.getMethod(NMSManager.CraftWorld, "getHandle", new Class[] {})
                     .invoke(block.getWorld(), new Object[] {});
             if (version == 8) {

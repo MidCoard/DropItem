@@ -44,7 +44,7 @@ public class DropItemRunnable extends BukkitRunnable {
                         hopper.getInventory().addItem(new ItemStack[] { dropItem.getItemStack() });
                         return;
                     }
-                   
+
                 }
                 if (DropItemUtil.checkPickForm("w-move")) {
                     final List<Entity> entities = dropItem.getNearbyEntities(0.75, 0.75, 0.75);

@@ -38,12 +38,6 @@ public class DropItem extends JavaPlugin {
     public static HashMap<String, String> Slanguages = new HashMap<>();
     public static HashMap<String, String> Tlanguages = new HashMap<>();
 
-    public static int getVersion() {
-        final String v = Bukkit.getServer().getClass().getPackage().getName();
-        final String version = v.substring(v.lastIndexOf('.') + 1).split("_")[1];
-        return Integer.parseInt(version);
-    }
-
     private final BukkitScheduler bukkitScheduler = this.getServer().getScheduler();
     public CommandMap commandMap;
     private CraftAIListener craftAIListener;

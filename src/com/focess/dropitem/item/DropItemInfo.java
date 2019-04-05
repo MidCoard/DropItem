@@ -45,6 +45,13 @@ public class DropItemInfo {
 
     private static int refreshTime = 300;
 
+    public static void clear(final int anxiCode) {
+        if (DropItemInfo.anxiCode == anxiCode)
+            DropItemInfo.dropItemInfos.clear();
+        else
+            AnxiCode.shut(DropItemInfo.class);
+    }
+
     protected static DropItemInfo getDropItemInfo(final UUID uuid) {
         return DropItemInfo.dropItemInfos.get(uuid);
     }
@@ -125,12 +132,6 @@ public class DropItemInfo {
         this.dropItem = dropItem;
         this.uuid = dropItem.getUniqueId();
         DropItemInfo.dropItemInfos.put(dropItem.getUniqueId(), this);
-    }
-
-    public static void clear(int anxiCode) {
-        if (DropItemInfo.anxiCode == anxiCode)
-            dropItemInfos.clear();
-        else AnxiCode.shut(DropItemInfo.class);
     }
 
 }

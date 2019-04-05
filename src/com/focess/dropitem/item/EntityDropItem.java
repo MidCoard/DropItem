@@ -12,7 +12,6 @@ import org.bukkit.util.EulerAngle;
 
 public abstract class EntityDropItem {
 
-    
     public static EntityDropItem createEntityDropItem(final LivingEntity entity) {
         return new EntityDropItem1_8_p(entity);
     }
