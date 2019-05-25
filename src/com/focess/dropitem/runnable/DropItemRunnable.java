@@ -89,6 +89,8 @@ public class DropItemRunnable extends BukkitRunnable {
         location.setY(location.getY() - DropItemUtil.getHeight());
         if (location.getBlock().getType().equals(Material.HOPPER)) {
             final Hopper hopper = (Hopper) location.getBlock().getState();
+            if (!hopper.getInventory().containsAtLeast(dropItem.getItemStack(),1) && hopper.getInventory().firstEmpty() == -1)
+                return;
             Inventory inventory = Bukkit.createInventory(null, InventoryType.HOPPER);
             for (int i = 0;i<hopper.getInventory().getContents().length;i++){
                 if (hopper.getInventory().getItem(i) == null)

@@ -77,6 +77,8 @@ public class DropItemUtil {
     }
 
     public static void fillPlayerInventory(final Player player, final EntityDropItem entityDropItem) {
+        if (!player.getInventory().containsAtLeast(entityDropItem.getItemStack(),1) && player.getInventory().firstEmpty() == -1)
+            return;
         Inventory inventory = Bukkit.createInventory(null, InventoryType.PLAYER);
         for (int i = 0;i<player.getInventory().getContents().length;i++){
             if (player.getInventory().getItem(i) == null)
