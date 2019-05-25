@@ -112,7 +112,6 @@ public class DropItem extends JavaPlugin {
             this.craftAIListener.getStartTask().cancel();
             for (final BukkitTask bukkitTask : DropItem.bukkitTasks)
                 bukkitTask.cancel();
-            this.loadConfig();
             CraftAIListener.reload(DropItem.anxiCode);
             CraftDropItem.uploadItems(DropItem.anxiCode);
             Debug.reload(DropItem.anxiCode);

@@ -23,26 +23,35 @@ public class PlayerMoveListener implements Listener {
         this.anxiCode = AnxiCode.getCode(PlayerMoveListener.class, drop);
     }
 
+    private void onLoadDropItem(final Player player) {
+        final List<Entity> entities_load = player.getNearbyEntities(12, 12, 12);
+        for (final Entity entity : entities_load)
+            if (!CraftDropItem.include(entity) && !entity.isDead())
+                if (entity instanceof ArmorStand)
+                    if (!((ArmorStand) entity).isVisible())
+                        CraftDropItem.loadItem(entity, this.anxiCode);
+    }
+
     @EventHandler
     public void onPlayerMove(final PlayerMoveEvent event) {
         try {
             final Player player = event.getPlayer();
-            final List<Entity> entities_load = player.getNearbyEntities(12, 12, 12);
-            for (final Entity entity : entities_load)
-                if (!CraftDropItem.include(entity) && !entity.isDead())
-                    if (entity instanceof ArmorStand)
-                        if (!((ArmorStand) entity).isVisible())
-                            CraftDropItem.loadItem(entity, this.anxiCode);
-            if (player.getGameMode().compareTo(GameMode.SPECTATOR) == 0)
-                return;
-            final List<Entity> entities = player.getNearbyEntities(1.0D, 1.0D, 1.0D);
-            for (final Entity entity : entities)
-                if (CraftDropItem.include(entity) && player.isSneaking() && DropItemUtil.checkPickForm("normal")
-                        && (DropItemUtil.naturalSpawn() || DropItemUtil.allowedPlayer()
-                                || DropItemUtil.checkPlayerPermission(player)))
-                    DropItemUtil.fillPlayerInventory(player, CraftDropItem.getDropItem(entity));
+            this.onLoadDropItem(player);
+            this.onPlayerPickUpItem(player);
         } catch (final Exception e) {
             Debug.debug(e, "Something wrong in calling Event PlayerMoveEvent.");
         }
+    }
+
+    private void onPlayerPickUpItem(final Player player) {
+        if (player.getGameMode().compareTo(GameMode.SPECTATOR) == 0)
+            return;
+        final List<Entity> entities = player.getNearbyEntities(1.0D, 1.0D, 1.0D);
+        for (final Entity entity : entities)
+            if (CraftDropItem.include(entity) && player.isSneaking() && DropItemUtil.checkPickForm("normal")
+                    && (DropItemUtil.naturalSpawn() || DropItemUtil.allowedPlayer()
+                            || DropItemUtil.checkPlayerPermission(player)))
+                DropItemUtil.fillPlayerInventory(player, CraftDropItem.getDropItem(entity));
+
     }
 }

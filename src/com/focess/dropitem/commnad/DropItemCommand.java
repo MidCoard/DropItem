@@ -93,10 +93,7 @@ public class DropItemCommand extends Command {
                     this.unregister(this.drop.commandMap);
                     this.flag = false;
                     FileUtils.forceDelete(this.drop.getDataFolder());
-                } else if (args[0].equalsIgnoreCase("reload")) {
-                    commandSender.sendMessage(this.getMessage("Reloading"));
-                    this.drop.loadConfig();
-                } else if (args[0].equalsIgnoreCase("cleanall")) {
+                }  else if (args[0].equalsIgnoreCase("cleanall")) {
                     final Collection<EntityDropItem> dropItems = CraftDropItem.getDropItems(this.anxiCode);
                     for (final EntityDropItem dropItem : dropItems)
                         CraftDropItem.remove(dropItem, DropItemDeathEvent.DeathCause.SYSTEM_CLEAN);
@@ -158,7 +155,7 @@ public class DropItemCommand extends Command {
     public List<String> tabComplete(final CommandSender commandSender, final String alias, final String[] args) {
         try {
             final List<String> defaults = DropItemUtil
-                    .toList(new String[] { "clean", "cleanall", "disable", "reload" });
+                    .toList(new String[] { "clean", "cleanall", "disable" });
             if (args == null)
                 return defaults;
             else if (args.length == 1) {
@@ -185,7 +182,6 @@ public class DropItemCommand extends Command {
             commandSender.sendMessage(this.getMessage("CommandClean"));
             commandSender.sendMessage(this.getMessage("CommandCleanAll"));
             commandSender.sendMessage(this.getMessage("CommandDisable"));
-            commandSender.sendMessage(this.getMessage("CommandReload"));
         } catch (final Exception e) {
             Debug.debug(e, "Something wrong in usaging to " + commandSender.getName() + ".");
         }

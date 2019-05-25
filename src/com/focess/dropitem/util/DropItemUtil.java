@@ -2,11 +2,14 @@ package com.focess.dropitem.util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import com.focess.dropitem.Debug;
@@ -74,34 +77,27 @@ public class DropItemUtil {
     }
 
     public static void fillPlayerInventory(final Player player, final EntityDropItem entityDropItem) {
-        if (player.getInventory().firstEmpty() != -1) {
-            final PlayerGottenEvent event_gotten = new PlayerGottenEvent(entityDropItem.getItemStack(), player);
-            Bukkit.getServer().getPluginManager().callEvent(event_gotten);
-            if (!event_gotten.isCancelled()) {
-                player.getInventory().addItem(new ItemStack[] { entityDropItem.getItemStack() });
-                CraftDropItem.remove(entityDropItem, DropItemDeathEvent.DeathCause.PLAYER_GOTTEN);
-            }
-        } else if (!player.getInventory().contains(entityDropItem.getItemStack()))
+        Inventory inventory = Bukkit.createInventory(null, InventoryType.PLAYER);
+        for (int i = 0;i<player.getInventory().getContents().length;i++){
+            if (player.getInventory().getItem(i) == null)
+                continue;
+            ItemStack itemStack = player.getInventory().getItem(i).clone();
+            if (itemStack != null)
+                inventory.setItem(i, itemStack);
+        }
+        Map<Integer, ItemStack> itemStacks = inventory.addItem(entityDropItem.getItemStack().clone());
+        ItemStack item = entityDropItem.getItemStack().clone();
+        if (!itemStacks.isEmpty())
+            item.setAmount(item.getAmount() - itemStacks.get(0).getAmount());
+        if (item.getAmount() == 0)
             return;
-        else {
-            int count = 0;
-            final ItemStack is = entityDropItem.getItemStack();
-            int amount = 0;
-            for (final ItemStack itemStack : player.getInventory())
-                if (itemStack != null)
-                    if (itemStack.isSimilar(is)) {
-                        count += itemStack.getAmount();
-                        amount++;
-                    }
-            if (((amount * entityDropItem.getItemStack().getMaxStackSize()) - count - is.getAmount()) > 0) {
-                final PlayerGottenEvent event_gotten = new PlayerGottenEvent(entityDropItem.getItemStack(), player);
-                Bukkit.getServer().getPluginManager().callEvent(event_gotten);
-                if (!event_gotten.isCancelled()) {
-                    player.getInventory().addItem(new ItemStack[] { entityDropItem.getItemStack() });
-                    CraftDropItem.remove(entityDropItem, DropItemDeathEvent.DeathCause.PLAYER_GOTTEN);
-                }
-            } else
-                return;
+        final PlayerGottenEvent event = new PlayerGottenEvent(item, player);
+        Bukkit.getServer().getPluginManager().callEvent(event);
+        if (!event.isCancelled()) {
+            CraftDropItem.remove(entityDropItem, DropItemDeathEvent.DeathCause.PLAYER_GOTTEN);
+            player.getInventory().addItem(event.getItemStack());
+            if (item.getAmount() != entityDropItem.getItemStack().getAmount())
+                CraftDropItem.spawnItem(itemStacks.get(0), entityDropItem.getLocation().clone().add(0,1,0), false);
         }
     }
 
