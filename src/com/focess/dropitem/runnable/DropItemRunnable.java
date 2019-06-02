@@ -59,7 +59,7 @@ public class DropItemRunnable extends BukkitRunnable {
                     final Player player = (Player) entity;
                     if (DropItemUtil.naturalSpawn() || DropItemUtil.allowedPlayer()
                             || DropItemUtil.checkPlayerPermission(player))
-                        DropItemUtil.fillPlayerInventory(player, CraftDropItem.getDropItem(entity));
+                        DropItemUtil.fillPlayerInventory(player, dropItem);
                 }
         }
     }
