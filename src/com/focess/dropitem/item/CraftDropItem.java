@@ -257,7 +257,7 @@ public class CraftDropItem {
                 final DropItemSpawnEvent event = new DropItemSpawnEvent(dropItem);
                 CraftDropItem.drop.getServer().getPluginManager().callEvent(event);
                 if (event.isCancelled()) {
-                    CraftDropItem.droppedItems.remove(dropItem);
+                    CraftDropItem.droppedItems.remove(dropItem.getUniqueId());
                     dropItem.remove();
                     return null;
                 }

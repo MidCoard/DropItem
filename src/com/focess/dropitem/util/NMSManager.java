@@ -147,7 +147,7 @@ public class NMSManager {
         Object tag = null;
         try {
             final Object nmsEntity = NMSManager.getHandle.invoke(entity);
-            tag = NMSManager.NBTTagCompound.newInstance();
+            tag = NMSManager.NBTTagCompound.newInstance(); 
             NMSManager.e.invoke(nmsEntity, tag);
         } catch (final Exception e) {
             e.printStackTrace();
