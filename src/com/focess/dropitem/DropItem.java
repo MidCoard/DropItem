@@ -137,7 +137,7 @@ public class DropItem extends JavaPlugin {
         this.pluginManager.registerEvents(new PlayerMoveListener(this), this);
         this.pluginManager.registerEvents(new SpawnDropItemListener(), this);
         this.pluginManager.registerEvents(new DropItemPermissionListener(this), this);
-        this.pluginManager.registerEvents(new PlayerInteractListener(), this);
+        this.pluginManager.registerEvents(new PlayerInteractListener(this), this);
         this.registerPermission();
         DropItem.bukkitTasks.add(this.bukkitScheduler.runTaskTimer(this, new SpawnDropItemRunnable(), 0, 10l));
         DropItem.bukkitTasks

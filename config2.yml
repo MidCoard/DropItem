@@ -6,6 +6,8 @@ PitchX: 100
 PitchY: 135
 PitchZ: 100
 #设置物品持有角度。默认为100，135，100。最大为360。
+EnableCoverBlock: false
+#是否启用覆盖方块（修复不能再掉落物上面放方块的bug）。默认为false。
 EnableAliases: true
 #是否启用子指令。默认为true。
 ShowItemInfo: true

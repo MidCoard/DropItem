@@ -40,6 +40,12 @@ public class DropItemUtil {
 
     private static boolean showItemInfo;
 
+	private static boolean enableCoverBlock;
+
+	private static boolean enableAliases;
+	
+	private static boolean debug;
+
     public static boolean allowedPlayer() {
         return DropItemUtil.allowedPlayer;
     }
@@ -74,6 +80,18 @@ public class DropItemUtil {
 
     public static boolean checkPlayerPermission(final Player player) {
         return player.hasPermission("dropitem.use");
+    }
+    
+    public static boolean checkCoverBlock() {
+    	return DropItemUtil.enableCoverBlock;
+    }
+    
+    public static boolean checkAliases() {
+    	return DropItemUtil.enableAliases;
+    }
+    
+    public static boolean checkDebug() {
+    	return debug;
     }
 
     public static void fillPlayerInventory(final Player player, final EntityDropItem entityDropItem) {
@@ -129,15 +147,18 @@ public class DropItemUtil {
 
     public static void loadDefault(final DropItem drop) {
         DropItemUtil.anxiCode = AnxiCode.getCode(DropItemUtil.class, drop);
-        DropItemUtil.height = drop.getConfig().getDouble("Height");
-        DropItemUtil.pickForm = drop.getConfig().getString("PickForm");
-        DropItemUtil.dropForm = drop.getConfig().getString("DropForm");
-        DropItemUtil.showItemInfo = drop.getConfig().getBoolean("ShowItemInfo");
+        DropItemUtil.height = drop.getConfig().getDouble("Height",0.3d);
+        DropItemUtil.pickForm = drop.getConfig().getString("PickForm","normal");
+        DropItemUtil.dropForm = drop.getConfig().getString("DropForm","normal");
+        DropItemUtil.showItemInfo = drop.getConfig().getBoolean("ShowItemInfo", true);
         DropItemUtil.naturalSpawn = drop.getConfig().getBoolean("NaturalSpawn", true);
         if (!DropItemUtil.naturalSpawn)
             DropItemUtil.allowedPlayer = drop.getConfig().getBoolean("AllowedPlayer", false);
         DropItemUtil.allowedPlayers = DropItemUtil.toList(drop.getConfig().getString("AllowedPlayers").split(","));
         DropItemUtil.getBanItems(drop);
+        DropItemUtil.enableCoverBlock = drop.getConfig().getBoolean("EnableCoverBlock",false);
+        DropItemUtil.enableAliases = drop.getConfig().getBoolean("EnableAliases",true);
+        debug = drop.getConfig().getBoolean("Debug2",false);
     }
 
     public static boolean naturalSpawn() {

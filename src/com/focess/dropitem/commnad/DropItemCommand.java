@@ -11,11 +11,14 @@ import java.util.Set;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
+import org.bukkit.util.BlockIterator;
 
 import com.focess.dropitem.Debug;
 import com.focess.dropitem.DropItem;
@@ -30,8 +33,7 @@ public class DropItemCommand extends Command {
     private static YamlConfiguration yaml;
 
     private static List<String> getAliases(final DropItem drop) {
-        final boolean flag = drop.getConfig().getBoolean("EnableAliases");
-        if (flag)
+        if (DropItemUtil.checkAliases())
             return DropItemUtil.toList(new String[] { "di" });
         return new ArrayList<>();
     }
@@ -107,7 +109,13 @@ public class DropItemCommand extends Command {
                             if ((entity instanceof ArmorStand) && !((ArmorStand) entity).isVisible())
                                 entity.remove();
                     commandSender.sendMessage(this.getMessage("AfterCleanAll"));
-                } else {
+                } else if (args[0].equalsIgnoreCase("test")) {
+        			final BlockIterator i = new BlockIterator((Player)commandSender, 5);
+        			commandSender.sendMessage("start");
+        			while(i.hasNext())
+        				commandSender.sendMessage(i.next().getType().toString());
+        			commandSender.sendMessage("end");
+                }else {
                     commandSender.sendMessage(this.getMessage("InvaildArg"));
                     this.usage(commandSender);
                 }
