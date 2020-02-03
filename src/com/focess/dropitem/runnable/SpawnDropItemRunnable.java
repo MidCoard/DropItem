@@ -11,26 +11,26 @@ import com.focess.dropitem.item.CraftDropItem;
 
 public class SpawnDropItemRunnable implements Runnable {
 
-    private static List<Item> items = new CopyOnWriteArrayList<>();
+	private static List<Item> items = new CopyOnWriteArrayList<>();
 
-    public static void addItem(final Item item) {
-        SpawnDropItemRunnable.items.add(item);
-    }
+	public static void addItem(final Item item) {
+		SpawnDropItemRunnable.items.add(item);
+	}
 
-    @Override
-    public void run() {
-        for (final Item item : SpawnDropItemRunnable.items) {
-            if (item.isDead()) {
-                SpawnDropItemRunnable.items.remove(item);
-                continue;
-            }
-            if (item.isOnGround()) {
-                final ItemStack itemStack = item.getItemStack();
-                final Location location = item.getLocation();
-                item.remove();
-                CraftDropItem.spawnItem(itemStack, location);
-            }
-        }
-    }
+	@Override
+	public void run() {
+		for (final Item item : SpawnDropItemRunnable.items) {
+			if (item.isDead()) {
+				SpawnDropItemRunnable.items.remove(item);
+				continue;
+			}
+			if (item.isOnGround()) {
+				final ItemStack itemStack = item.getItemStack();
+				final Location location = item.getLocation();
+				item.remove();
+				CraftDropItem.spawnItem(itemStack, location);
+			}
+		}
+	}
 
 }

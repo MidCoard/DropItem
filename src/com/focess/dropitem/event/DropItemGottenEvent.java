@@ -6,37 +6,37 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 
 public class DropItemGottenEvent extends Event implements Cancellable {
-    private static final HandlerList handlerList = new HandlerList();
+	private static final HandlerList handlerList = new HandlerList();
 
-    public static HandlerList getHandlerList() {
-        return DropItemGottenEvent.handlerList;
-    }
+	public static HandlerList getHandlerList() {
+		return DropItemGottenEvent.handlerList;
+	}
 
-    private boolean cancel;
+	private boolean cancel;
 
-    private final ItemStack itemStack;
+	private final ItemStack itemStack;
 
-    public DropItemGottenEvent(final ItemStack itemStack) {
-        this.itemStack = itemStack;
-        this.cancel = false;
-    }
+	public DropItemGottenEvent(final ItemStack itemStack) {
+		this.itemStack = itemStack;
+		this.cancel = false;
+	}
 
-    @Override
-    public HandlerList getHandlers() {
-        return DropItemGottenEvent.handlerList;
-    }
+	@Override
+	public HandlerList getHandlers() {
+		return DropItemGottenEvent.handlerList;
+	}
 
-    public ItemStack getItemStack() {
-        return this.itemStack;
-    }
+	public ItemStack getItemStack() {
+		return this.itemStack;
+	}
 
-    @Override
-    public boolean isCancelled() {
-        return this.cancel;
-    }
+	@Override
+	public boolean isCancelled() {
+		return this.cancel;
+	}
 
-    @Override
-    public void setCancelled(final boolean cancel) {
-        this.cancel = cancel;
-    }
+	@Override
+	public void setCancelled(final boolean cancel) {
+		this.cancel = cancel;
+	}
 }

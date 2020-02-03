@@ -6,14 +6,14 @@ import com.focess.dropitem.item.EntityDropItem;
 
 public abstract class DropItemEvent extends Event {
 
-    private final EntityDropItem dropItem;
+	private final EntityDropItem dropItem;
 
-    public DropItemEvent(final EntityDropItem dropItem) {
-        this.dropItem = dropItem;
-    }
+	public DropItemEvent(final EntityDropItem dropItem) {
+		this.dropItem = dropItem;
+	}
 
-    public EntityDropItem getDropItem() {
-        return this.dropItem;
-    }
+	public EntityDropItem getDropItem() {
+		return this.dropItem;
+	}
 
 }
