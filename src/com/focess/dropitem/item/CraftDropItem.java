@@ -226,8 +226,7 @@ public class CraftDropItem {
 			final boolean isregistered) {
 		try {
 			location.setY(location.getBlockY() - 1 + DropItemUtil.getHeight());
-			EntityDropItem dropItem = null;
-			dropItem = EntityDropItem.createEntityDropItem(
+			EntityDropItem dropItem = EntityDropItem.createEntityDropItem(
 					(LivingEntity) location.getWorld().spawnEntity(location, EntityType.ARMOR_STAND), itemStack);
 			dropItem.setUp();
 			boolean flag = false;

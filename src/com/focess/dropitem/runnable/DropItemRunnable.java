@@ -75,8 +75,6 @@ public class DropItemRunnable extends BukkitRunnable {
 			if (loc2.getBlock().getType().equals(Material.AIR))
 				NMSManager.setNBTBoolean(dropItem.getEntity(), "NoGravity", false);
 			else {
-				// NBT is slower than teleport
-				NMSManager.setNBTBoolean(dropItem.getEntity(), "NoGravity", true);
 				loc.setY(loc.getBlockY() - 1 + DropItemUtil.getHeight());
 				dropItem.teleport(loc);
 			}
@@ -88,40 +86,24 @@ public class DropItemRunnable extends BukkitRunnable {
 			return;
 		final Location location = dropItem.getLocation();
 		location.setY(location.getY() - DropItemUtil.getHeight());
-		if (location.getBlock().getType().equals(Material.HOPPER)) {
-			final Hopper hopper = (Hopper) location.getBlock().getState();
-			if (!hopper.getInventory().containsAtLeast(dropItem.getItemStack(), 1)
-					&& hopper.getInventory().firstEmpty() == -1)
-				return;
-			final Inventory inventory = Bukkit.createInventory(null, InventoryType.HOPPER);
-			for (int i = 0; i < hopper.getInventory().getContents().length; i++) {
-				if (hopper.getInventory().getItem(i) == null)
-					continue;
-				final ItemStack itemStack = hopper.getInventory().getItem(i).clone();
-				if (itemStack != null)
-					inventory.setItem(i, itemStack);
-			}
-			final Map<Integer, ItemStack> itemStacks = inventory.addItem(dropItem.getItemStack().clone());
-			final ItemStack item = dropItem.getItemStack().clone();
-			if (!itemStacks.isEmpty())
-				item.setAmount(item.getAmount() - itemStacks.get(0).getAmount());
-			if (item.getAmount() == 0)
-				return;
-			final HopperGottenEvent event = new HopperGottenEvent(item, hopper);
-			this.drop.getServer().getPluginManager().callEvent(event);
-			if (!event.isCancelled()) {
-				CraftDropItem.remove(dropItem, DropItemDeathEvent.DeathCause.HOPPER_GOTTEN);
-				hopper.getInventory().addItem(event.getItemStack());
-				if (item.getAmount() != dropItem.getItemStack().getAmount())
-					CraftDropItem.spawnItem(itemStacks.get(0), dropItem.getLocation().clone().add(0, 1, 0), false);
-			}
-		}
+		if (location.getBlock().getType().equals(Material.HOPPER)) 
+			DropItemUtil.fillHopperInventory((Hopper) location.getBlock().getState(), dropItem);
+	}
+	
+	private void onCactusClean(final EntityDropItem dropItem) {
+		if (dropItem.isDead())
+			return;
+		final Location location = dropItem.getLocation();
+		location.setY(location.getY() - DropItemUtil.getHeight());
+		if (location.getBlock().getType().equals(Material.CACTUS))
+			CraftDropItem.remove(dropItem, DropItemDeathEvent.DeathCause.CACTUS_CLEAN);
 	}
 
 	@Override
 	public void run() {
 		try {
 			for (final EntityDropItem dropItem : CraftDropItem.getDropItems(DropItemRunnable.anxiCode)) {
+				this.onCactusClean(dropItem);
 				this.onHopperGotten(dropItem);
 				this.onCheckPickForm(dropItem);
 				this.onCheckPosition(dropItem);

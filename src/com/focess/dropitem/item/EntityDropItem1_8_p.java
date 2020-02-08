@@ -19,7 +19,6 @@ public class EntityDropItem1_8_p extends EntityDropItem {
 		super(armorStand, itemStack);
 		this.check(armorStand);
 		((ArmorStand) this.getEntity()).setItemInHand(itemStack);
-		// EntityDropItem.setNBT(this.getEntity(), "NoGravity", true);
 	}
 
 	private void check(final LivingEntity armorStand) {
@@ -44,7 +43,6 @@ public class EntityDropItem1_8_p extends EntityDropItem {
 		this.getEntity().setCustomNameVisible(false);
 		this.getEntity().setCanPickupItems(false);
 		NMSManager.setNBTBoolean(this.getEntity(), "NoGravity", true);
-
 	}
 
 }

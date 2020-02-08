@@ -7,6 +7,7 @@ import java.util.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.block.Hopper;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
@@ -15,6 +16,7 @@ import org.bukkit.inventory.ItemStack;
 import com.focess.dropitem.Debug;
 import com.focess.dropitem.DropItem;
 import com.focess.dropitem.event.DropItemDeathEvent;
+import com.focess.dropitem.event.HopperGottenEvent;
 import com.focess.dropitem.event.PlayerGottenEvent;
 import com.focess.dropitem.item.CraftDropItem;
 import com.focess.dropitem.item.EntityDropItem;
@@ -117,6 +119,34 @@ public class DropItemUtil {
 		if (!event.isCancelled()) {
 			CraftDropItem.remove(entityDropItem, DropItemDeathEvent.DeathCause.PLAYER_GOTTEN);
 			player.getInventory().addItem(event.getItemStack());
+			if (item.getAmount() != entityDropItem.getItemStack().getAmount())
+				CraftDropItem.spawnItem(itemStacks.get(0), entityDropItem.getLocation().clone().add(0, 1, 0), false);
+		}
+	}
+	
+	public static void fillHopperInventory(final Hopper hopper,final EntityDropItem entityDropItem) {
+		if (!hopper.getInventory().containsAtLeast(entityDropItem.getItemStack(), 1)
+				&& hopper.getInventory().firstEmpty() == -1)
+			return;
+		final Inventory inventory = Bukkit.createInventory(null, InventoryType.HOPPER);
+		for (int i = 0; i < hopper.getInventory().getContents().length; i++) {
+			if (hopper.getInventory().getItem(i) == null)
+				continue;
+			final ItemStack itemStack = hopper.getInventory().getItem(i).clone();
+			if (itemStack != null)
+				inventory.setItem(i, itemStack);
+		}
+		final Map<Integer, ItemStack> itemStacks = inventory.addItem(entityDropItem.getItemStack().clone());
+		final ItemStack item = entityDropItem.getItemStack().clone();
+		if (!itemStacks.isEmpty())
+			item.setAmount(item.getAmount() - itemStacks.get(0).getAmount());
+		if (item.getAmount() == 0)
+			return;
+		final HopperGottenEvent event = new HopperGottenEvent(item, hopper);
+		Bukkit.getServer().getPluginManager().callEvent(event);
+		if (!event.isCancelled()) {
+			CraftDropItem.remove(entityDropItem, DropItemDeathEvent.DeathCause.HOPPER_GOTTEN);
+			hopper.getInventory().addItem(event.getItemStack());
 			if (item.getAmount() != entityDropItem.getItemStack().getAmount())
 				CraftDropItem.spawnItem(itemStacks.get(0), entityDropItem.getLocation().clone().add(0, 1, 0), false);
 		}
