@@ -164,7 +164,7 @@ public class PlayerInteractListener implements Listener {
 	private void playSound(final Player player, final Block block) {
 		try {
 			final Object nmsblock = NMSManager.getMethod(NMSManager.getCraftClass("util.CraftMagicNumbers"), "getBlock",
-					new Class[] { Block.class }).invoke(null, block);
+					new Class[] { Material.class }).invoke(null, block.getType());
 			final Field stepSound = NMSManager.getField(NMSManager.getNMSClass("Block"), "stepSound");
 			final Object sound = stepSound.get(nmsblock);
 			final int version = NMSManager.getVersionInt();

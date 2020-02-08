@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -20,6 +19,7 @@ import org.bukkit.scheduler.BukkitTask;
 import com.focess.dropitem.Debug;
 import com.focess.dropitem.DropItem;
 import com.focess.dropitem.util.AnxiCode;
+import com.focess.dropitem.util.Pair;
 
 public class CraftAIListener {
 	private static class DropItemAI extends BukkitRunnable {
