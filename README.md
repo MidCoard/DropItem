@@ -9,19 +9,19 @@ DropItem supports Minecraft versions which are higher than 1.8. On lower version
 ## For Developers
 If you are developers and want to interact with the items in DropItem.You can find the following events and use them like any other events.
 
-###DropItemDeathEvent
+**DropItemDeathEvent**
 It called when an item disappear(or we called it death).
 
-###DropItemGottenEvent
+**DropItemGottenEvent**
 It called when an item was gotten by a player or a hopper.
 It is different from DropItemDeathEvent.
 Just like when a player got an item,first the DropItemGottenEvent called and next the DropItemDeathEvent called.
 
-###DropItemSpawnEvent
+**DropItemSpawnEvent**
 It called when an item was spawned.
 
-###HopperGottenEvent
+**HopperGottenEvent**
 Notice the DropItemGottenEvent.It called when a hopper got an item.
 
-###PlayerGottenEvent
+**PlayerGottenEvent**
 Notice the DropItemGottenEvent.It called when a player got an item.
