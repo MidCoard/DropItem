@@ -28,7 +28,7 @@ public class DropItemUtil {
 
 	private static List<String> allowedPlayers;
 
-	@SuppressWarnings("unused")
+	@SuppressWarnings("unused") 
 	private static int anxiCode;
 
 	private static final List<Material> BanItems = new ArrayList<>();
