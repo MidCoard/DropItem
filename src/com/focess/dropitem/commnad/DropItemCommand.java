@@ -34,7 +34,7 @@ public class DropItemCommand extends Command {
 	private final DropItem drop;
 
 	public DropItemCommand(final int anxiCode, final DropItem dropItem) {
-		super("DropItem", DropItemCommand.getAliases(dropItem));
+		super("DropItem", DropItemCommand.getAliases(dropItem),"dropitem.command");
 		this.drop = dropItem;
 		this.anxiCode = AnxiCode.getCode(DropItemCommand.class, dropItem);
 		if (anxiCode != this.anxiCode)

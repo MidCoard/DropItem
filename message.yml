@@ -5,6 +5,7 @@ CommandCleanAll: §a§l使用/DropItem cleanall or /di cleanall 清理类似于�
 CommandDisable: §a§l使用/DropItem disable or /di disable 安全无遗留卸载DropItem插件
 CommandUnregister: §c§l未知指令
 Disabling: §b§l卸载DropItem插件...
+HaveNoPermission: §c§l你没有权限
 InvalidArg: §c§l无效的参数
 Welcome: §a§l欢迎使用DropItem插件
 SenderNotPlayer: §c§l你不是玩家

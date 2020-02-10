@@ -98,6 +98,10 @@ public abstract class Command extends org.bukkit.command.Command {
 
 	@Override
 	public final boolean execute(final CommandSender sender, final String cmd, final String[] args) {
+		if (!sender.hasPermission(this.getPermission())) {
+			sender.sendMessage(DropItem.getMessage("HaveNoPermission"));
+			return true;
+		}
 		int amount = 0;
 		if (args != null)
 			amount = args.length;
