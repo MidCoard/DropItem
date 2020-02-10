@@ -2,7 +2,6 @@ package com.focess.dropitem.util;
 
 import java.util.HashMap;
 
-import com.focess.dropitem.Debug;
 import com.focess.dropitem.DropItem;
 import com.focess.dropitem.commnad.DropItemCommand;
 import com.focess.dropitem.item.CraftAIListener;
@@ -24,7 +23,6 @@ public class AnxiCode {
 		AnxiCode.safeClass.put(DropItemRunnable.class, false);
 		AnxiCode.safeClass.put(CraftAIListener.class, false);
 		AnxiCode.safeClass.put(DropItemCommand.class, false);
-		AnxiCode.safeClass.put(Debug.class, false);
 		AnxiCode.safeClass.put(DropItemInfo.class, false);
 		AnxiCode.safeClass.put(PlayerMoveListener.class, false);
 		AnxiCode.safeClass.put(DropItemUtil.class, false);

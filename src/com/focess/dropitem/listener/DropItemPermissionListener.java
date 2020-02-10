@@ -5,7 +5,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-import com.focess.dropitem.Debug;
 import com.focess.dropitem.DropItem;
 import com.focess.dropitem.util.DropItemUtil;
 
@@ -18,15 +17,11 @@ public class DropItemPermissionListener implements Listener {
 
 	@EventHandler
 	public void onPlayerJoin(final PlayerJoinEvent event) {
-		try {
-			final Player player = event.getPlayer();
-			if (DropItemUtil.allowedPlayer())
-				player.addAttachment(this.drop).setPermission("dropitem.use", true);
-			else if (DropItemUtil.checkAllowedPlayer(player.getName()))
-				player.addAttachment(this.drop).setPermission("dropitem.use", true);
-		} catch (final Exception e) {
-			Debug.debug(e, "Something wrong in calling Event PlayerJoinEvent.");
-		}
+		final Player player = event.getPlayer();
+		if (DropItemUtil.allowedPlayer())
+			player.addAttachment(this.drop).setPermission("dropitem.use", true);
+		else if (DropItemUtil.checkAllowedPlayer(player.getName()))
+			player.addAttachment(this.drop).setPermission("dropitem.use", true);
 	}
 
 }

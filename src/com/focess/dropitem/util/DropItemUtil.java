@@ -1,5 +1,6 @@
 package com.focess.dropitem.util;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -13,13 +14,13 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import com.focess.dropitem.Debug;
 import com.focess.dropitem.DropItem;
 import com.focess.dropitem.event.DropItemDeathEvent;
 import com.focess.dropitem.event.HopperGottenEvent;
 import com.focess.dropitem.event.PlayerGottenEvent;
 import com.focess.dropitem.item.CraftDropItem;
 import com.focess.dropitem.item.EntityDropItem;
+import com.google.common.collect.Lists;
 
 public class DropItemUtil {
 
@@ -96,35 +97,7 @@ public class DropItemUtil {
 		return player.hasPermission("dropitem.use");
 	}
 
-	public static void fillPlayerInventory(final Player player, final EntityDropItem entityDropItem) {
-		if (!player.getInventory().containsAtLeast(entityDropItem.getItemStack(), 1)
-				&& player.getInventory().firstEmpty() == -1)
-			return;
-		final Inventory inventory = Bukkit.createInventory(null, InventoryType.PLAYER);
-		for (int i = 0; i < player.getInventory().getContents().length; i++) {
-			if (player.getInventory().getItem(i) == null)
-				continue;
-			final ItemStack itemStack = player.getInventory().getItem(i).clone();
-			if (itemStack != null)
-				inventory.setItem(i, itemStack);
-		}
-		final Map<Integer, ItemStack> itemStacks = inventory.addItem(entityDropItem.getItemStack().clone());
-		final ItemStack item = entityDropItem.getItemStack().clone();
-		if (!itemStacks.isEmpty())
-			item.setAmount(item.getAmount() - itemStacks.get(0).getAmount());
-		if (item.getAmount() == 0)
-			return;
-		final PlayerGottenEvent event = new PlayerGottenEvent(item, player);
-		Bukkit.getServer().getPluginManager().callEvent(event);
-		if (!event.isCancelled()) {
-			CraftDropItem.remove(entityDropItem, DropItemDeathEvent.DeathCause.PLAYER_GOTTEN);
-			player.getInventory().addItem(event.getItemStack());
-			if (item.getAmount() != entityDropItem.getItemStack().getAmount())
-				CraftDropItem.spawnItem(itemStacks.get(0), entityDropItem.getLocation().clone().add(0, 1, 0), false);
-		}
-	}
-	
-	public static void fillHopperInventory(final Hopper hopper,final EntityDropItem entityDropItem) {
+	public static void fillHopperInventory(final Hopper hopper, final EntityDropItem entityDropItem) {
 		if (!hopper.getInventory().containsAtLeast(entityDropItem.getItemStack(), 1)
 				&& hopper.getInventory().firstEmpty() == -1)
 			return;
@@ -152,24 +125,56 @@ public class DropItemUtil {
 		}
 	}
 
+	public static void fillPlayerInventory(final Player player, final EntityDropItem entityDropItem) {
+		if (!player.getInventory().containsAtLeast(entityDropItem.getItemStack(), 1)
+				&& player.getInventory().firstEmpty() == -1)
+			return;
+		final Inventory inventory = Bukkit.createInventory(null, InventoryType.PLAYER);
+		for (int i = 0; i < player.getInventory().getContents().length; i++) {
+			if (player.getInventory().getItem(i) == null)
+				continue;
+			final ItemStack itemStack = player.getInventory().getItem(i).clone();
+			if (itemStack != null)
+				inventory.setItem(i, itemStack);
+		}
+		final Map<Integer, ItemStack> itemStacks = inventory.addItem(entityDropItem.getItemStack().clone());
+		final ItemStack item = entityDropItem.getItemStack().clone();
+		if (!itemStacks.isEmpty())
+			item.setAmount(item.getAmount() - itemStacks.get(0).getAmount());
+		if (item.getAmount() == 0)
+			return;
+		final PlayerGottenEvent event = new PlayerGottenEvent(item, player);
+		Bukkit.getServer().getPluginManager().callEvent(event);
+		if (!event.isCancelled()) {
+			CraftDropItem.remove(entityDropItem, DropItemDeathEvent.DeathCause.PLAYER_GOTTEN);
+			player.getInventory().addItem(event.getItemStack());
+			if (item.getAmount() != entityDropItem.getItemStack().getAmount())
+				CraftDropItem.spawnItem(itemStacks.get(0), entityDropItem.getLocation().clone().add(0, 1, 0), false);
+		}
+	}
+
+	public static void forceDelete(final File file) {
+		if (file.isFile())
+			file.delete();
+		else
+			for (final File f : file.listFiles())
+				DropItemUtil.forceDelete(f);
+	}
+
 	@SuppressWarnings("deprecation")
 	private static void getBanItems(final DropItem drop) {
-		try {
-			final String banItems = drop.getConfig().getString("BanItem");
-			for (final String banItem : banItems.split(","))
-				try {
-					final int id = Integer.parseInt(banItem);
-					if (Material.getMaterial(id) == null)
-						continue;
-					DropItemUtil.BanItems.add(Material.getMaterial(id));
-				} catch (final Exception e) {
-					if (Material.getMaterial(banItem) == null)
-						continue;
-					DropItemUtil.BanItems.add(Material.getMaterial(banItem));
-				}
-		} catch (final Exception e) {
-			Debug.debug(e, "Something wrong in getting BanItems.");
-		}
+		final String banItems = drop.getConfig().getString("BanItem");
+		for (final String banItem : banItems.split(","))
+			try {
+				final int id = Integer.parseInt(banItem);
+				if (Material.getMaterial(id) == null)
+					continue;
+				DropItemUtil.BanItems.add(Material.getMaterial(id));
+			} catch (final Exception e) {
+				if (Material.getMaterial(banItem) == null)
+					continue;
+				DropItemUtil.BanItems.add(Material.getMaterial(banItem));
+			}
 	}
 
 	public static double getHeight() {
@@ -185,7 +190,7 @@ public class DropItemUtil {
 		DropItemUtil.naturalSpawn = drop.getConfig().getBoolean("NaturalSpawn", true);
 		if (!DropItemUtil.naturalSpawn)
 			DropItemUtil.allowedPlayer = drop.getConfig().getBoolean("AllowedPlayer", false);
-		DropItemUtil.allowedPlayers = DropItemUtil.toList(drop.getConfig().getString("AllowedPlayers").split(","));
+		DropItemUtil.allowedPlayers = Lists.newArrayList(drop.getConfig().getString("AllowedPlayers").split(","));
 		DropItemUtil.getBanItems(drop);
 		DropItemUtil.enableCoverBlock = drop.getConfig().getBoolean("EnableCoverBlock", false);
 		DropItemUtil.enableAliases = drop.getConfig().getBoolean("EnableAliases", true);
@@ -198,13 +203,6 @@ public class DropItemUtil {
 
 	public static boolean showItemInfo() {
 		return DropItemUtil.showItemInfo;
-	}
-
-	public static List<String> toList(final String[] list) {
-		final List<String> ret = new ArrayList<>();
-		for (final String element : list)
-			ret.add(element);
-		return ret;
 	}
 
 }

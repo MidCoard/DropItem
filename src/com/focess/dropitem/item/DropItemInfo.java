@@ -6,7 +6,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.scheduler.BukkitRunnable;
 
-import com.focess.dropitem.Debug;
 import com.focess.dropitem.DropItem;
 import com.focess.dropitem.event.DropItemDeathEvent.DeathCause;
 import com.focess.dropitem.util.AnxiCode;
@@ -17,19 +16,15 @@ public class DropItemInfo {
 
 		@Override
 		public void run() {
-			try {
-				for (final UUID uuid : DropItemInfo.dropItemInfos.keySet()) {
-					final DropItemInfo dropItemInfo = DropItemInfo.dropItemInfos.get(uuid);
-					dropItemInfo.time++;
-					if (dropItemInfo.time > DropItemInfo.refreshTime) {
-						DropItemInfo.dropItemInfos.remove(uuid);
-						if (!dropItemInfo.alive)
-							CraftAIListener.remove(dropItemInfo.getUUID());
-						CraftDropItem.remove(dropItemInfo.dropItem, DeathCause.DEATH);
-					}
+			for (final UUID uuid : DropItemInfo.dropItemInfos.keySet()) {
+				final DropItemInfo dropItemInfo = DropItemInfo.dropItemInfos.get(uuid);
+				dropItemInfo.time++;
+				if (dropItemInfo.time > DropItemInfo.refreshTime) {
+					DropItemInfo.dropItemInfos.remove(uuid);
+					if (!dropItemInfo.alive)
+						CraftAIListener.remove(dropItemInfo.getUUID());
+					CraftDropItem.remove(dropItemInfo.dropItem, DeathCause.DEATH);
 				}
-			} catch (final Exception e) {
-				Debug.debug(e, "Something wrong in running Runnable DropItemLive.");
 			}
 		}
 
@@ -57,24 +52,19 @@ public class DropItemInfo {
 	}
 
 	public static void register(final DropItem drop, final int anxiCode) {
-		try {
-			DropItemInfo.anxiCode = AnxiCode.getCode(DropItemInfo.class, drop);
-			if (DropItemInfo.anxiCode == anxiCode) {
-				DropItemInfo.drop = drop;
-				final String temp = drop.getConfig().getString("RefreshTime");
-				try {
-					DropItemInfo.refreshTime = Integer.parseInt(temp);
-				} catch (final Exception e) {
-					DropItemInfo.isRefresh = Boolean.getBoolean(temp);
-				}
-				if (DropItemInfo.isRefresh)
-					DropItemInfo.drop.getServer().getScheduler().runTaskTimer(drop, (Runnable) new DropItemLive(), 0,
-							20);
-			} else
-				AnxiCode.shut(DropItemInfo.class);
-		} catch (final Exception e) {
-			Debug.debug(e, "Something wrong in starting to check DropItem living time.");
-		}
+		DropItemInfo.anxiCode = AnxiCode.getCode(DropItemInfo.class, drop);
+		if (DropItemInfo.anxiCode == anxiCode) {
+			DropItemInfo.drop = drop;
+			final String temp = drop.getConfig().getString("RefreshTime");
+			try {
+				DropItemInfo.refreshTime = Integer.parseInt(temp);
+			} catch (final Exception e) {
+				DropItemInfo.isRefresh = Boolean.getBoolean(temp);
+			}
+			if (DropItemInfo.isRefresh)
+				DropItemInfo.drop.getServer().getScheduler().runTaskTimer(drop, (Runnable) new DropItemLive(), 0, 20);
+		} else
+			AnxiCode.shut(DropItemInfo.class);
 	}
 
 	protected static void registerInfo(final EntityDropItem dropItem) {

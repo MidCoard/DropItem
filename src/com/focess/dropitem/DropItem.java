@@ -1,14 +1,13 @@
 package com.focess.dropitem;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
-import org.bukkit.command.CommandMap;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -30,44 +29,43 @@ import com.focess.dropitem.listener.SpawnDropItemListener;
 import com.focess.dropitem.runnable.DropItemRunnable;
 import com.focess.dropitem.runnable.SpawnDropItemRunnable;
 import com.focess.dropitem.util.AnxiCode;
+import com.focess.dropitem.util.Command;
 import com.focess.dropitem.util.DropItemUtil;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 public class DropItem extends JavaPlugin {
+
 	private static int anxiCode;
-	private static List<BukkitTask> bukkitTasks = new ArrayList<>();
-	public static HashMap<String, String> Slanguages = new HashMap<>();
-	public static HashMap<String, String> Tlanguages = new HashMap<>();
+	private static List<BukkitTask> bukkitTasks = Lists.newArrayList();
+	private static DropItem instance;
+	private static Map<String, String> messages = Maps.newHashMap();
+	public static Map<String, String> Slanguages = Maps.newHashMap();
+	public static Map<String, String> Tlanguages = Maps.newHashMap();
+
+	public static DropItem getInstance() {
+		return DropItem.instance;
+	}
+
+	public static String getMessage(final String message) {
+		final String ret = DropItem.messages.get(message);
+		if (ret == null)
+			return "";
+		else
+			return ret;
+	}
 
 	private final BukkitScheduler bukkitScheduler = this.getServer().getScheduler();
-	public CommandMap commandMap;
+
 	private CraftAIListener craftAIListener;
 
 	private final PluginManager pluginManager = this.getServer().getPluginManager();
 
-	{
-		try {
-			this.getCommandMap();
-		} catch (final Exception e) {
-			Debug.debug(e, "Something wrong in getting CommandMap Instance.");
-		}
-	}
-
-	private void getCommandMap() throws Exception {
-		final Class<?> c = Bukkit.getServer().getClass();
-		this.commandMap = (CommandMap) c.getDeclaredMethod("getCommandMap", new Class[0]).invoke(this.getServer(),
-				new Object[0]);
-	}
-
 	public CraftAIListener getCraftAIListener(final int anxiCode) {
-		try {
-			if (DropItem.anxiCode == anxiCode)
-				return this.craftAIListener;
-			AnxiCode.shut(DropItem.class);
-			return null;
-		} catch (final Exception e) {
-			Debug.debug(e, "Something wrong in getting CraftAIListener Instance.");
-			return null;
-		}
+		if (DropItem.anxiCode == anxiCode)
+			return this.craftAIListener;
+		AnxiCode.shut(DropItem.class);
+		return null;
 	}
 
 	private void getLanguage() {
@@ -82,53 +80,48 @@ public class DropItem extends JavaPlugin {
 	}
 
 	public void loadConfig() {
-		try {
-			if (!this.getDataFolder().exists())
-				this.getDataFolder().mkdir();
-			final File file = new File(this.getDataFolder(), "config.yml");
-			if (!file.exists()) {
-				this.saveDefaultConfig();
-				this.reloadConfig();
-			}
-			this.saveResource("message.yml", false);
-			this.saveResource("language-zhs.yml", false);
-			this.saveResource("language-zht.yml", false);
-			final File drops = new File(this.getDataFolder(), "drops");
-			if (!drops.exists())
-				drops.mkdir();
-			final File bugs = new File(this.getDataFolder(), "bugs");
-			if (!bugs.exists())
-				bugs.mkdir();
-			this.getLanguage();
-		} catch (final Exception e) {
-			Debug.debug(e, "Something wrong in loading config.");
+		if (!this.getDataFolder().exists())
+			this.getDataFolder().mkdir();
+		final File file = new File(this.getDataFolder(), "config.yml");
+		if (!file.exists()) {
+			this.saveDefaultConfig();
+			this.reloadConfig();
 		}
+		this.saveResource("message.yml", false);
+		this.saveResource("language-zhs.yml", false);
+		this.saveResource("language-zht.yml", false);
+		final File drops = new File(this.getDataFolder(), "drops");
+		if (!drops.exists())
+			drops.mkdir();
+		final File bugs = new File(this.getDataFolder(), "bugs");
+		if (!bugs.exists())
+			bugs.mkdir();
+		final File messFile = new File(this.getDataFolder(), "message.yml");
+		final YamlConfiguration yml = YamlConfiguration.loadConfiguration(messFile);
+		final Set<String> keys = yml.getKeys(false);
+		for (final String key : keys)
+			DropItem.messages.put(key, yml.getString(key));
+		this.getLanguage();
 	}
 
 	@Override
 	public void onDisable() {
-		try {
-			this.craftAIListener.getLoadTask().cancel();
-			this.craftAIListener.getStartTask().cancel();
-			for (final BukkitTask bukkitTask : DropItem.bukkitTasks)
-				bukkitTask.cancel();
-			CraftAIListener.reload(DropItem.anxiCode);
-			CraftDropItem.uploadItems(DropItem.anxiCode);
-			Debug.reload(DropItem.anxiCode);
-			AnxiCode.reload(DropItem.anxiCode);
-			this.getLogger().info("DropItem插件载出成功");
-		} catch (final Exception e) {
-			Debug.debug(e, "Something wrong in disabling Plugin DropItem.");
-		}
+		this.craftAIListener.getLoadTask().cancel();
+		this.craftAIListener.getStartTask().cancel();
+		for (final BukkitTask bukkitTask : DropItem.bukkitTasks)
+			bukkitTask.cancel();
+		CraftAIListener.reload(DropItem.anxiCode);
+		CraftDropItem.uploadItems(DropItem.anxiCode);
+		AnxiCode.reload(DropItem.anxiCode);
+		this.getLogger().info("DropItem插件载出成功");
 	}
 
 	@Override
 	public void onEnable() {
+		DropItem.instance = this;
 		new AnxiCode(this);
 		DropItem.anxiCode = AnxiCode.getCode(DropItem.class, this);
 		this.loadConfig();
-		if (this.getConfig().getBoolean("Debug", false))
-			Debug.debug(this, DropItem.anxiCode);
 		this.getLogger().info("DropItem插件载入成功");
 		DropItemUtil.loadDefault(this);
 		DropItemInfo.register(this, DropItem.anxiCode);
@@ -143,45 +136,40 @@ public class DropItem extends JavaPlugin {
 		DropItem.bukkitTasks
 				.add(this.bukkitScheduler.runTaskTimer(this, (Runnable) new DropItemRunnable(this), 0L, 10L));
 		this.craftAIListener = new CraftAIListener(this, DropItem.anxiCode);
-		this.commandMap.register(this.getDescription().getName(), new DropItemCommand("", "", DropItem.anxiCode, this));
+		Command.register(new DropItemCommand(DropItem.anxiCode, this));
 	}
 
 	private void registerPermission() {
-		try {
-			boolean isregister = false;
-			for (final Permission perm : this.pluginManager.getPermissions())
-				if (perm.getName().equals("dropitem.command") || perm.getName().equals("dropitem.use"))
-					isregister = true;
-			if (!isregister) {
-				this.pluginManager.addPermission(new Permission("dropitem.command"));
-				this.pluginManager.addPermission(new Permission("dropitem.use"));
-			}
-			if (this.getConfig().getBoolean("AllowedPlayers", true)) {
-				final List<World> worlds = Bukkit.getWorlds();
-				for (final World world : worlds) {
-					final Collection<Entity> players = world.getEntitiesByClasses(Player.class);
-					for (final Entity player : players)
-						((Player) player).addAttachment(this).setPermission("dropitem.use", true);
-				}
-			} else {
-				final List<World> worlds = Bukkit.getWorlds();
-				for (final World world : worlds) {
-					final Collection<Entity> players = world.getEntitiesByClasses(Player.class);
-					for (final Entity player : players)
-						((Player) player).addAttachment(this).setPermission("dropitem.use", false);
-				}
-			}
-			final List<String> allowedPlayers = DropItemUtil
-					.toList(this.getConfig().getString("AllowedPlayer").split(","));
+		boolean isregister = false;
+		for (final Permission perm : this.pluginManager.getPermissions())
+			if (perm.getName().equals("dropitem.command") || perm.getName().equals("dropitem.use"))
+				isregister = true;
+		if (!isregister) {
+			this.pluginManager.addPermission(new Permission("dropitem.command"));
+			this.pluginManager.addPermission(new Permission("dropitem.use"));
+		}
+		if (this.getConfig().getBoolean("AllowedPlayers", true)) {
 			final List<World> worlds = Bukkit.getWorlds();
 			for (final World world : worlds) {
 				final Collection<Entity> players = world.getEntitiesByClasses(Player.class);
 				for (final Entity player : players)
-					if (allowedPlayers.contains(((Player) player).getName()))
-						((Player) player).addAttachment(this).setPermission("dropitem.use", true);
+					((Player) player).addAttachment(this).setPermission("dropitem.use", true);
 			}
-		} catch (final Exception e) {
-			Debug.debug(e, "Something wrong in registering permissions.");
+		} else {
+			final List<World> worlds = Bukkit.getWorlds();
+			for (final World world : worlds) {
+				final Collection<Entity> players = world.getEntitiesByClasses(Player.class);
+				for (final Entity player : players)
+					((Player) player).addAttachment(this).setPermission("dropitem.use", false);
+			}
+		}
+		final List<String> allowedPlayers = Lists.newArrayList(this.getConfig().getString("AllowedPlayer").split(","));
+		final List<World> worlds = Bukkit.getWorlds();
+		for (final World world : worlds) {
+			final Collection<Entity> players = world.getEntitiesByClasses(Player.class);
+			for (final Entity player : players)
+				if (allowedPlayers.contains(((Player) player).getName()))
+					((Player) player).addAttachment(this).setPermission("dropitem.use", true);
 		}
 	}
 }

@@ -14,8 +14,6 @@ ShowItemInfo: true
 #是否显示物品信息。默认为true。
 DropItemAI: true
 #是否开启性能优化AI。默认为true。
-Debug: true
-#是否开启Debug功能，该功能能探测大部分插件本身错误并生成错误报告。默认为true。
 Language: zhs
 #设置生成物品显示名字语言。zhs：显示名字为中文简体。zht：显示为中文繁体。en：显示名字为英文。默认为zhs。
 NaturalSpawn: true

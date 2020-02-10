@@ -15,7 +15,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.BlockIterator;
 
-import com.focess.dropitem.Debug;
 import com.focess.dropitem.DropItem;
 import com.focess.dropitem.event.DropItemDeathEvent.DeathCause;
 import com.focess.dropitem.event.PlayerGottenEvent;
@@ -34,117 +33,99 @@ public class PlayerInteractListener implements Listener {
 	}
 
 	private boolean buildBlock(final Player player, final ItemStack itemStack) {
-		try {
-			if (DropItemUtil.checkDebug())
-				player.sendMessage("111111111111");
-			final BlockIterator i;
-			if (player.getGameMode().equals(GameMode.SURVIVAL))
-				i = new BlockIterator(player, 4);
+		if (DropItemUtil.checkDebug())
+			player.sendMessage("111111111111");
+		final BlockIterator i;
+		if (player.getGameMode().equals(GameMode.SURVIVAL))
+			i = new BlockIterator(player, 4);
+		else
+			i = new BlockIterator(player, 5);
+		Block last = null;
+		Block now = null;
+		while (i.hasNext())
+			if (!(now = i.next()).getType().equals(Material.AIR))
+				break;
 			else
-				i = new BlockIterator(player, 5);
-			Block last = null;
-			Block now = null;
-			while (i.hasNext())
-				if (!(now = i.next()).getType().equals(Material.AIR))
-					break;
-				else
-					last = now;
-			if (last == null)
-				return false;
-			else
-				this.placeBlock(last, player, itemStack);
-			return true;
-		} catch (final Exception e) {
-			Debug.debug(e, "Something wrong in building block.");
-		}
-		return false;
+				last = now;
+		if (last == null)
+			return false;
+		else
+			this.placeBlock(last, player, itemStack);
+		return true;
 	}
 
 	@SuppressWarnings("deprecation")
 	private boolean buildBlock2(final Player player, final ItemStack itemStack) {
-		try {
-			if (DropItemUtil.checkDebug())
-				player.sendMessage("22222222222");
-			final BlockIterator i;
-			if (player.getGameMode().equals(GameMode.SURVIVAL))
-				i = new BlockIterator(player, 4);
+		if (DropItemUtil.checkDebug())
+			player.sendMessage("22222222222");
+		final BlockIterator i;
+		if (player.getGameMode().equals(GameMode.SURVIVAL))
+			i = new BlockIterator(player, 4);
+		else
+			i = new BlockIterator(player, 5);
+		Block last = null;
+		Block now = null;
+		while (i.hasNext())
+			if (!(now = i.next()).getType().equals(Material.AIR))
+				break;
 			else
-				i = new BlockIterator(player, 5);
-			Block last = null;
-			Block now = null;
-			while (i.hasNext())
-				if (!(now = i.next()).getType().equals(Material.AIR))
-					break;
-				else
-					last = now;
-			if (last == null)
-				return false;
-			boolean flag = false;
-			for (final EntityDropItem entityDropItem : CraftDropItem.getDropItems(this.anxiCode))
-				if (entityDropItem.getLocation().distance(last.getLocation()) < 1.0) {
-					flag = true;
-					break;
-				}
-			if (DropItemUtil.checkDebug())
-				player.sendMessage(flag + "");
-			if (!flag)
-				return false;
-			last.setType(itemStack.getType());
-			last.setData((byte) itemStack.getDurability());
-			if (!player.getGameMode().equals(GameMode.CREATIVE))
-				if (itemStack.getAmount() == 1)
-					itemStack.setType(Material.AIR);
-				else
-					itemStack.setAmount(itemStack.getAmount() - 1);
-			player.setItemInHand(itemStack);
-			player.updateInventory();
-			this.playSound(player, last);
-			return true;
-		} catch (final Exception e) {
-			Debug.debug(e, "Something wrong in building block2.");
-		}
+				last = now;
+		if (last == null)
+			return false;
+		boolean flag = false;
+		for (final EntityDropItem entityDropItem : CraftDropItem.getDropItems(this.anxiCode))
+			if (entityDropItem.getLocation().distance(last.getLocation()) < 1.0) {
+				flag = true;
+				break;
+			}
+		if (DropItemUtil.checkDebug())
+			player.sendMessage(flag + "");
+		if (!flag)
+			return false;
+		last.setType(itemStack.getType());
+		last.setData((byte) itemStack.getDurability());
+		if (!player.getGameMode().equals(GameMode.CREATIVE))
+			if (itemStack.getAmount() == 1)
+				itemStack.setType(Material.AIR);
+			else
+				itemStack.setAmount(itemStack.getAmount() - 1);
+		player.setItemInHand(itemStack);
+		player.updateInventory();
+		this.playSound(player, last);
 		return true;
 	}
 
 	@EventHandler
 	public void onPlayerInteract(final PlayerInteractEvent event) {
-		try {
-			if ((event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)
-					&& event.getPlayer().getItemInHand() != null
-					&& event.getPlayer().getItemInHand().getType().isBlock() && DropItemUtil.checkCoverBlock())
-				if (this.buildBlock2(event.getPlayer(), event.getPlayer().getItemInHand())) {
-					event.setCancelled(true);
-					if (DropItemUtil.checkDebug())
-						event.getPlayer().sendMessage("fuck");
-				}
-		} catch (final Exception e) {
-			Debug.debug(e, "Something wrong in calling Event PlayerInteractEvent.");
-		}
+		if ((event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)
+				&& event.getPlayer().getItemInHand() != null && event.getPlayer().getItemInHand().getType().isBlock()
+				&& DropItemUtil.checkCoverBlock())
+			if (this.buildBlock2(event.getPlayer(), event.getPlayer().getItemInHand())) {
+				event.setCancelled(true);
+				if (DropItemUtil.checkDebug())
+					event.getPlayer().sendMessage("fuck");
+			}
 	}
 
 	@EventHandler
 	public void onPlayerInteractAtEntity(final PlayerInteractAtEntityEvent event) {
-		try {
-			if (CraftDropItem.include(event.getRightClicked()))
-				if (event.getPlayer().getItemInHand() == null
-						|| event.getPlayer().getItemInHand().getType().equals(Material.AIR)) {
+		if (CraftDropItem.include(event.getRightClicked()))
+			if (event.getPlayer().getItemInHand() == null
+					|| event.getPlayer().getItemInHand().getType().equals(Material.AIR)) {
+				event.setCancelled(true);
+				if (DropItemUtil.naturalSpawn() || DropItemUtil.allowedPlayer()
+						|| DropItemUtil.checkPlayerPermission(event.getPlayer())) {
+					final EntityDropItem dropItem = CraftDropItem.getDropItem(event.getRightClicked());
+					final PlayerGottenEvent e = new PlayerGottenEvent(dropItem.getItemStack(), event.getPlayer());
+					Bukkit.getServer().getPluginManager().callEvent(e);
+					if (e.isCancelled())
+						return;
+					event.getPlayer().setItemInHand(dropItem.getItemStack());
+					CraftDropItem.remove(dropItem, DeathCause.PLAYER_GOTTEN);
+				}
+			} else if (event.getPlayer().getItemInHand().getType().isBlock())
+				if (this.buildBlock(event.getPlayer(), event.getPlayer().getItemInHand()))
 					event.setCancelled(true);
-					if (DropItemUtil.naturalSpawn() || DropItemUtil.allowedPlayer()
-							|| DropItemUtil.checkPlayerPermission(event.getPlayer())) {
-						final EntityDropItem dropItem = CraftDropItem.getDropItem(event.getRightClicked());
-						final PlayerGottenEvent e = new PlayerGottenEvent(dropItem.getItemStack(), event.getPlayer());
-						Bukkit.getServer().getPluginManager().callEvent(e);
-						if (e.isCancelled())
-							return;
-						event.getPlayer().setItemInHand(dropItem.getItemStack());
-						CraftDropItem.remove(dropItem, DeathCause.PLAYER_GOTTEN);
-					}
-				} else if (event.getPlayer().getItemInHand().getType().isBlock())
-					if (this.buildBlock(event.getPlayer(), event.getPlayer().getItemInHand()))
-						event.setCancelled(true);
-		} catch (final Exception e) {
-			Debug.debug(e, "Something wrong in calling Event PlayerInteractAtEntityEvent.");
-		}
 	}
 
 	@SuppressWarnings("deprecation")
@@ -199,8 +180,7 @@ public class PlayerInteractListener implements Listener {
 						.invoke(nmsWorld, null, block_position, sound_effect, category, 1.0f, 0.8f);
 			}
 		} catch (final Exception e) {
-			Debug.debug(e, "Something wrong in playing sound with Player(" + player.getName() + ")" + "and Block("
-					+ block + ")");
+			e.printStackTrace();
 		}
 	}
 }

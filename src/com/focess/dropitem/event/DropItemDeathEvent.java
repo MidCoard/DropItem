@@ -8,7 +8,7 @@ import com.focess.dropitem.item.EntityDropItem;
 public class DropItemDeathEvent extends DropItemEvent implements Cancellable {
 
 	public enum DeathCause {
-		DEATH, FIRE_TICK, HOPPER_GOTTEN, PLAYER_GOTTEN, SYSTEM_CLEAN,CACTUS_CLEAN, UNKNOWN;
+		CACTUS_CLEAN, DEATH, FIRE_TICK, HOPPER_GOTTEN, PLAYER_GOTTEN, SYSTEM_CLEAN, UNKNOWN;
 	}
 
 	private static final HandlerList handlerList = new HandlerList();

@@ -1,23 +1,16 @@
 package com.focess.dropitem.runnable;
 
 import java.util.List;
-import java.util.Map;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Hopper;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import com.focess.dropitem.Debug;
 import com.focess.dropitem.DropItem;
 import com.focess.dropitem.event.DropItemDeathEvent;
-import com.focess.dropitem.event.HopperGottenEvent;
 import com.focess.dropitem.item.CraftDropItem;
 import com.focess.dropitem.item.EntityDropItem;
 import com.focess.dropitem.util.AnxiCode;
@@ -31,6 +24,15 @@ public class DropItemRunnable extends BukkitRunnable {
 	public DropItemRunnable(final DropItem dropItem) {
 		this.drop = dropItem;
 		DropItemRunnable.anxiCode = AnxiCode.getCode(DropItemRunnable.class, this.drop);
+	}
+
+	private void onCactusClean(final EntityDropItem dropItem) {
+		if (dropItem.isDead())
+			return;
+		final Location location = dropItem.getLocation();
+		location.setY(location.getY() - DropItemUtil.getHeight());
+		if (location.getBlock().getType().equals(Material.CACTUS))
+			CraftDropItem.remove(dropItem, DropItemDeathEvent.DeathCause.CACTUS_CLEAN);
 	}
 
 	private void onCheckCustomName(final EntityDropItem dropItem) {
@@ -86,31 +88,18 @@ public class DropItemRunnable extends BukkitRunnable {
 			return;
 		final Location location = dropItem.getLocation();
 		location.setY(location.getY() - DropItemUtil.getHeight());
-		if (location.getBlock().getType().equals(Material.HOPPER)) 
+		if (location.getBlock().getType().equals(Material.HOPPER))
 			DropItemUtil.fillHopperInventory((Hopper) location.getBlock().getState(), dropItem);
-	}
-	
-	private void onCactusClean(final EntityDropItem dropItem) {
-		if (dropItem.isDead())
-			return;
-		final Location location = dropItem.getLocation();
-		location.setY(location.getY() - DropItemUtil.getHeight());
-		if (location.getBlock().getType().equals(Material.CACTUS))
-			CraftDropItem.remove(dropItem, DropItemDeathEvent.DeathCause.CACTUS_CLEAN);
 	}
 
 	@Override
 	public void run() {
-		try {
-			for (final EntityDropItem dropItem : CraftDropItem.getDropItems(DropItemRunnable.anxiCode)) {
-				this.onCactusClean(dropItem);
-				this.onHopperGotten(dropItem);
-				this.onCheckPickForm(dropItem);
-				this.onCheckPosition(dropItem);
-				this.onCheckCustomName(dropItem);
-			}
-		} catch (final Exception e) {
-			Debug.debug(e, "Something wrong in running Runnable DropItemRunnable.");
+		for (final EntityDropItem dropItem : CraftDropItem.getDropItems(DropItemRunnable.anxiCode)) {
+			this.onCactusClean(dropItem);
+			this.onHopperGotten(dropItem);
+			this.onCheckPickForm(dropItem);
+			this.onCheckPosition(dropItem);
+			this.onCheckCustomName(dropItem);
 		}
 	}
 }

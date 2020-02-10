@@ -7,7 +7,6 @@ EnableCoverBlock: false
 EnableAliases: true
 ShowItemInfo: true
 DropItemAI: true
-Debug: true
 Language: zhs
 NaturalSpawn: true
 AllowedPlayer: true

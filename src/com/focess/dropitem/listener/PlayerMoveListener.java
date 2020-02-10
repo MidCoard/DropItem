@@ -10,7 +10,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-import com.focess.dropitem.Debug;
 import com.focess.dropitem.DropItem;
 import com.focess.dropitem.item.CraftDropItem;
 import com.focess.dropitem.util.AnxiCode;
@@ -34,13 +33,9 @@ public class PlayerMoveListener implements Listener {
 
 	@EventHandler
 	public void onPlayerMove(final PlayerMoveEvent event) {
-		try {
-			final Player player = event.getPlayer();
-			this.onLoadDropItem(player);
-			this.onPlayerPickUpItem(player);
-		} catch (final Exception e) {
-			Debug.debug(e, "Something wrong in calling Event PlayerMoveEvent.");
-		}
+		final Player player = event.getPlayer();
+		this.onLoadDropItem(player);
+		this.onPlayerPickUpItem(player);
 	}
 
 	private void onPlayerPickUpItem(final Player player) {

@@ -6,5 +6,6 @@ CommandDisable: §a§l使用/DropItem disable or /di disable 安全无遗留卸�
 CommandUnregister: §c§l未知指令
 Disabling: §b§l卸载DropItem插件...
 HaveNoPermission: §c§l你没有权限
-InvaildArg: §c§l无效的参数
+InvalidArg: §c§l无效的参数
 Welcome: §a§l欢迎使用DropItem插件
+SenderNotPlayer: §c§l你不是玩家
