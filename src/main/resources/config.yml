@@ -1,0 +1,18 @@
+DropForm: normal
+PickForm: normal
+PitchX: 100
+PitchY: 135
+PitchZ: 100
+EnableCoverBlock: false
+EnableAliases: true
+ShowItemInfo: true
+DropItemAI: true
+Language: zhs
+NaturalSpawn: true
+AllowedPlayer: true
+AllowedPlayers: MidCoard
+BanItem: AIR
+RefreshTime: 300
+Height: 0.3
+Angles:
+  - AIR 100 135 100
