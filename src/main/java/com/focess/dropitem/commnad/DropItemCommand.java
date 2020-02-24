@@ -18,7 +18,7 @@ import com.focess.dropitem.item.DropItemInfo;
 import com.focess.dropitem.item.EntityDropItem;
 import com.focess.dropitem.util.AnxiCode;
 import com.focess.dropitem.util.Command;
-import com.focess.dropitem.util.CommandExecuter;
+import com.focess.dropitem.util.CommandExecutor;
 import com.focess.dropitem.util.DropItemUtil;
 import com.google.common.collect.Lists;
 
@@ -52,7 +52,7 @@ public class DropItemCommand extends Command {
 
     @Override
     public void init() {
-        this.addExecuter(0, (CommandExecuter) (sender, args) -> {
+        this.addExecutor(0, (sender, args) -> {
             final Collection<EntityDropItem> dropItems = CraftDropItem.getDropItems(this.anxiCode);
             for (final EntityDropItem dropItem : dropItems)
                 CraftDropItem.remove(dropItem, DropItemDeathEvent.DeathCause.SYSTEM_CLEAN);
@@ -64,7 +64,7 @@ public class DropItemCommand extends Command {
             sender.sendMessage(DropItem.getMessage("AfterClean"));
 
         }, "clean");
-        this.addExecuter(0, (CommandExecuter) (sender, args) -> {
+        this.addExecutor(0, (sender, args) -> {
             sender.sendMessage(DropItem.getMessage("Disabling"));
             this.drop.getPluginLoader().disablePlugin(this.drop);
             final Collection<EntityDropItem> dropItems = CraftDropItem.getDropItems(this.anxiCode);
@@ -75,7 +75,7 @@ public class DropItemCommand extends Command {
             this.unregister();
             DropItemUtil.forceDelete(this.drop.getDataFolder());
         }, "disable");
-        this.addExecuter(0, (CommandExecuter) (sender, args) -> {
+        this.addExecutor(0, (sender, args) -> {
             final Collection<EntityDropItem> dropItems = CraftDropItem.getDropItems(this.anxiCode);
             for (final EntityDropItem dropItem : dropItems)
                 CraftDropItem.remove(dropItem, DropItemDeathEvent.DeathCause.SYSTEM_CLEAN);
@@ -90,7 +90,7 @@ public class DropItemCommand extends Command {
                         entity.remove();
             sender.sendMessage(DropItem.getMessage("AfterCleanAll"));
         }, "cleanall");
-        this.addExecuter(0, (CommandExecuter) (sender, args) -> {
+        this.addExecutor(0, (sender, args) -> {
         }, "test");
     }
 

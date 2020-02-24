@@ -1,12 +1,8 @@
 <component name="ArtifactManager">
-  <artifact type="jar" build-on-make="true" name="DropItem:jar">
+  <artifact type="jar" name="DropItem:jar">
     <output-path>$USER_HOME$/Desktop/[1.8.00]craftbukkit by boge/[1.8.00]craftbukkit by boge/plugins</output-path>
-    <root id="archive" name="DropItem_jar.jar">
-      <element id="directory" name="META-INF">
-        <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
-      </element>
+    <root id="archive" name="DropItem.jar">
       <element id="module-output" name="DropItem" />
-      <element id="module-source" name="DropItem" />
     </root>
   </artifact>
 </component>

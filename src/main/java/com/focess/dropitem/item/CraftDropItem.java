@@ -11,6 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
@@ -60,13 +61,13 @@ public class CraftDropItem {
 
     private static int anxiCode;
     private static DropItem drop;
-    private static Map<UUID, EntityDropItem> droppedItems = new ConcurrentHashMap<>();
-    private static List<ItemStackAngle> isas = new ArrayList<>();
+    private static final Map<UUID, EntityDropItem> droppedItems = new ConcurrentHashMap<>();
+    private static final List<ItemStackAngle> isas = new ArrayList<>();
     private static int pitchX;
     private static int pitchY;
     private static int pitchZ;
 
-    private static List<String> uuids = new ArrayList<>();
+    private static final List<String> uuids = new ArrayList<>();
 
     public static EntityDropItem getDropItem(final Entity entity) {
         return CraftDropItem.droppedItems.get(entity.getUniqueId());
@@ -208,7 +209,9 @@ public class CraftDropItem {
                     CraftDropItem.pitchZ);
             dropItem.setRightArmPose(eulerAngle);
         }
+        NamespacedKey n;
         String customName = itemStack.getType().name().toLowerCase() + " × " + itemStack.getAmount();
+        DropItemUtil.getMaterialKey(itemStack.getType());
         if (DropItem.Slanguages.get(itemStack.getType().name()) == null)
             System.out.println("对不起，我们暂时还没有物品类型为：" + itemStack.getType().name() + "的中文译名");
         else if (itemStack.hasItemMeta() && itemStack.getItemMeta().hasDisplayName())

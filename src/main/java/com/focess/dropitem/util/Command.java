@@ -17,7 +17,7 @@ public abstract class Command extends org.bukkit.command.Command {
     private static class Executer {
 
         private final int count;
-        private CommandExecuter executer;
+        private CommandExecutor executer;
         private final String[] subcommands;
 
         private Executer(final int count, final String... subcommands) {
@@ -25,7 +25,7 @@ public abstract class Command extends org.bukkit.command.Command {
             this.count = count;
         }
 
-        public Executer addExecuter(final CommandExecuter executer) {
+        public Executer addExecuter(final CommandExecutor executer) {
             this.executer = executer;
             return this;
         }
@@ -38,9 +38,7 @@ public abstract class Command extends org.bukkit.command.Command {
         }
 
         public boolean checkCount(final int amount) {
-            if (this.subcommands.length + this.count == amount)
-                return true;
-            return false;
+            return this.subcommands.length + this.count == amount;
         }
 
         public void execute(final CommandSender sender, final String[] args) {
@@ -93,9 +91,8 @@ public abstract class Command extends org.bukkit.command.Command {
         Command.commandMap.register(DropItem.getInstance().getName(), this);
     }
 
-    public final Command addExecuter(final int count, final CommandExecuter executer, final String... subcommands) {
-        this.executers.add(new Executer(count, subcommands).addExecuter(executer));
-        return this;
+    public final void addExecutor(final int count, final CommandExecutor executor, final String... subcommands) {
+        this.executers.add(new Executer(count, subcommands).addExecuter(executor));
     }
 
     @Override

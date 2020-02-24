@@ -1,13 +1,17 @@
 package com.focess.dropitem.util;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.block.Block;
 import org.bukkit.block.Hopper;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
@@ -24,7 +28,7 @@ import com.google.common.collect.Lists;
 
 public class DropItemUtil {
 
-    private static boolean allowedPlayer = false;
+    private static boolean allowedPlayer;
 
     private static List<String> allowedPlayers;
 
@@ -32,8 +36,6 @@ public class DropItemUtil {
     private static int anxiCode;
 
     private static final List<Material> BanItems = new ArrayList<>();
-
-    private static boolean debug;
 
     private static String dropForm;
 
@@ -49,6 +51,20 @@ public class DropItemUtil {
 
     private static boolean showItemInfo;
 
+    public static NamespacedKey getMaterialKey(Material material) {
+        try {
+            final Object nmsItem = NMSManager.getMethod(NMSManager.getCraftClass("util.CraftMagicNumbers"), "getItem",
+                    new Class[]{Material.class}).invoke(null, material);
+            final Object registryItems = NMSManager.getField(NMSManager.getNMSClass("IRegistry"),"ITEM").get(null);
+            final Object minecraftKey = NMSManager.getMethod(NMSManager.getNMSClass("RegistryBlocks"),"get",Object.class).invoke(registryItems,nmsItem);
+            System.out.println(minecraftKey);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static boolean allowedPlayer() {
         return DropItemUtil.allowedPlayer;
     }
@@ -62,17 +78,11 @@ public class DropItemUtil {
     }
 
     public static boolean checkBanItems(final ItemStack itemStack) {
-        if (DropItemUtil.BanItems.contains(itemStack.getType()))
-            return false;
-        return true;
+        return !DropItemUtil.BanItems.contains(itemStack.getType());
     }
 
     public static boolean checkCoverBlock() {
         return DropItemUtil.enableCoverBlock;
-    }
-
-    public static boolean checkDebug() {
-        return DropItemUtil.debug;
     }
 
     public static boolean checkDropForm(final String form) {
@@ -81,10 +91,8 @@ public class DropItemUtil {
 
     public static boolean checkNull(final String name) {
         if (name != null) {
-            if (!name.startsWith(ChatColor.RED + "QuickShop") && !name.contains("GSCompleXMoneyFromMobzzzzzzzzz")
-                    && !name.contains("XXXPlayer777MoneyXXX"))
-                return true;
-            return false;
+            return !name.startsWith(ChatColor.RED + "QuickShop") && !name.contains("GSCompleXMoneyFromMobzzzzzzzzz")
+                    && !name.contains("XXXPlayer777MoneyXXX");
         }
         return true;
     }
@@ -168,7 +176,7 @@ public class DropItemUtil {
             try {
                 final int id = Integer.parseInt(banItem);
                 if (Material.getMaterial(id) == null)
-                    continue;
+                continue;
                 DropItemUtil.BanItems.add(Material.getMaterial(id));
             } catch (final Exception e) {
                 if (Material.getMaterial(banItem) == null)
@@ -194,7 +202,6 @@ public class DropItemUtil {
         DropItemUtil.getBanItems(drop);
         DropItemUtil.enableCoverBlock = drop.getConfig().getBoolean("EnableCoverBlock", false);
         DropItemUtil.enableAliases = drop.getConfig().getBoolean("EnableAliases", true);
-        DropItemUtil.debug = drop.getConfig().getBoolean("Debug2", false);
     }
 
     public static boolean naturalSpawn() {
@@ -203,6 +210,48 @@ public class DropItemUtil {
 
     public static boolean showItemInfo() {
         return DropItemUtil.showItemInfo;
+    }
+
+    public static void playSound(final Player player, final Block block) {
+        try {
+            final Object nmsblock = NMSManager.getMethod(NMSManager.getCraftClass("util.CraftMagicNumbers"), "getBlock",
+                    new Class[]{Material.class}).invoke(null, block.getType());
+            final Field stepSound = NMSManager.getField(NMSManager.getNMSClass("Block"), "stepSound");
+            final Object sound = stepSound.get(nmsblock);
+            final int version = NMSManager.getVersionInt();
+            final Object nmsWorld = NMSManager.getMethod(NMSManager.CraftWorld, "getHandle", new Class[]{})
+                    .invoke(block.getWorld());
+            if (version == 8) {
+                final String sound_str = (String) NMSManager
+                        .getMethod(sound.getClass(), "getPlaceSound", new Class[]{}).invoke(sound, new Object[]{});
+                NMSManager.getMethod(NMSManager.World, "makeSound",
+                        new Class[]{double.class, double.class, double.class, String.class, float.class,
+                                float.class})
+                        .invoke(nmsWorld, block.getLocation().getX(), block.getLocation().getY(),
+                                block.getLocation().getZ(), sound_str, 1f, 0.8f);
+            } else {
+                final Object block_position = NMSManager
+                        .getConstructor(NMSManager.getNMSClass("BlockPosition"),
+                                new Class[]{double.class, double.class, double.class})
+                        .newInstance(block.getLocation().getX(), block.getLocation().getY(),
+                                block.getLocation().getZ());
+                final Object sound_effect = NMSManager
+                        .getMethod(NMSManager.getNMSClass("SoundEffectType"), "e", new Class[]{})
+                        .invoke(sound);
+                Object category = null;
+                for (final Object e : NMSManager.getNMSClass("SoundCategory").getEnumConstants())
+                    if (e.toString().equalsIgnoreCase("BLOCKS"))
+                        category = e;
+                NMSManager
+                        .getMethod(NMSManager.World, "a",
+                                new Class[]{NMSManager.getNMSClass("EntityHuman"),
+                                        NMSManager.getNMSClass("BlockPosition"), NMSManager.getNMSClass("SoundEffect"),
+                                        NMSManager.getNMSClass("SoundCategory"), float.class, float.class})
+                        .invoke(nmsWorld, null, block_position, sound_effect, category, 1.0f, 0.8f);
+            }
+        } catch (final Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

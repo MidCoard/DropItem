@@ -11,7 +11,7 @@ import com.focess.dropitem.item.CraftDropItem;
 
 public class SpawnDropItemRunnable implements Runnable {
 
-    private static List<Item> items = new CopyOnWriteArrayList<>();
+    private static final List<Item> items = new CopyOnWriteArrayList<>();
 
     public static void addItem(final Item item) {
         SpawnDropItemRunnable.items.add(item);

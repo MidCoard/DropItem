@@ -42,7 +42,7 @@ public class EntityDropItem1_8_p extends EntityDropItem {
         this.getEntity().setRemoveWhenFarAway(false);
         this.getEntity().setCustomNameVisible(false);
         this.getEntity().setCanPickupItems(false);
-        NMSManager.setNBTBoolean(this.getEntity(), "NoGravity", true);
+        ((ArmorStand) this.getEntity()).setGravity(false);
     }
 
 

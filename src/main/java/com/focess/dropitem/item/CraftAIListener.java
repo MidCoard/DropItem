@@ -80,9 +80,9 @@ public class CraftAIListener {
 
     }
 
-    private static Map<UUID, Pair<Location, ItemStack>> ais = new ConcurrentHashMap<>();
+    private static final Map<UUID, Pair<Location, ItemStack>> ais = new ConcurrentHashMap<>();
     private static int anxiCode;
-    private static boolean isStart = false;
+    private static boolean isStart;
 
     public static void reload(final int anxiCode) {
         if (CraftAIListener.anxiCode == anxiCode)

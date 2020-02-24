@@ -11,7 +11,7 @@
     <facet type="minecraft" name="Minecraft">
       <configuration>
         <autoDetectTypes>
-          <platformType>SPIGOT</platformType>
+          <platformType>PAPER</platformType>
         </autoDetectTypes>
       </configuration>
     </facet>
@@ -28,18 +28,20 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="module-library">
-      <library name="bukkit.jar">
+      <library>
         <CLASSES>
-          <root url="jar://$USER_HOME$/Desktop/[1.8.00]craftbukkit by boge/[1.8.00]craftbukkit by boge/bukkit.jar!/" />
+          <root url="jar://$USER_HOME$/Desktop/[1.8.00]craftbukkit by boge/[1.8.00]craftbukkit by boge/1.10.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$USER_HOME$/Desktop/[1.8.00]craftbukkit by boge/[1.8.00]craftbukkit by boge/1.10.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="1.12.jar">
+      <library>
         <CLASSES>
-          <root url="jar://$USER_HOME$/Desktop/[1.8.00]craftbukkit by boge/[1.8.00]craftbukkit by boge/1.12.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/jetbrains/annotations/18.0.0/annotations-18.0.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -48,7 +50,27 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MAVEN_REPOSITORY$/org/jetbrains/annotations/18.0.0/annotations-18.0.0.jar!/" />
+          <root url="jar://$USER_HOME$/Desktop/[1.8.00]craftbukkit by boge/[1.8.00]craftbukkit by boge/Paper-1.14.4-7caed1a-20190924-2319.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$USER_HOME$/Desktop/[1.8.00]craftbukkit by boge/[1.8.00]craftbukkit by boge/Paper-1.14.4-7caed1a-20190924-2319.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: BukkitAPI_SpigotAPI_NMS2:BukkitAPI_SpigotAPI_NMS2:1.0">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/libs/1.12.2spigot.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: BukkitAPI_SpigotAPI_NMS:BukkitAPI_SpigotAPI_NMS:1.0">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/libs/Paper-1.14.4-7caed1a-20190924-2319.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

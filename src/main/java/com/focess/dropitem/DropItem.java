@@ -37,9 +37,9 @@ import com.google.common.collect.Maps;
 public class DropItem extends JavaPlugin {
 
     private static int anxiCode;
-    private static List<BukkitTask> bukkitTasks = Lists.newArrayList();
+    private static final List<BukkitTask> bukkitTasks = Lists.newArrayList();
     private static DropItem instance;
-    private static Map<String, String> messages = Maps.newHashMap();
+    private static final Map<String, String> messages = Maps.newHashMap();
     public static Map<String, String> Slanguages = Maps.newHashMap();
     public static Map<String, String> Tlanguages = Maps.newHashMap();
 

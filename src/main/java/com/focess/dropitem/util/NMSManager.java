@@ -3,6 +3,7 @@ package com.focess.dropitem.util;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,35 +13,35 @@ import org.bukkit.entity.Player;
 
 public class NMSManager {
 
-    public final static Class<?> CraftEntity;
+    public static final Class<?> CraftEntity;
     // basic class
-    public final static Class<?> CraftServer;
-    public final static Class<?> CraftWorld;
+    public static final Class<?> CraftServer;
+    public static final Class<?> CraftWorld;
 
     // NBT Builder
-    private final static Method e;
-    public final static Class<?> Entity;
-    public final static Class<?> EntityPlayer;
+    private static final Method e;
+    public static final Class<?> Entity;
+    public static final Class<?> EntityPlayer;
     // getNBT from an entity
-    private final static Method f;
-    private final static Method getBoolean;
+    private static final Method f;
+    private static final Method getBoolean;
     // setNBT to an entity
-    private final static Method getHandle;
-    private final static Method hasKey;
+    private static final Method getHandle;
+    private static final Method hasKey;
     // basic
-    private final static Map<Class<?>, Map<String, Field>> loadedFields = new HashMap<>();
-    private final static Map<Class<?>, Map<String, Method>> loadedMethods = new HashMap<>();
+    private static final Map<Class<?>, Map<String, Field>> loadedFields = new HashMap<>();
+    private static final Map<Class<?>, Map<String, Method>> loadedMethods = new HashMap<>();
 
-    private final static Map<String, Class<?>> loadedNMSClasses = new HashMap<>();
-    public final static Class<?> MinecraftServer;
+    private static final Map<String, Class<?>> loadedNMSClasses = new HashMap<>();
+    public static final Class<?> MinecraftServer;
 
-    public final static Class<?> NBTTagCompound;
-    private final static Method setBoolean;
-    private final static Method setInt;
+    public static final Class<?> NBTTagCompound;
+    private static final Method setBoolean;
+    private static final Method setInt;
     private static int versionInt = -1;
     private static String versionString;
-    public final static Class<?> World;
-    public final static Class<?> WorldServer;
+    public static final Class<?> World;
+    public static final Class<?> WorldServer;
 
     static {
         World = NMSManager.getNMSClass("World");
@@ -70,7 +71,7 @@ public class NMSManager {
 
         if (getHandleMethod != null)
             try {
-                final Object nmsPlayer = getHandleMethod.invoke(player, new Object[0]);
+                final Object nmsPlayer = getHandleMethod.invoke(player);
                 final Field playerConField = NMSManager.getField(nmsPlayer.getClass(), "playerConnection");
                 return playerConField.get(nmsPlayer);
             } catch (final Exception e) {
@@ -84,6 +85,7 @@ public class NMSManager {
         try {
             return clazz.getConstructor(params);
         } catch (final NoSuchMethodException e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -92,7 +94,7 @@ public class NMSManager {
         if (NMSManager.loadedNMSClasses.containsKey(nmsClassName))
             return NMSManager.loadedNMSClasses.get(nmsClassName);
         final String clazzName = "org.bukkit.craftbukkit." + NMSManager.getVersionString() + nmsClassName;
-        Class<?> clazz;
+        final Class<?> clazz;
         try {
             clazz = Class.forName(clazzName);
         } catch (final Throwable t) {
@@ -123,11 +125,11 @@ public class NMSManager {
         return null;
     }
 
-    public static Method getMethod(final Class<?> clazz, final String methodName, final Class<?>[] params) {
+    public static Method getMethod(final Class<?> clazz, final String methodName, final Class<?>... params) {
         if (!NMSManager.loadedMethods.containsKey(clazz))
             NMSManager.loadedMethods.put(clazz, new HashMap<String, Method>());
         final Map<String, Method> methods = NMSManager.loadedMethods.get(clazz);
-        if (methods.containsKey(methodName) && methods.get(methodName).getParameterTypes().equals(params))
+        if (methods.containsKey(methodName) && Arrays.equals(methods.get(methodName).getParameterTypes(),params))
             return methods.get(methodName);
         try {
             final Method method = clazz.getDeclaredMethod(methodName, params);
@@ -165,15 +167,15 @@ public class NMSManager {
         return false;
     }
 
-    public static Class getNMSClass(final String nmsClassName) {
+    public static Class<?> getNMSClass(final String nmsClassName) {
         if (NMSManager.loadedNMSClasses.containsKey(nmsClassName))
             return NMSManager.loadedNMSClasses.get(nmsClassName);
         final String clazzName = "net.minecraft.server." + NMSManager.getVersionString() + nmsClassName;
-        Class<?> clazz;
+        final Class<?> clazz;
         try {
             clazz = Class.forName(clazzName);
-        } catch (final Throwable t) {
-            t.printStackTrace();
+        } catch (final Exception e) {
+            e.printStackTrace();
             return NMSManager.loadedNMSClasses.put(nmsClassName, null);
         }
         NMSManager.loadedNMSClasses.put(nmsClassName, clazz);

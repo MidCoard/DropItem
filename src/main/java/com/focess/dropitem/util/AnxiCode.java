@@ -14,9 +14,9 @@ import com.focess.dropitem.runnable.DropItemRunnable;
 public class AnxiCode {
     private static final AnxiCode[] anxiCode = new AnxiCode[1];
 
-    private static boolean flag = false;
+    private static boolean flag;
 
-    private static HashMap<Class<?>, Boolean> safeClass = new HashMap<>();
+    private static final HashMap<Class<?>, Boolean> safeClass = new HashMap<>();
 
     static {
         AnxiCode.safeClass.put(CraftDropItem.class, false);
@@ -72,11 +72,11 @@ public class AnxiCode {
                 final int index = (int) (Math.random() * 10.0D);
                 stringBuilder.append(index);
             }
-            this.code = stringBuilder.toString().hashCode();
-            AnxiCode.anxiCode[0] = this;
-            AnxiCode.flag = true;
-            this.drop = dropItem;
-        } else {
+        this.code = stringBuilder.toString().hashCode();
+        AnxiCode.anxiCode[0] = this;
+        AnxiCode.flag = true;
+        this.drop = dropItem;
+    } else {
             this.code = -1;
             AnxiCode.shut(AnxiCode.class);
         }

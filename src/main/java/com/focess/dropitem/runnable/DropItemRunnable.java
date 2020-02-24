@@ -5,6 +5,7 @@ import java.util.List;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Hopper;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -75,8 +76,9 @@ public class DropItemRunnable extends BukkitRunnable {
             final Location loc2 = loc.clone();
             loc2.setY(loc2.getY() - 1);
             if (loc2.getBlock().getType().equals(Material.AIR))
-                NMSManager.setNBTBoolean(dropItem.getEntity(), "NoGravity", false);
+                ((ArmorStand)dropItem.getEntity()).setGravity(true);
             else {
+                ((ArmorStand)dropItem.getEntity()).setGravity(false);
                 loc.setY(loc.getBlockY() - 1 + DropItemUtil.getHeight());
                 dropItem.teleport(loc);
             }

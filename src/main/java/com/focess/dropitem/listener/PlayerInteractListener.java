@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -33,8 +34,6 @@ public class PlayerInteractListener implements Listener {
     }
 
     private boolean buildBlock(final Player player, final ItemStack itemStack) {
-        if (DropItemUtil.checkDebug())
-            player.sendMessage("111111111111");
         final BlockIterator i;
         if (player.getGameMode().equals(GameMode.SURVIVAL))
             i = new BlockIterator(player, 4);
@@ -56,8 +55,6 @@ public class PlayerInteractListener implements Listener {
 
     @SuppressWarnings("deprecation")
     private boolean buildBlock2(final Player player, final ItemStack itemStack) {
-        if (DropItemUtil.checkDebug())
-            player.sendMessage("22222222222");
         final BlockIterator i;
         if (player.getGameMode().equals(GameMode.SURVIVAL))
             i = new BlockIterator(player, 4);
@@ -78,12 +75,9 @@ public class PlayerInteractListener implements Listener {
                 flag = true;
                 break;
             }
-        if (DropItemUtil.checkDebug())
-            player.sendMessage(flag + "");
         if (!flag)
             return false;
         last.setType(itemStack.getType());
-        last.setData((byte) itemStack.getDurability());
         if (!player.getGameMode().equals(GameMode.CREATIVE))
             if (itemStack.getAmount() == 1)
                 itemStack.setType(Material.AIR);
@@ -91,7 +85,7 @@ public class PlayerInteractListener implements Listener {
                 itemStack.setAmount(itemStack.getAmount() - 1);
         player.setItemInHand(itemStack);
         player.updateInventory();
-        this.playSound(player, last);
+        DropItemUtil.playSound(player, last);
         return true;
     }
 
@@ -100,18 +94,13 @@ public class PlayerInteractListener implements Listener {
         if ((event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)
                 && event.getPlayer().getItemInHand() != null && event.getPlayer().getItemInHand().getType().isBlock()
                 && DropItemUtil.checkCoverBlock())
-            if (this.buildBlock2(event.getPlayer(), event.getPlayer().getItemInHand())) {
+            if (this.buildBlock2(event.getPlayer(), event.getPlayer().getItemInHand()))
                 event.setCancelled(true);
-                if (DropItemUtil.checkDebug())
-                    event.getPlayer().sendMessage("fuck");
-            }
     }
 
     @EventHandler
     public void onPlayerInteractAtEntity(final PlayerInteractAtEntityEvent event) {
-        if (CraftDropItem.include(event.getRightClicked()))
-            if (event.getPlayer().getItemInHand() == null
-                    || event.getPlayer().getItemInHand().getType().equals(Material.AIR)) {
+        if (CraftDropItem.include(event.getRightClicked())) {
                 event.setCancelled(true);
                 if (DropItemUtil.naturalSpawn() || DropItemUtil.allowedPlayer()
                         || DropItemUtil.checkPlayerPermission(event.getPlayer())) {
@@ -120,18 +109,15 @@ public class PlayerInteractListener implements Listener {
                     Bukkit.getServer().getPluginManager().callEvent(e);
                     if (e.isCancelled())
                         return;
-                    event.getPlayer().setItemInHand(dropItem.getItemStack());
+                    DropItemUtil.fillPlayerInventory(event.getPlayer(),dropItem);
                     CraftDropItem.remove(dropItem, DeathCause.PLAYER_GOTTEN);
                 }
-            } else if (event.getPlayer().getItemInHand().getType().isBlock())
-                if (this.buildBlock(event.getPlayer(), event.getPlayer().getItemInHand()))
-                    event.setCancelled(true);
+            }
     }
 
     @SuppressWarnings("deprecation")
     private void placeBlock(final Block block, final Player player, final ItemStack itemStack) {
         block.setType(itemStack.getType());
-        block.setData((byte) itemStack.getDurability());
         if (!player.getGameMode().equals(GameMode.CREATIVE))
             if (itemStack.getAmount() == 1)
                 itemStack.setType(Material.AIR);
@@ -139,48 +125,8 @@ public class PlayerInteractListener implements Listener {
                 itemStack.setAmount(itemStack.getAmount() - 1);
         player.setItemInHand(itemStack);
         player.updateInventory();
-        this.playSound(player, block);
+        DropItemUtil.playSound(player, block);
     }
 
-    private void playSound(final Player player, final Block block) {
-        try {
-            final Object nmsblock = NMSManager.getMethod(NMSManager.getCraftClass("util.CraftMagicNumbers"), "getBlock",
-                    new Class[]{Material.class}).invoke(null, block.getType());
-            final Field stepSound = NMSManager.getField(NMSManager.getNMSClass("Block"), "stepSound");
-            final Object sound = stepSound.get(nmsblock);
-            final int version = NMSManager.getVersionInt();
-            final Object nmsWorld = NMSManager.getMethod(NMSManager.CraftWorld, "getHandle", new Class[]{})
-                    .invoke(block.getWorld(), new Object[]{});
-            if (version == 8) {
-                final String sound_str = (String) NMSManager
-                        .getMethod(sound.getClass(), "getPlaceSound", new Class[]{}).invoke(sound, new Object[]{});
-                NMSManager.getMethod(NMSManager.World, "makeSound",
-                        new Class[]{double.class, double.class, double.class, String.class, float.class,
-                                float.class})
-                        .invoke(nmsWorld, block.getLocation().getX(), block.getLocation().getY(),
-                                block.getLocation().getZ(), sound_str, 1f, 0.8f);
-            } else {
-                final Object block_position = NMSManager
-                        .getConstructor(NMSManager.getNMSClass("BlockPosition"),
-                                new Class[]{double.class, double.class, double.class})
-                        .newInstance(block.getLocation().getX(), block.getLocation().getY(),
-                                block.getLocation().getZ());
-                final Object sound_effect = NMSManager
-                        .getMethod(NMSManager.getNMSClass("SoundEffectType"), "e", new Class[]{})
-                        .invoke(sound, new Object[]{});
-                Object category = null;
-                for (final Object e : NMSManager.getNMSClass("SoundCategory").getEnumConstants())
-                    if (e.toString().equalsIgnoreCase("BLOCKS"))
-                        category = e;
-                NMSManager
-                        .getMethod(NMSManager.World, "a",
-                                new Class[]{NMSManager.getNMSClass("EntityHuman"),
-                                        NMSManager.getNMSClass("BlockPosition"), NMSManager.getNMSClass("SoundEffect"),
-                                        NMSManager.getNMSClass("SoundCategory"), float.class, float.class})
-                        .invoke(nmsWorld, null, block_position, sound_effect, category, 1.0f, 0.8f);
-            }
-        } catch (final Exception e) {
-            e.printStackTrace();
-        }
-    }
+
 }

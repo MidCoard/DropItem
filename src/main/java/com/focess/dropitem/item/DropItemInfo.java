@@ -34,7 +34,7 @@ public class DropItemInfo {
 
     private static DropItem drop;
 
-    private static Map<UUID, DropItemInfo> dropItemInfos = new ConcurrentHashMap<>();
+    private static final Map<UUID, DropItemInfo> dropItemInfos = new ConcurrentHashMap<>();
 
     private static boolean isRefresh = true;
 
@@ -79,7 +79,7 @@ public class DropItemInfo {
 
     private EntityDropItem dropItem;
 
-    private int time = 0;
+    private int time;
 
     private UUID uuid;
 
@@ -99,11 +99,8 @@ public class DropItemInfo {
             return false;
         final DropItemInfo other = (DropItemInfo) obj;
         if (this.dropItem == null) {
-            if (other.dropItem != null)
-                return false;
-        } else if (!this.dropItem.equals(other.dropItem))
-            return false;
-        return true;
+            return other.dropItem == null;
+        } else return this.dropItem.equals(other.dropItem);
     }
 
     public EntityDropItem getDropItem() {
