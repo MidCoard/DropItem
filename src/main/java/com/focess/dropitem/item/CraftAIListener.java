@@ -70,7 +70,7 @@ public class CraftAIListener {
                     boolean flag = false;
                     for (final Entity entity : entities)
                         if (entity instanceof Player
-                                && ((Player) entity).getGameMode().equals(GameMode.SPECTATOR)) {
+                                && !((Player) entity).getGameMode().equals(GameMode.SPECTATOR)) {
                             flag = true;
                             break;
                         }
@@ -93,7 +93,7 @@ public class CraftAIListener {
             for (final World world : worlds) {
                 final Collection<Entity> players = world.getEntitiesByClasses(Player.class);
                 for (final Entity player : players)
-                    if (player instanceof Player && ((Player) player).getGameMode().compareTo(GameMode.SPECTATOR) != 0)
+                    if (player instanceof Player && !((Player) player).getGameMode().equals(GameMode.SPECTATOR))
                         for (final UUID uuid : CraftAIListener.ais.keySet()) {
                             final Pair<Location, ItemStack> pair = CraftAIListener.ais.get(uuid);
                             final Location location = pair.getKey();

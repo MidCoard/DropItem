@@ -2,10 +2,15 @@ package com.focess.dropitem.util;
 
 import com.focess.dropitem.DropItem;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import org.bukkit.Material;
 import org.bukkit.util.EulerAngle;
 
+import java.io.InputStreamReader;
 import java.util.List;
+import java.util.Map;
 
 public class DropItemConfiguration {
     private static final List<Material> banItems = Lists.newArrayList();
@@ -20,12 +25,20 @@ public class DropItemConfiguration {
     private static boolean enableCoverBlock;
     private static boolean enableAliases;
     private static boolean dropItemAI;
+
+    private static Map<String, String> languages = Maps.newHashMap();
+
     private static String language;
     private static int pitchX;
     private static int pitchY;
     private static int pitchZ;
     private static int refreshTime;
     private static boolean refresh;
+    private static Map<String, String> originalLanguages = Maps.newHashMap();
+
+    public static String getLanguage() {
+        return language;
+    }
 
     public static void loadDefault(final DropItem drop) {
         dropForm = drop.getConfig().getString("DropForm", "normal");
@@ -38,6 +51,7 @@ public class DropItemConfiguration {
         showItemInfo = drop.getConfig().getBoolean("ShowItemInfo", true);
         dropItemAI = drop.getConfig().getBoolean("DropItemAI", true);
         language = drop.getConfig().getString("Language", "zh_CN");
+        getLanguage(drop);
         naturalSpawn = drop.getConfig().getBoolean("NaturalSpawn", true);
         getAllowedPlayer(drop);
         allowedPlayers = Lists.newArrayList(drop.getConfig().getString("AllowedPlayers").split(","));
@@ -45,6 +59,13 @@ public class DropItemConfiguration {
         getRefreshTime(drop);
         height = drop.getConfig().getDouble("Height", 0.3d);
         getItemStackAngles(drop);
+    }
+
+    private static void getLanguage(final DropItem drop) {
+        originalLanguages = new GsonBuilder().create().fromJson(new InputStreamReader(drop.getResource(DropItemUtil.getLanguageVersion() + ".json")), new TypeToken<Map<String, String>>() {
+        }.getType());
+        languages = new GsonBuilder().create().fromJson(new InputStreamReader(drop.getResource(DropItemUtil.getLanguageVersion() + DropItemConfiguration.getLanguage() + ".json")), new TypeToken<Map<String, String>>() {
+        }.getType());
     }
 
     private static void getAllowedPlayer(final DropItem drop) {
@@ -75,7 +96,7 @@ public class DropItemConfiguration {
     }
 
     public static boolean checkBanItems(final Material material) {
-        return banItems.contains(material);
+        return !banItems.contains(material);
     }
 
 
@@ -158,6 +179,13 @@ public class DropItemConfiguration {
 
     public static EulerAngle getDefaultAngle() {
         return new EulerAngle(pitchX, pitchY, pitchZ);
+    }
+
+    public static String translate(final Object name, final boolean version) {
+        if (version)
+            return languages.get(name);
+        else
+            return languages.get(originalLanguages.get(name));
     }
 
     public static class ItemStackAngle {

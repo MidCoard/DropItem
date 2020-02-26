@@ -1,6 +1,5 @@
 package com.focess.dropitem.util;
 
-import com.focess.dropitem.DropItem;
 import com.focess.dropitem.event.DropItemDeathEvent;
 import com.focess.dropitem.event.HopperGottenEvent;
 import com.focess.dropitem.event.PlayerGottenEvent;
@@ -152,14 +151,18 @@ public class DropItemUtil {
                     new Class[]{ItemStack.class}).invoke(null, itemStack);
             final Object name = NMSManager.getMethod(NMSManager.getNMSClass("ItemStack"), "getName").invoke(nmsItemStack);
             if (NMSManager.getVersionInt() >= 13) {
-                if (name.getClass().getName().equals(NMSManager.getNMSClass("ChatComponentText").getName()))
+                /*if (name.getClass().getName().equals(NMSManager.getNMSClass("ChatComponentText").getName()))
                     //itemStack.getItemMeta().getDisplayName();
                     return (String) NMSManager.getMethod(NMSManager.getNMSClass("ChatComponentText"), "getText").invoke(name);
-                else if (NMSManager.getVersionInt() == 13)
-                    return DropItem.Slanguages.get(NMSManager.getField(NMSManager.getNMSClass("ChatMessage"), "f").get(name));
+                else*/
+                if (NMSManager.getVersionInt() == 13)
+                    return DropItemConfiguration.translate(NMSManager.getField(NMSManager.getNMSClass("ChatMessage"), "f").get(name), true);
                 else
-                    return DropItem.Slanguages.get(NMSManager.getField(NMSManager.getNMSClass("ChatMessage"), "key").get(name));
-            } else return "";
+                    return DropItemConfiguration.translate(NMSManager.getField(NMSManager.getNMSClass("ChatMessage"), "key").get(name), true);
+            } else {
+                //no display
+                return DropItemConfiguration.translate(name, false);
+            }
         } catch (final Exception e) {
             e.printStackTrace();
             return "THIS IS AN ERROR.";

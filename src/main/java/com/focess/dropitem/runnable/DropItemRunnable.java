@@ -56,7 +56,7 @@ public class DropItemRunnable extends BukkitRunnable {
                 dropItem.getEntity().setGravity(true);
             else {
                 dropItem.getEntity().setGravity(false);
-                location.setY(location.getBlockY() - 1 + DropItemConfiguration.getHeight());
+                location.setY(location.getBlockY() + DropItemConfiguration.getHeight());
                 dropItem.teleport(location);
             }
         }

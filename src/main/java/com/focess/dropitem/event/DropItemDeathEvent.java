@@ -1,14 +1,13 @@
 package com.focess.dropitem.event;
 
+import com.focess.dropitem.item.EntityDropItem;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
-
-import com.focess.dropitem.item.EntityDropItem;
 
 public class DropItemDeathEvent extends DropItemEvent implements Cancellable {
 
     public enum DeathCause {
-        CACTUS_CLEAN, DEATH, FIRE_TICK, HOPPER_GOTTEN, PLAYER_GOTTEN, SYSTEM_CLEAN, UNKNOWN
+        CACTUS_CLEAN, DEATH, FIRE_TICK, HOPPER_GOTTEN, PLAYER_GOTTEN, SYSTEM_CLEAN, VOID, EXPLOSION, UNKNOWN
     }
 
     private static final HandlerList handlerList = new HandlerList();

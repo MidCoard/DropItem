@@ -53,7 +53,8 @@ public class DropItemCommand extends Command {
             final File drops = new File(this.drop.getDataFolder(), "drops");
             for (final File file : drops.listFiles())
                 file.delete();
-            this.drop.getCraftAIListener().clear();
+            if (DropItemConfiguration.isDropItemAI())
+                this.drop.getCraftAIListener().clear();
             DropItemInfo.clear();
             sender.sendMessage(DropItem.getMessage("AfterClean"));
 
@@ -76,7 +77,8 @@ public class DropItemCommand extends Command {
             final File drops = new File(this.drop.getDataFolder(), "drops");
             for (final File file : drops.listFiles())
                 file.delete();
-            this.drop.getCraftAIListener().clear();
+            if (DropItemConfiguration.isDropItemAI())
+                this.drop.getCraftAIListener().clear();
             final List<World> worlds = Bukkit.getWorlds();
             for (final World world : worlds)
                 for (final Entity entity : world.getEntities())

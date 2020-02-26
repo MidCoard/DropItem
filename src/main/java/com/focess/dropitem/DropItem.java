@@ -9,11 +9,8 @@ import com.focess.dropitem.runnable.DropItemRunnable;
 import com.focess.dropitem.runnable.SpawnDropItemRunnable;
 import com.focess.dropitem.util.Command;
 import com.focess.dropitem.util.DropItemConfiguration;
-import com.focess.dropitem.util.DropItemUtil;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -26,7 +23,6 @@ import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
-import java.io.InputStreamReader;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -37,8 +33,6 @@ public class DropItem extends JavaPlugin {
     private static final List<BukkitTask> bukkitTasks = Lists.newArrayList();
     private static DropItem instance;
     private static final Map<String, String> messages = Maps.newHashMap();
-    public static Map<String, String> Slanguages;
-    public static Map<String, String> Tlanguages = Maps.newHashMap();
 
     public static DropItem getInstance() {
         return DropItem.instance;
@@ -62,15 +56,6 @@ public class DropItem extends JavaPlugin {
         return this.craftAIListener;
     }
 
-    private void getLanguage() {
-        Slanguages = new GsonBuilder().create().fromJson(new InputStreamReader(this.getResource(DropItemUtil.getLanguageVersion() + DropItemUtil.getLanguageVersion() + ".json")), new TypeToken<Map<String, String>>() {
-        }.getType());
-        final File Tlanguage = new File(this.getDataFolder(), "language-zht.yml");
-        final YamlConfiguration Tyaml = YamlConfiguration.loadConfiguration(Tlanguage);
-        for (final String key : Tyaml.getKeys(false))
-            DropItem.Tlanguages.put(key, Tyaml.getString(key));
-    }
-
     public void loadConfig() {
         if (!this.getDataFolder().exists())
             this.getDataFolder().mkdir();
@@ -91,7 +76,6 @@ public class DropItem extends JavaPlugin {
         final Set<String> keys = yml.getKeys(false);
         for (final String key : keys)
             DropItem.messages.put(key, yml.getString(key));
-        this.getLanguage();
     }
 
     @Override
@@ -127,11 +111,11 @@ public class DropItem extends JavaPlugin {
     }
 
     private void registerPermission() {
-        boolean isregister = false;
+        boolean isRegister = false;
         for (final Permission perm : this.pluginManager.getPermissions())
             if (perm.getName().equals("dropitem.command") || perm.getName().equals("dropitem.use"))
-                isregister = true;
-        if (!isregister) {
+                isRegister = true;
+        if (!isRegister) {
             this.pluginManager.addPermission(new Permission("dropitem.command"));
             this.pluginManager.addPermission(new Permission("dropitem.use"));
         }

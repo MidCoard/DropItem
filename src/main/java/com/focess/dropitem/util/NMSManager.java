@@ -198,14 +198,18 @@ public class NMSManager {
         return NMSManager.versionString;
     }
 
-    public static boolean hasNBT(final LivingEntity entity, final String nbtName) {
+    public static boolean hasNBT(final Object nbt, final String nbtName) {
         try {
-            final Object tag = NMSManager.getNBT(entity);
-            return (boolean) NMSManager.hasKey.invoke(tag, nbtName);
+            return (boolean) NMSManager.hasKey.invoke(nbt, nbtName);
         } catch (final Exception e) {
             e.printStackTrace();
         }
         return false;
+    }
+
+
+    public static boolean hasNBT(final LivingEntity entity, final String nbtName) {
+        return hasNBT(NMSManager.getNBT(entity), nbtName);
     }
 
     private static void saveNBT(final LivingEntity entity, final Object tag) {

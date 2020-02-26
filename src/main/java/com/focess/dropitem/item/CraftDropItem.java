@@ -132,8 +132,10 @@ public class CraftDropItem {
             final EulerAngle eulerAngle = DropItemConfiguration.getDefaultAngle();
             dropItem.setRightArmPose(eulerAngle);
         }
-        final String customName = DropItemUtil.formatName(itemStack) + " × " + itemStack.getAmount();
-        dropItem.setCustomName(customName);
+        if (itemStack.hasItemMeta() && itemStack.getItemMeta().hasDisplayName())
+            dropItem.setCustomName(itemStack.getItemMeta().getDisplayName());
+        else
+            dropItem.setCustomName(DropItemUtil.formatName(itemStack) + " × " + itemStack.getAmount());
         CraftDropItem.droppedItems.put(dropItem.getUniqueId(), dropItem);
         if (isCalled) {
             final DropItemSpawnEvent event = new DropItemSpawnEvent(dropItem);
@@ -150,16 +152,18 @@ public class CraftDropItem {
     }
 
     public static void uploadItems() {
-        final Map<UUID, Pair<Location, ItemStack>> ais = CraftDropItem.drop.getCraftAIListener()
-                .getAIs();
-        for (final UUID uuid : ais.keySet()) {
-            final Pair<Location, ItemStack> pair = ais.get(uuid);
-            final Location location = pair.getKey();
-            final ItemStack itemStack = pair.getValue();
-            final Location temp = new Location(location.getWorld(), location.getBlockX(), location.getBlockY() + 1,
-                    location.getBlockZ());
-            if (itemStack != null)
-                CraftDropItem.spawnItem(itemStack, temp, false);
+        if (DropItemConfiguration.isDropItemAI()) {
+            final Map<UUID, Pair<Location, ItemStack>> ais = CraftDropItem.drop.getCraftAIListener()
+                    .getAIs();
+            for (final UUID uuid : ais.keySet()) {
+                final Pair<Location, ItemStack> pair = ais.get(uuid);
+                final Location location = pair.getKey();
+                final ItemStack itemStack = pair.getValue();
+                final Location temp = new Location(location.getWorld(), location.getBlockX(), location.getBlockY() + 1,
+                        location.getBlockZ());
+                if (itemStack != null)
+                    CraftDropItem.spawnItem(itemStack, temp, false);
+            }
         }
         for (final EntityDropItem dropItem : CraftDropItem.droppedItems.values()) {
             final File uuidFile = new File(
