@@ -14,7 +14,6 @@ public class RemoveDropItemListener implements Listener {
     @EventHandler
     public void onDropItemDamage(final EntityDamageEvent event) {
         if (CraftDropItem.include(event.getEntity())) {
-            System.out.println(event.getCause());
             if (event.getCause().equals(DamageCause.FIRE_TICK))
                 CraftDropItem.remove(event.getEntity(), DeathCause.FIRE_TICK);
             else if (event.getCause().equals(DamageCause.VOID))

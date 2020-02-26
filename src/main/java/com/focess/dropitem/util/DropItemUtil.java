@@ -160,7 +160,12 @@ public class DropItemUtil {
                 else
                     return DropItemConfiguration.translate(NMSManager.getField(NMSManager.getNMSClass("ChatMessage"), "key").get(name), true);
             } else {
-                //no display
+                //no
+                final String str = (String) name;
+                if (str.startsWith("Spawn")) {
+                    final String temp = str.substring(6);
+                    return DropItemConfiguration.translate("Spawn", false) + " " + DropItemConfiguration.translate(temp, false);
+                }
                 return DropItemConfiguration.translate(name, false);
             }
         } catch (final Exception e) {

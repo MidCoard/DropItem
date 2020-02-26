@@ -65,12 +65,6 @@ public class DropItem extends JavaPlugin {
             this.reloadConfig();
         }
         this.saveResource("message.yml", false);
-        final File drops = new File(this.getDataFolder(), "drops");
-        if (!drops.exists())
-            drops.mkdir();
-        final File bugs = new File(this.getDataFolder(), "bugs");
-        if (!bugs.exists())
-            bugs.mkdir();
         final File messFile = new File(this.getDataFolder(), "message.yml");
         final YamlConfiguration yml = YamlConfiguration.loadConfiguration(messFile);
         final Set<String> keys = yml.getKeys(false);

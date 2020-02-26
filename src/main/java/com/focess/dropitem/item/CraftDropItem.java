@@ -8,7 +8,9 @@ import com.focess.dropitem.runnable.SpawnDropItemRunnable;
 import com.focess.dropitem.util.DropItemConfiguration;
 import com.focess.dropitem.util.DropItemUtil;
 import com.focess.dropitem.util.Pair;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
@@ -17,13 +19,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.EulerAngle;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.*;
+import java.util.Collection;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class CraftDropItem {
     private static final Map<UUID, EntityDropItem> droppedItems = new ConcurrentHashMap<>();
-    private static final List<String> uuids = new ArrayList<>();
     private static DropItem drop;
 
     public static EntityDropItem getDropItem(final Entity entity) {
@@ -36,9 +38,6 @@ public class CraftDropItem {
 
     public static void hide(final EntityDropItem dropItem) {
         if (CraftDropItem.include(dropItem.getEntity())) {
-            final File uuidFile = new File(
-                    CraftDropItem.drop.getDataFolder() + "/drops/" + dropItem.getUniqueId().toString());
-            uuidFile.delete();
             dropItem.remove();
             CraftDropItem.droppedItems.remove(dropItem.getUniqueId());
         }
@@ -50,19 +49,11 @@ public class CraftDropItem {
 
     public static void loadItem(final DropItem dropItem) {
         CraftDropItem.drop = dropItem;
-        final File drops = new File(CraftDropItem.drop.getDataFolder(), "drops");
-        final File[] files = drops.listFiles();
-        for (final File file : files)
-            CraftDropItem.uuids.add(file.getName());
-    }
-
-    public static void loadItem(final Entity dropItem) {
-        if (CraftDropItem.uuids.contains(dropItem.getUniqueId().toString())) {
-            final EntityDropItem entityDropItem = EntityDropItem.createEntityDropItem((LivingEntity) dropItem);
-            CraftDropItem.droppedItems.put(dropItem.getUniqueId(), entityDropItem);
-            DropItemInfo.registerInfo(entityDropItem);
-            CraftDropItem.uuids.remove(dropItem.getUniqueId().toString());
-        }
+        for (final World world : Bukkit.getWorlds())
+            for (final Item item : world.getEntitiesByClass(Item.class)) {
+                CraftDropItem.spawnItem(item.getItemStack(), item.getLocation(), false);
+                item.remove();
+            }
     }
 
     public static void remove(final Entity dropItem, final DeathCause death) {
@@ -71,10 +62,7 @@ public class CraftDropItem {
 
     public static void remove(final EntityDropItem dropItem, final boolean isCalled) {
         if (CraftDropItem.include(dropItem.getEntity()) && !isCalled) {
-            final File uuidFile = new File(
-                    CraftDropItem.drop.getDataFolder() + "/drops/" + dropItem.getUniqueId().toString());
             DropItemInfo.remove(dropItem.getUniqueId());
-            uuidFile.delete();
             if (!dropItem.isDead())
                 dropItem.remove();
             CraftDropItem.droppedItems.remove(dropItem.getUniqueId());
@@ -165,14 +153,9 @@ public class CraftDropItem {
                     CraftDropItem.spawnItem(itemStack, temp, false);
             }
         }
-        for (final EntityDropItem dropItem : CraftDropItem.droppedItems.values()) {
-            final File uuidFile = new File(
-                    CraftDropItem.drop.getDataFolder() + "/drops/" + dropItem.getUniqueId().toString());
-            try {
-                uuidFile.createNewFile();
-            } catch (final IOException e) {
-                e.printStackTrace();
-            }
+        for (final EntityDropItem dropItem : CraftDropItem.getDropItems()) {
+            CraftDropItem.remove(dropItem, false);
+            dropItem.getLocation().getWorld().dropItem(dropItem.getLocation().add(0, 1 - DropItemConfiguration.getHeight(), 0), dropItem.getItemStack());
         }
     }
 
