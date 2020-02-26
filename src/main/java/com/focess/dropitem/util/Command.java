@@ -1,16 +1,14 @@
 package com.focess.dropitem.util;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
+import com.focess.dropitem.DropItem;
+import com.google.common.collect.Lists;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
 
-import com.focess.dropitem.DropItem;
-import com.google.common.collect.Lists;
-import org.bukkit.inventory.ItemStack;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public abstract class Command extends org.bukkit.command.Command {
 
@@ -60,7 +58,6 @@ public abstract class Command extends org.bukkit.command.Command {
         } catch (final Exception e) {
             e.printStackTrace();
         }
-        ItemStack dd;
     }
 
     private static void getCommandMap() throws Exception {
@@ -101,9 +98,7 @@ public abstract class Command extends org.bukkit.command.Command {
             sender.sendMessage(DropItem.getMessage("HaveNoPermission"));
             return true;
         }
-        int amount = 0;
-        if (args != null)
-            amount = args.length;
+        final int amount = args.length;
         boolean flag = false;
         for (final Executer executer : this.executers)
             if (executer.checkCount(amount) && executer.checkArgs(args)) {

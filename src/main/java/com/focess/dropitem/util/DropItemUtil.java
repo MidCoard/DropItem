@@ -1,16 +1,14 @@
 package com.focess.dropitem.util;
 
-import java.io.File;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
+import com.focess.dropitem.DropItem;
+import com.focess.dropitem.event.DropItemDeathEvent;
+import com.focess.dropitem.event.HopperGottenEvent;
+import com.focess.dropitem.event.PlayerGottenEvent;
+import com.focess.dropitem.item.CraftDropItem;
+import com.focess.dropitem.item.EntityDropItem;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.block.Hopper;
 import org.bukkit.entity.Player;
@@ -18,88 +16,19 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import com.focess.dropitem.DropItem;
-import com.focess.dropitem.event.DropItemDeathEvent;
-import com.focess.dropitem.event.HopperGottenEvent;
-import com.focess.dropitem.event.PlayerGottenEvent;
-import com.focess.dropitem.item.CraftDropItem;
-import com.focess.dropitem.item.EntityDropItem;
-import com.google.common.collect.Lists;
+import java.io.File;
+import java.lang.reflect.Field;
+import java.util.Map;
 
 public class DropItemUtil {
 
-    private static boolean allowedPlayer;
-
-    private static List<String> allowedPlayers;
-
-    @SuppressWarnings("unused")
-    private static int anxiCode;
-
-    private static final List<Material> BanItems = new ArrayList<>();
-
-    private static String dropForm;
-
-    private static boolean enableAliases;
-
-    private static boolean enableCoverBlock;
-
-    private static double height;
-
-    private static boolean naturalSpawn;
-
-    private static String pickForm;
-
-    private static boolean showItemInfo;
-
-    public static NamespacedKey getMaterialKey(Material material) {
-        try {
-            final Object nmsItem = NMSManager.getMethod(NMSManager.getCraftClass("util.CraftMagicNumbers"), "getItem",
-                    new Class[]{Material.class}).invoke(null, material);
-            final Object registryItems = NMSManager.getField(NMSManager.getNMSClass("IRegistry"),"ITEM").get(null);
-            final Object minecraftKey = NMSManager.getMethod(NMSManager.getNMSClass("RegistryBlocks"),"get",Object.class).invoke(registryItems,nmsItem);
-            System.out.println(minecraftKey);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public static boolean allowedPlayer() {
-        return DropItemUtil.allowedPlayer;
-    }
-
-    public static boolean checkAliases() {
-        return DropItemUtil.enableAliases;
-    }
-
-    public static boolean checkAllowedPlayer(final String name) {
-        return DropItemUtil.allowedPlayers.contains(name);
-    }
-
-    public static boolean checkBanItems(final ItemStack itemStack) {
-        return !DropItemUtil.BanItems.contains(itemStack.getType());
-    }
-
-    public static boolean checkCoverBlock() {
-        return DropItemUtil.enableCoverBlock;
-    }
-
-    public static boolean checkDropForm(final String form) {
-        return DropItemUtil.dropForm.equals(form);
-    }
-
     public static boolean checkNull(final String name) {
-        if (name != null) {
+        if (name != null)
             return !name.startsWith(ChatColor.RED + "QuickShop") && !name.contains("GSCompleXMoneyFromMobzzzzzzzzz")
                     && !name.contains("XXXPlayer777MoneyXXX");
-        }
         return true;
     }
 
-    public static boolean checkPickForm(final String form) {
-        return DropItemUtil.pickForm.equals(form);
-    }
 
     public static boolean checkPlayerPermission(final Player player) {
         return player.hasPermission("dropitem.use");
@@ -169,49 +98,6 @@ public class DropItemUtil {
                 DropItemUtil.forceDelete(f);
     }
 
-    @SuppressWarnings("deprecation")
-    private static void getBanItems(final DropItem drop) {
-        final String banItems = drop.getConfig().getString("BanItem");
-        for (final String banItem : banItems.split(","))
-            try {
-                final int id = Integer.parseInt(banItem);
-                if (Material.getMaterial(id) == null)
-                continue;
-                DropItemUtil.BanItems.add(Material.getMaterial(id));
-            } catch (final Exception e) {
-                if (Material.getMaterial(banItem) == null)
-                    continue;
-                DropItemUtil.BanItems.add(Material.getMaterial(banItem));
-            }
-    }
-
-    public static double getHeight() {
-        return DropItemUtil.height;
-    }
-
-    public static void loadDefault(final DropItem drop) {
-        DropItemUtil.anxiCode = AnxiCode.getCode(DropItemUtil.class, drop);
-        DropItemUtil.height = drop.getConfig().getDouble("Height", 0.3d);
-        DropItemUtil.pickForm = drop.getConfig().getString("PickForm", "normal");
-        DropItemUtil.dropForm = drop.getConfig().getString("DropForm", "normal");
-        DropItemUtil.showItemInfo = drop.getConfig().getBoolean("ShowItemInfo", true);
-        DropItemUtil.naturalSpawn = drop.getConfig().getBoolean("NaturalSpawn", true);
-        if (!DropItemUtil.naturalSpawn)
-            DropItemUtil.allowedPlayer = drop.getConfig().getBoolean("AllowedPlayer", false);
-        DropItemUtil.allowedPlayers = Lists.newArrayList(drop.getConfig().getString("AllowedPlayers").split(","));
-        DropItemUtil.getBanItems(drop);
-        DropItemUtil.enableCoverBlock = drop.getConfig().getBoolean("EnableCoverBlock", false);
-        DropItemUtil.enableAliases = drop.getConfig().getBoolean("EnableAliases", true);
-    }
-
-    public static boolean naturalSpawn() {
-        return DropItemUtil.naturalSpawn;
-    }
-
-    public static boolean showItemInfo() {
-        return DropItemUtil.showItemInfo;
-    }
-
     public static void playSound(final Player player, final Block block) {
         try {
             final Object nmsblock = NMSManager.getMethod(NMSManager.getCraftClass("util.CraftMagicNumbers"), "getBlock",
@@ -254,4 +140,29 @@ public class DropItemUtil {
         }
     }
 
+    public static String getLanguageVersion() {
+        if (NMSManager.getVersionInt() >= 13)
+            return "1.15";
+        return "1.12";
+    }
+
+    public static String formatName(final ItemStack itemStack) {
+        try {
+            final Object nmsItemStack = NMSManager.getMethod(NMSManager.getCraftClass("inventory.CraftItemStack"), "asNMSCopy",
+                    new Class[]{ItemStack.class}).invoke(null, itemStack);
+            final Object name = NMSManager.getMethod(NMSManager.getNMSClass("ItemStack"), "getName").invoke(nmsItemStack);
+            if (NMSManager.getVersionInt() >= 13) {
+                if (name.getClass().getName().equals(NMSManager.getNMSClass("ChatComponentText").getName()))
+                    //itemStack.getItemMeta().getDisplayName();
+                    return (String) NMSManager.getMethod(NMSManager.getNMSClass("ChatComponentText"), "getText").invoke(name);
+                else if (NMSManager.getVersionInt() == 13)
+                    return DropItem.Slanguages.get(NMSManager.getField(NMSManager.getNMSClass("ChatMessage"), "f").get(name));
+                else
+                    return DropItem.Slanguages.get(NMSManager.getField(NMSManager.getNMSClass("ChatMessage"), "key").get(name));
+            } else return "";
+        } catch (final Exception e) {
+            e.printStackTrace();
+            return "THIS IS AN ERROR.";
+        }
+    }
 }

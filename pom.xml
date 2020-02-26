@@ -25,7 +25,13 @@
             <artifactId>BukkitAPI_SpigotAPI_NMS</artifactId>
             <version>1.0</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/libs/Paper-1.14.4-7caed1a-20190924-2319.jar</systemPath>
+            <systemPath>${project.basedir}/libs/spigot-1.13-R0.1-SNAPSHOT.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>18.0.0</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
     <build>
@@ -44,6 +50,15 @@
                 <artifactId>maven-resources-plugin</artifactId>
                 <configuration>
                     <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <outputDirectory>C:\Users\Admin\Desktop\[1.8.00]craftbukkit by boge\[1.8.00]craftbukkit by
+                        boge\plugins
+                    </outputDirectory>
                 </configuration>
             </plugin>
         </plugins>

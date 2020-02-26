@@ -1,15 +1,15 @@
 package com.focess.dropitem.util;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.bukkit.Bukkit;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 
 public class NMSManager {
 
@@ -53,21 +53,21 @@ public class NMSManager {
         CraftEntity = NMSManager.getCraftClass("entity.CraftEntity");
         Entity = NMSManager.getNMSClass("Entity");
         NBTTagCompound = NMSManager.getNMSClass("NBTTagCompound");
-        getHandle = NMSManager.getMethod(NMSManager.CraftEntity, "getHandle", new Class[]{});
-        setInt = NMSManager.getMethod(NMSManager.NBTTagCompound, "setInt", new Class[]{String.class, Integer.TYPE});
+        getHandle = NMSManager.getMethod(NMSManager.CraftEntity, "getHandle");
+        setInt = NMSManager.getMethod(NMSManager.NBTTagCompound, "setInt", String.class, int.class);
         setBoolean = NMSManager.getMethod(NMSManager.NBTTagCompound, "setBoolean",
-                new Class[]{String.class, Boolean.TYPE});
-        hasKey = NMSManager.getMethod(NMSManager.NBTTagCompound, "hasKey", new Class[]{String.class});
-        getBoolean = NMSManager.getMethod(NMSManager.NBTTagCompound, "getBoolean", new Class[]{String.class});
-        f = NMSManager.getMethod(NMSManager.Entity, "f", new Class[]{NMSManager.NBTTagCompound});
+                String.class, boolean.class);
+        hasKey = NMSManager.getMethod(NMSManager.NBTTagCompound, "hasKey", String.class);
+        getBoolean = NMSManager.getMethod(NMSManager.NBTTagCompound, "getBoolean", String.class);
+        f = NMSManager.getMethod(NMSManager.Entity, "f", NMSManager.NBTTagCompound);
         if (NMSManager.getVersionInt() < 12)
-            e = NMSManager.getMethod(NMSManager.Entity, "e", new Class[]{NMSManager.NBTTagCompound});
+            e = NMSManager.getMethod(NMSManager.Entity, "e", NMSManager.NBTTagCompound);
         else
-            e = NMSManager.getMethod(NMSManager.Entity, "save", new Class[]{NMSManager.NBTTagCompound});
+            e = NMSManager.getMethod(NMSManager.Entity, "save", NMSManager.NBTTagCompound);
     }
 
     public static Object getConnection(final Player player) {
-        final Method getHandleMethod = NMSManager.getMethod(player.getClass(), "getHandle", new Class[0]);
+        final Method getHandleMethod = NMSManager.getMethod(player.getClass(), "getHandle");
 
         if (getHandleMethod != null)
             try {
@@ -235,5 +235,7 @@ public class NMSManager {
         } catch (final Exception e) {
             e.printStackTrace();
         }
+
     }
+
 }

@@ -1,12 +1,15 @@
 package com.focess.dropitem.listener;
 
-import java.lang.reflect.Field;
-
+import com.focess.dropitem.event.DropItemDeathEvent.DeathCause;
+import com.focess.dropitem.event.PlayerGottenEvent;
+import com.focess.dropitem.item.CraftDropItem;
+import com.focess.dropitem.item.EntityDropItem;
+import com.focess.dropitem.util.DropItemConfiguration;
+import com.focess.dropitem.util.DropItemUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,23 +19,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.BlockIterator;
 
-import com.focess.dropitem.DropItem;
-import com.focess.dropitem.event.DropItemDeathEvent.DeathCause;
-import com.focess.dropitem.event.PlayerGottenEvent;
-import com.focess.dropitem.item.CraftDropItem;
-import com.focess.dropitem.item.EntityDropItem;
-import com.focess.dropitem.util.AnxiCode;
-import com.focess.dropitem.util.DropItemUtil;
-import com.focess.dropitem.util.NMSManager;
-
 public class PlayerInteractListener implements Listener {
-
-    private final int anxiCode;
-
-    public PlayerInteractListener(final DropItem drop) {
-        this.anxiCode = AnxiCode.getCode(PlayerInteractListener.class, drop);
-    }
-
     private boolean buildBlock(final Player player, final ItemStack itemStack) {
         final BlockIterator i;
         if (player.getGameMode().equals(GameMode.SURVIVAL))
@@ -40,7 +27,7 @@ public class PlayerInteractListener implements Listener {
         else
             i = new BlockIterator(player, 5);
         Block last = null;
-        Block now = null;
+        Block now;
         while (i.hasNext())
             if (!(now = i.next()).getType().equals(Material.AIR))
                 break;
@@ -61,7 +48,7 @@ public class PlayerInteractListener implements Listener {
         else
             i = new BlockIterator(player, 5);
         Block last = null;
-        Block now = null;
+        Block now;
         while (i.hasNext())
             if (!(now = i.next()).getType().equals(Material.AIR))
                 break;
@@ -70,7 +57,7 @@ public class PlayerInteractListener implements Listener {
         if (last == null)
             return false;
         boolean flag = false;
-        for (final EntityDropItem entityDropItem : CraftDropItem.getDropItems(this.anxiCode))
+        for (final EntityDropItem entityDropItem : CraftDropItem.getDropItems())
             if (entityDropItem.getLocation().distance(last.getLocation()) < 1.0) {
                 flag = true;
                 break;
@@ -93,7 +80,7 @@ public class PlayerInteractListener implements Listener {
     public void onPlayerInteract(final PlayerInteractEvent event) {
         if ((event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)
                 && event.getPlayer().getItemInHand() != null && event.getPlayer().getItemInHand().getType().isBlock()
-                && DropItemUtil.checkCoverBlock())
+                && DropItemConfiguration.isEnableCoverBlock())
             if (this.buildBlock2(event.getPlayer(), event.getPlayer().getItemInHand()))
                 event.setCancelled(true);
     }
@@ -102,16 +89,15 @@ public class PlayerInteractListener implements Listener {
     public void onPlayerInteractAtEntity(final PlayerInteractAtEntityEvent event) {
         if (CraftDropItem.include(event.getRightClicked())) {
                 event.setCancelled(true);
-                if (DropItemUtil.naturalSpawn() || DropItemUtil.allowedPlayer()
-                        || DropItemUtil.checkPlayerPermission(event.getPlayer())) {
-                    final EntityDropItem dropItem = CraftDropItem.getDropItem(event.getRightClicked());
-                    final PlayerGottenEvent e = new PlayerGottenEvent(dropItem.getItemStack(), event.getPlayer());
-                    Bukkit.getServer().getPluginManager().callEvent(e);
-                    if (e.isCancelled())
-                        return;
-                    DropItemUtil.fillPlayerInventory(event.getPlayer(),dropItem);
-                    CraftDropItem.remove(dropItem, DeathCause.PLAYER_GOTTEN);
-                }
+            if (DropItemUtil.checkPlayerPermission(event.getPlayer()) && (DropItemConfiguration.checkPickForm("normal") || DropItemConfiguration.checkPickForm("right-click"))) {
+                final EntityDropItem dropItem = CraftDropItem.getDropItem(event.getRightClicked());
+                final PlayerGottenEvent e = new PlayerGottenEvent(dropItem.getItemStack(), event.getPlayer());
+                Bukkit.getServer().getPluginManager().callEvent(e);
+                if (e.isCancelled())
+                    return;
+                DropItemUtil.fillPlayerInventory(event.getPlayer(), dropItem);
+                CraftDropItem.remove(dropItem, DeathCause.PLAYER_GOTTEN);
+            }
             }
     }
 

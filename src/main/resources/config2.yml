@@ -14,12 +14,12 @@ ShowItemInfo: true
 #是否显示物品信息。默认为true。
 DropItemAI: true
 #是否开启性能优化AI。默认为true。
-Language: zhs
-#设置生成物品显示名字语言。zhs：显示名字为中文简体。zht：显示为中文繁体。en：显示名字为英文。默认为zhs。
+Language: zh_CN
+#设置生成物品显示名字语言。zh_CN：显示名字为中文简体。zh_TW：显示为中文繁体。其他代码均显示英文。默认为zh_CN。
 NaturalSpawn: true
-#设置自然生成（即所有掉落方式）的物品是否立体化。true：自然生成（即所有掉落方式）的物品立体化。false：自然生成（即所有掉落方式）的物品不立体化。默认为true。为true时后面一项（即AllowedPlayer）默认将无效。
+#设置自然生成（即所有掉落方式）的物品是否立体化。true：自然生成（即所有掉落方式）的物品立体化。false：自然生成（即所有掉落方式）的物品不立体化。默认为true。为true时后面一项（即AllowedPlayer）默认将无效且允许所有玩家使用该插件。
 AllowedPlayer: true
-#设置是否允许所有玩家掉落物品立体化。true：允许所有玩家掉落物品立体化。false：不允许所有玩家掉落物品立体化。默认为true。为true时后面一项（即AllowedPlayers）默认将无效。
+#设置是否允许所有玩家拥有使用该插件的权限。true：允许所有玩家使用该插件。false：不允许所有玩家使用该插件。默认为true。为true时后面一项（即AllowedPlayers）默认将无效。
 AllowedPlayers: MidCoard
 #设置当AllowedPlayer为false时的白名单玩家。默认为MidCoard（作者Minecraft玩家名）。多个玩家请用“,”（即英文状态下的逗号）隔开。
 BanItem: AIR

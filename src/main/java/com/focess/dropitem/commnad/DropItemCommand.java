@@ -1,44 +1,38 @@
 package com.focess.dropitem.commnad;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
+import com.focess.dropitem.DropItem;
+import com.focess.dropitem.event.DropItemDeathEvent;
+import com.focess.dropitem.item.CraftDropItem;
+import com.focess.dropitem.item.DropItemInfo;
+import com.focess.dropitem.item.EntityDropItem;
+import com.focess.dropitem.util.Command;
+import com.focess.dropitem.util.DropItemConfiguration;
+import com.focess.dropitem.util.DropItemUtil;
+import com.google.common.collect.Lists;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 
-import com.focess.dropitem.DropItem;
-import com.focess.dropitem.event.DropItemDeathEvent;
-import com.focess.dropitem.item.CraftDropItem;
-import com.focess.dropitem.item.DropItemInfo;
-import com.focess.dropitem.item.EntityDropItem;
-import com.focess.dropitem.util.AnxiCode;
-import com.focess.dropitem.util.Command;
-import com.focess.dropitem.util.CommandExecutor;
-import com.focess.dropitem.util.DropItemUtil;
-import com.google.common.collect.Lists;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class DropItemCommand extends Command {
 
-    private static List<String> getAliases(final DropItem drop) {
-        if (DropItemUtil.checkAliases())
-            return Lists.newArrayList("di");
-        return new ArrayList<>();
-    }
-
-    private final int anxiCode;
-    private final DropItem drop;
-
-    public DropItemCommand(final int anxiCode, final DropItem dropItem) {
+    public DropItemCommand(final DropItem dropItem) {
         super("DropItem", DropItemCommand.getAliases(dropItem), "dropitem.command");
         this.drop = dropItem;
-        this.anxiCode = AnxiCode.getCode(DropItemCommand.class, dropItem);
-        if (anxiCode != this.anxiCode)
-            AnxiCode.shut(DropItemCommand.class);
+    }
+
+    private final DropItem drop;
+
+    private static List<String> getAliases(final DropItem dropItem) {
+        if (DropItemConfiguration.isEnableAliases())
+            return Lists.newArrayList("di");
+        return new ArrayList<>();
     }
 
     @Override
@@ -53,21 +47,21 @@ public class DropItemCommand extends Command {
     @Override
     public void init() {
         this.addExecutor(0, (sender, args) -> {
-            final Collection<EntityDropItem> dropItems = CraftDropItem.getDropItems(this.anxiCode);
+            final Collection<EntityDropItem> dropItems = CraftDropItem.getDropItems();
             for (final EntityDropItem dropItem : dropItems)
                 CraftDropItem.remove(dropItem, DropItemDeathEvent.DeathCause.SYSTEM_CLEAN);
             final File drops = new File(this.drop.getDataFolder(), "drops");
             for (final File file : drops.listFiles())
                 file.delete();
-            this.drop.getCraftAIListener(this.anxiCode).clear(this.anxiCode);
-            DropItemInfo.clear(this.anxiCode);
+            this.drop.getCraftAIListener().clear();
+            DropItemInfo.clear();
             sender.sendMessage(DropItem.getMessage("AfterClean"));
 
         }, "clean");
         this.addExecutor(0, (sender, args) -> {
             sender.sendMessage(DropItem.getMessage("Disabling"));
             this.drop.getPluginLoader().disablePlugin(this.drop);
-            final Collection<EntityDropItem> dropItems = CraftDropItem.getDropItems(this.anxiCode);
+            final Collection<EntityDropItem> dropItems = CraftDropItem.getDropItems();
             for (final EntityDropItem dropItem : dropItems) {
                 dropItem.getLocation().getWorld().dropItem(dropItem.getLocation(), dropItem.getItemStack());
                 CraftDropItem.remove(dropItem, false);
@@ -76,13 +70,13 @@ public class DropItemCommand extends Command {
             DropItemUtil.forceDelete(this.drop.getDataFolder());
         }, "disable");
         this.addExecutor(0, (sender, args) -> {
-            final Collection<EntityDropItem> dropItems = CraftDropItem.getDropItems(this.anxiCode);
+            final Collection<EntityDropItem> dropItems = CraftDropItem.getDropItems();
             for (final EntityDropItem dropItem : dropItems)
                 CraftDropItem.remove(dropItem, DropItemDeathEvent.DeathCause.SYSTEM_CLEAN);
             final File drops = new File(this.drop.getDataFolder(), "drops");
             for (final File file : drops.listFiles())
                 file.delete();
-            this.drop.getCraftAIListener(this.anxiCode).clear(this.anxiCode);
+            this.drop.getCraftAIListener().clear();
             final List<World> worlds = Bukkit.getWorlds();
             for (final World world : worlds)
                 for (final Entity entity : world.getEntities())

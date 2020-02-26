@@ -1,14 +1,15 @@
 package com.focess.dropitem.item;
 
-import java.util.List;
-import java.util.UUID;
-
+import com.focess.dropitem.util.DropItemConfiguration;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.EulerAngle;
+
+import java.util.List;
+import java.util.UUID;
 
 public abstract class EntityDropItem {
 
@@ -94,5 +95,10 @@ public abstract class EntityDropItem {
     public void teleport(final Location location) {
         this.dropitem.teleport(location);
     }
+
+    public Location getFixLocation() {
+        return this.getLocation().clone().add(0, -DropItemConfiguration.getHeight(), 0);
+    }
+
 
 }
