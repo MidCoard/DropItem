@@ -6,11 +6,14 @@ import com.google.common.collect.Maps;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import org.bukkit.Material;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.util.EulerAngle;
 
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class DropItemConfiguration {
 
@@ -39,8 +42,18 @@ public class DropItemConfiguration {
     private static boolean refresh;
     private static Map<String, String> originalLanguages = Maps.newHashMap();
 
+    private static final Map<String, String> messages = Maps.newHashMap();
+
     public static String getLanguage() {
         return language;
+    }
+
+    public static String getMessage(final String message) {
+        final String ret = messages.get(message);
+        if (ret == null)
+            return message;
+        else
+            return ret;
     }
 
     public static void loadDefault(final DropItem drop) {
@@ -62,6 +75,23 @@ public class DropItemConfiguration {
         getRefreshTime(drop);
         height = drop.getConfig().getDouble("Height", 0.3d);
         getItemStackAngles(drop);
+        getMessage(drop);
+    }
+
+    private static void getMessage(final DropItem drop) {
+        try {
+            final YamlConfiguration yml;
+            if (checkLanguageMark(DropItemConfiguration.getLanguage()))
+                yml = YamlConfiguration.loadConfiguration(new InputStreamReader(drop.getResource("message" + getLanguage() + ".yml"), StandardCharsets.UTF_8));
+            else
+                yml = YamlConfiguration.loadConfiguration(new InputStreamReader(drop.getResource("message.yml"), StandardCharsets.UTF_8));
+            final Set<String> keys = yml.getKeys(false);
+            for (final String key : keys)
+                messages.put(key, yml.getString(key));
+        }
+        catch(final Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private static void getLanguage(final DropItem drop) {

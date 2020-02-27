@@ -92,9 +92,11 @@ public class DropItemUtil {
     public static void forceDelete(final File file) {
         if (file.isFile())
             file.delete();
-        else
+        else {
             for (final File f : file.listFiles())
                 DropItemUtil.forceDelete(f);
+            file.delete(); 
+        }
     }
 
     public static void playSound(final Player player, final Block block) {

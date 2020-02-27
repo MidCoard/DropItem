@@ -8,7 +8,7 @@ EnableCoverBlock: false
 EnableAliases: true
 ShowItemInfo: true
 DropItemAI: true
-Language: zh_CN
+Language: en_US
 NaturalSpawn: true
 AllowedPlayer: true
 AllowedPlayers: MidCoard

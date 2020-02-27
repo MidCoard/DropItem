@@ -1,11 +1,11 @@
-AfterClean: §b§l清理掉落物完毕
-AfterCleanAll: §b§l清理掉落物完毕
-CommandClean: §a§l使用/DropItem clean or /di clean 清理已知的掉落物
-CommandCleanAll: §a§l使用/DropItem cleanall or /di cleanall 清理类似于掉落物的所有掉落物（不安全，仅在物品加载错误时使用）
-CommandDisable: §a§l使用/DropItem disable or /di disable 安全无遗留卸载DropItem插件
-CommandUnregister: §c§l未知指令
-Disabling: §b§l卸载DropItem插件...
-HaveNoPermission: §c§l你没有权限
-InvalidArg: §c§l无效的参数
-Welcome: §a§l欢迎使用DropItem插件
-SenderNotPlayer: §c§l你不是玩家
+AfterClean: §b§l Finished clearing drops
+AfterCleanAll: §b§l Finished clearing drops
+CommandClean: §a§l Use / DropItem clean or / di clean to clear known drops
+CommandCleanAll: §a§l Use / DropItem cleanall or / di cleanall to clear all drops that are similar to drops (unsafe, only used when items are loaded incorrectly)
+CommandDisable: §a§l Use / DropItem disable or / di disable to safely uninstall the DropItem plugin
+CommandUnregister: §c§l Unknown instruction
+Disabling: §b§l Uninstall DropItem plugin ...
+HaveNoPermission: §c§l You have no permissions
+InvalidArg: §c§l Invalid argument
+Welcome: §a§l Welcome to the DropItem plugin
+SenderNotPlayer: §c§l You are not a player

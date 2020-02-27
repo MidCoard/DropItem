@@ -11,10 +11,8 @@ import com.focess.dropitem.util.Command;
 import com.focess.dropitem.util.ConfigUpdater;
 import com.focess.dropitem.util.DropItemConfiguration;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
@@ -26,25 +24,14 @@ import org.bukkit.scheduler.BukkitTask;
 import java.io.File;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public class DropItem extends JavaPlugin {
 
     private static final List<BukkitTask> bukkitTasks = Lists.newArrayList();
     private static DropItem instance;
-    private static final Map<String, String> messages = Maps.newHashMap();
 
     public static DropItem getInstance() {
         return DropItem.instance;
-    }
-
-    public static String getMessage(final String message) {
-        final String ret = DropItem.messages.get(message);
-        if (ret == null)
-            return "";
-        else
-            return ret;
     }
 
     private final BukkitScheduler bukkitScheduler = this.getServer().getScheduler();
@@ -65,14 +52,6 @@ public class DropItem extends JavaPlugin {
             this.saveDefaultConfig();
         else if (!this.checkVersion(this.getConfig().getString("Version", "7.4")))
             ConfigUpdater.updateConfig(this);
-        final File message = new File(this.getDataFolder(), "message.yml");
-        if (!message.exists())
-            this.saveResource("message.yml", false);
-        final File messFile = new File(this.getDataFolder(), "message.yml");
-        final YamlConfiguration yml = YamlConfiguration.loadConfiguration(messFile);
-        final Set<String> keys = yml.getKeys(false);
-        for (final String key : keys)
-            DropItem.messages.put(key, yml.getString(key));
     }
 
     private boolean checkVersion(final String version) {
@@ -93,7 +72,6 @@ public class DropItem extends JavaPlugin {
     public void onEnable() {
         DropItem.instance = this;
         this.loadConfig();
-        this.getLogger().info("DropItem插件载入成功");
         DropItemConfiguration.loadDefault(this);
         DropItemInfo.register(this);
         CraftDropItem.loadItem(this);
@@ -109,6 +87,7 @@ public class DropItem extends JavaPlugin {
         if (DropItemConfiguration.isDropItemAI())
             this.craftAIListener = new CraftAIListener(this);
         Command.register(new DropItemCommand(this));
+        this.getLogger().info("DropItem插件载入成功");
     }
 
     private void registerPermission() {

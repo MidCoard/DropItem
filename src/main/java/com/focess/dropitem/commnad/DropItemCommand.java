@@ -56,11 +56,11 @@ public class DropItemCommand extends Command {
             if (DropItemConfiguration.isDropItemAI())
                 this.drop.getCraftAIListener().clear();
             DropItemInfo.clear();
-            sender.sendMessage(DropItem.getMessage("AfterClean"));
+            sender.sendMessage(DropItemConfiguration.getMessage("AfterClean"));
 
         }, "clean");
         this.addExecutor(0, (sender, args) -> {
-            sender.sendMessage(DropItem.getMessage("Disabling"));
+            sender.sendMessage(DropItemConfiguration.getMessage("Disabling"));
             this.drop.getPluginLoader().disablePlugin(this.drop);
             final Collection<EntityDropItem> dropItems = CraftDropItem.getDropItems();
             for (final EntityDropItem dropItem : dropItems) {
@@ -84,7 +84,7 @@ public class DropItemCommand extends Command {
                 for (final Entity entity : world.getEntities())
                     if (entity instanceof ArmorStand && !((ArmorStand) entity).isVisible())
                         entity.remove();
-            sender.sendMessage(DropItem.getMessage("AfterCleanAll"));
+            sender.sendMessage(DropItemConfiguration.getMessage("AfterCleanAll"));
         }, "cleanall");
         this.addExecutor(0, (sender, args) -> {
         }, "test");
@@ -92,10 +92,10 @@ public class DropItemCommand extends Command {
 
     @Override
     public void usage(final CommandSender commandSender) {
-        commandSender.sendMessage(DropItem.getMessage("InvalidArg"));
-        commandSender.sendMessage(DropItem.getMessage("Welcome"));
-        commandSender.sendMessage(DropItem.getMessage("CommandClean"));
-        commandSender.sendMessage(DropItem.getMessage("CommandCleanAll"));
-        commandSender.sendMessage(DropItem.getMessage("CommandDisable"));
+        commandSender.sendMessage(DropItemConfiguration.getMessage("InvalidArg"));
+        commandSender.sendMessage(DropItemConfiguration.getMessage("Welcome"));
+        commandSender.sendMessage(DropItemConfiguration.getMessage("CommandClean"));
+        commandSender.sendMessage(DropItemConfiguration.getMessage("CommandCleanAll"));
+        commandSender.sendMessage(DropItemConfiguration.getMessage("CommandDisable"));
     }
 }

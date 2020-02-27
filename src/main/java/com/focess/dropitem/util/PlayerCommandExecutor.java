@@ -3,8 +3,6 @@ package com.focess.dropitem.util;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.focess.dropitem.DropItem;
-
 public interface PlayerCommandExecutor extends CommandExecutor {
 
     @Override
@@ -18,7 +16,7 @@ public interface PlayerCommandExecutor extends CommandExecutor {
     void execute(Player player, String[] args);
 
     default void executeError(final CommandSender sender, final String[] args) {
-        sender.sendMessage(DropItem.getMessage("SenderNotPlayer"));
+        sender.sendMessage(DropItemConfiguration.getMessage("SenderNotPlayer"));
     }
 
 }

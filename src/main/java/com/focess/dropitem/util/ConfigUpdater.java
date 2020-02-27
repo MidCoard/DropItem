@@ -28,10 +28,13 @@ public class ConfigUpdater {
         drop.saveConfig();
         final File zhs = new File(drop.getDataFolder(), "language-zhs.yml");
         final File zht = new File(drop.getDataFolder(), "language-zht.yml");
+        final File message = new File(drop.getDataFolder(),"message.yml");
         if (zhs.exists())
             zhs.delete();
         if (zht.exists())
             zht.delete();
+        if (message.exists())
+            message.delete();
         final File drops = new File(drop.getDataFolder(), "drops");
         if (drops.exists())
             DropItemUtil.forceDelete(drops);

@@ -79,7 +79,7 @@ public class PlayerInteractListener implements Listener {
     @EventHandler
     public void onPlayerInteract(final PlayerInteractEvent event) {
         if ((event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)
-                && event.getPlayer().getItemInHand() != null && event.getPlayer().getItemInHand().getType().isBlock()
+                && event.getPlayer().getItemInHand() != null &&! event.getPlayer().getItemInHand().getType().equals(Material.AIR) && event.getPlayer().getItemInHand().getType().isBlock()
                 && DropItemConfiguration.isEnableCoverBlock())
             if (this.buildBlock2(event.getPlayer(), event.getPlayer().getItemInHand()))
                 event.setCancelled(true);
