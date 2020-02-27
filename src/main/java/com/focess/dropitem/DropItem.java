@@ -8,6 +8,7 @@ import com.focess.dropitem.listener.*;
 import com.focess.dropitem.runnable.DropItemRunnable;
 import com.focess.dropitem.runnable.SpawnDropItemRunnable;
 import com.focess.dropitem.util.Command;
+import com.focess.dropitem.util.ConfigUpdater;
 import com.focess.dropitem.util.DropItemConfiguration;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -60,16 +61,22 @@ public class DropItem extends JavaPlugin {
         if (!this.getDataFolder().exists())
             this.getDataFolder().mkdir();
         final File file = new File(this.getDataFolder(), "config.yml");
-        if (!file.exists()) {
+        if (!file.exists())
             this.saveDefaultConfig();
-            this.reloadConfig();
-        }
-        this.saveResource("message.yml", false);
+        else if (!this.checkVersion(this.getConfig().getString("Version", "7.4")))
+            ConfigUpdater.updateConfig(this);
+        final File message = new File(this.getDataFolder(), "message.yml");
+        if (!message.exists())
+            this.saveResource("message.yml", false);
         final File messFile = new File(this.getDataFolder(), "message.yml");
         final YamlConfiguration yml = YamlConfiguration.loadConfiguration(messFile);
         final Set<String> keys = yml.getKeys(false);
         for (final String key : keys)
             DropItem.messages.put(key, yml.getString(key));
+    }
+
+    private boolean checkVersion(final String version) {
+        return this.getDescription().getVersion().equals(version);
     }
 
     @Override

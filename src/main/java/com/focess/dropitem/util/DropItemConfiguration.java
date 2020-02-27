@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.Map;
 
 public class DropItemConfiguration {
+
+    private static final List<String> LANGUAGEMARK = Lists.newArrayList("zh_CN", "zh_TW");
+
     private static final List<Material> banItems = Lists.newArrayList();
     private static final List<ItemStackAngle> angles = Lists.newArrayList();
     private static double height;
@@ -62,10 +65,16 @@ public class DropItemConfiguration {
     }
 
     private static void getLanguage(final DropItem drop) {
-        originalLanguages = new GsonBuilder().create().fromJson(new InputStreamReader(drop.getResource(DropItemUtil.getLanguageVersion() + ".json")), new TypeToken<Map<String, String>>() {
-        }.getType());
-        languages = new GsonBuilder().create().fromJson(new InputStreamReader(drop.getResource(DropItemUtil.getLanguageVersion() + DropItemConfiguration.getLanguage() + ".json")), new TypeToken<Map<String, String>>() {
-        }.getType());
+        if (checkLanguageMark(DropItemConfiguration.getLanguage())) {
+            originalLanguages = new GsonBuilder().create().fromJson(new InputStreamReader(drop.getResource(DropItemUtil.getLanguageVersion() + ".json")), new TypeToken<Map<String, String>>() {
+            }.getType());
+            languages = new GsonBuilder().create().fromJson(new InputStreamReader(drop.getResource(DropItemUtil.getLanguageVersion() + DropItemConfiguration.getLanguage() + ".json")), new TypeToken<Map<String, String>>() {
+            }.getType());
+        }
+    }
+
+    private static boolean checkLanguageMark(final String language) {
+        return LANGUAGEMARK.contains(language);
     }
 
     private static void getAllowedPlayer(final DropItem drop) {
@@ -182,10 +191,17 @@ public class DropItemConfiguration {
     }
 
     public static String translate(final Object name, final boolean version) {
-        if (version)
-            return languages.get(name);
-        else
-            return languages.get(originalLanguages.get(name));
+        if (version) {
+            final String ret = languages.get(name);
+            if (ret == null)
+                return NMSManager.translateKey(name);
+            return ret;
+        } else {
+            final String ret = languages.get(originalLanguages.get(name));
+            if (ret == null)
+                return (String) name;
+            return ret;
+        }
     }
 
     public static class ItemStackAngle {

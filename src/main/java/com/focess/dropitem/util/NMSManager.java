@@ -43,6 +43,12 @@ public class NMSManager {
     public static final Class<?> World;
     public static final Class<?> WorldServer;
 
+    //translate
+    private static Class<?> LocaleLanguage;
+    private static Object localeLanguage;
+
+    private static Method translateKey;
+
     static {
         World = NMSManager.getNMSClass("World");
         MinecraftServer = NMSManager.getNMSClass("MinecraftServer");
@@ -62,8 +68,16 @@ public class NMSManager {
         f = NMSManager.getMethod(NMSManager.Entity, "f", NMSManager.NBTTagCompound);
         if (NMSManager.getVersionInt() < 12)
             e = NMSManager.getMethod(NMSManager.Entity, "e", NMSManager.NBTTagCompound);
-        else
+        else {
             e = NMSManager.getMethod(NMSManager.Entity, "save", NMSManager.NBTTagCompound);
+            LocaleLanguage = NMSManager.getNMSClass("LocaleLanguage");
+            try {
+                localeLanguage = NMSManager.getMethod(LocaleLanguage, "getInstance").invoke(null);
+            } catch (final Exception e) {
+                e.printStackTrace();
+            }
+            translateKey = NMSManager.getMethod(LocaleLanguage, "translateKey", String.class);
+        }
     }
 
     public static Object getConnection(final Player player) {
@@ -240,6 +254,15 @@ public class NMSManager {
             e.printStackTrace();
         }
 
+    }
+
+    public static String translateKey(final Object key) {
+        try {
+            return (String) translateKey.invoke(localeLanguage, key);
+        } catch (final Exception e) {
+            e.printStackTrace();
+        }
+        return "THIS IS AN ERROR";
     }
 
 }

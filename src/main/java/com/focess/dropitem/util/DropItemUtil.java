@@ -145,7 +145,7 @@ public class DropItemUtil {
         return "1.12";
     }
 
-    public static String formatName(final ItemStack itemStack) {
+    public static java.lang.String formatName(final ItemStack itemStack) {
         try {
             final Object nmsItemStack = NMSManager.getMethod(NMSManager.getCraftClass("inventory.CraftItemStack"), "asNMSCopy",
                     new Class[]{ItemStack.class}).invoke(null, itemStack);
