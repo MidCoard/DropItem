@@ -44,19 +44,44 @@ public class DropItemConfiguration {
 
     private static final Map<String, String> messages = Maps.newHashMap();
 
+    private static boolean versionCheck;
+    private static int versionCheckCycle;
+    private static boolean checkCycle;
+
+    public static boolean isVersionCheck() {
+        return versionCheck;
+    }
+
+    public static int getVersionCheckCycle() {
+        return versionCheckCycle;
+    }
+
+    public static boolean isCheckCycle() {
+        return checkCycle;
+    }
+
     public static String getLanguage() {
         return language;
     }
 
-    public static String getMessage(final String message) {
+    public static String getMessage(final String message, final Object... format) {
         final String ret = messages.get(message);
         if (ret == null)
             return message;
-        else
-            return ret;
+        else {
+            if (format.length == 0)
+                return ret;
+            final String[] temp = ret.split("%f%");
+            final StringBuilder sb = new StringBuilder(temp[0]);
+            for (int i = 1;i<temp.length && i-1<format.length;i++)
+                sb.append(temp[i]).append(format[i-1]);
+            return sb.toString();
+        }
     }
 
     public static void loadDefault(final DropItem drop) {
+        versionCheck = drop.getConfig().getBoolean("VersionCheck",true);
+        getVersionCheckCycle(drop);
         dropForm = drop.getConfig().getString("DropForm", "normal");
         pickForm = drop.getConfig().getString("PickForm", "normal");
         pitchX = drop.getConfig().getInt("PitchX", 100);
@@ -76,6 +101,17 @@ public class DropItemConfiguration {
         height = drop.getConfig().getDouble("Height", 0.3d);
         getItemStackAngles(drop);
         getMessage(drop);
+    }
+
+    private static void getVersionCheckCycle(final DropItem drop) {
+        try {
+            versionCheckCycle = Integer.parseInt(drop.getConfig().getString("VersionCheckCycle"));
+            checkCycle = true;
+        }
+        catch(final Exception e) {
+            versionCheckCycle = 10800;
+            checkCycle = drop.getConfig().getBoolean("VersionCheckCycle");
+        }
     }
 
     private static void getMessage(final DropItem drop) {
@@ -114,10 +150,10 @@ public class DropItemConfiguration {
 
     private static void getRefreshTime(final DropItem drop) {
         try {
-            refreshTime = drop.getConfig().getInt("RefreshTime", 300);
+            refreshTime = Integer.parseInt(drop.getConfig().getString("RefreshTime"));
             refresh = true;
         } catch (final Exception e) {
-            refresh = drop.getConfig().getBoolean("RefreshTime", false);
+            refresh = drop.getConfig().getBoolean("RefreshTime");
             refreshTime = 300;
         }
     }

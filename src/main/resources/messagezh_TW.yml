@@ -9,3 +9,7 @@ HaveNoPermission: §c§l你沒有權限
 InvalidArg: §c§l無效的參數
 Welcome: §a§l歡迎使用DropItem插件
 SenderNotPlayer: §c§l你不是玩家
+VersionCheck: §b§l正在檢查版本更新
+VersionCheckFail: §c§l版本更新檢查錯誤%f%，請向作者報告問題
+LowVersion: §b§l最新版本 §a§l%f% §b§l已發布
+LatestVersion: §b§l你已是最新版本

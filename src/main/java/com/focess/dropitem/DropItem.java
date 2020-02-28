@@ -7,9 +7,7 @@ import com.focess.dropitem.item.DropItemInfo;
 import com.focess.dropitem.listener.*;
 import com.focess.dropitem.runnable.DropItemRunnable;
 import com.focess.dropitem.runnable.SpawnDropItemRunnable;
-import com.focess.dropitem.util.Command;
-import com.focess.dropitem.util.ConfigUpdater;
-import com.focess.dropitem.util.DropItemConfiguration;
+import com.focess.dropitem.util.*;
 import com.google.common.collect.Lists;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -40,6 +38,8 @@ public class DropItem extends JavaPlugin {
 
     private final PluginManager pluginManager = this.getServer().getPluginManager();
 
+    private final DropItemUtil.Version version = new DropItemUtil.Version(this.getDescription().getVersion());
+
     public CraftAIListener getCraftAIListener() {
         return this.craftAIListener;
     }
@@ -50,12 +50,8 @@ public class DropItem extends JavaPlugin {
         final File file = new File(this.getDataFolder(), "config.yml");
         if (!file.exists())
             this.saveDefaultConfig();
-        else if (!this.checkVersion(this.getConfig().getString("Version", "7.4")))
-            ConfigUpdater.updateConfig(this);
-    }
-
-    private boolean checkVersion(final String version) {
-        return this.getDescription().getVersion().equals(version);
+        else if (!new DropItemUtil.Version(this.getConfig().getString("Version", "7.4")).isNew(this.version))
+            ConfigUpdater.updateConfig(this, new DropItemUtil.Version(this.getConfig().getString("Version", "7.4")), this.version);
     }
 
     @Override
@@ -65,7 +61,6 @@ public class DropItem extends JavaPlugin {
         if (DropItemConfiguration.isDropItemAI())
             CraftAIListener.reload();
         CraftDropItem.uploadItems();
-        this.getLogger().info("DropItem插件载出成功");
     }
 
     @Override
@@ -81,13 +76,14 @@ public class DropItem extends JavaPlugin {
         this.pluginManager.registerEvents(new DropItemPermissionListener(this), this);
         this.pluginManager.registerEvents(new PlayerInteractListener(), this);
         this.registerPermission();
-        DropItem.bukkitTasks.add(this.bukkitScheduler.runTaskTimer(this, new SpawnDropItemRunnable(), 0, 10l));
+        DropItem.bukkitTasks.add(this.bukkitScheduler.runTaskTimer(this, new SpawnDropItemRunnable(), 0, 10L));
         DropItem.bukkitTasks
                 .add(this.bukkitScheduler.runTaskTimer(this, (Runnable) new DropItemRunnable(this), 0L, 10L));
         if (DropItemConfiguration.isDropItemAI())
             this.craftAIListener = new CraftAIListener(this);
         Command.register(new DropItemCommand(this));
-        this.getLogger().info("DropItem插件载入成功");
+        if (DropItemConfiguration.isVersionCheck())
+            VersionUpdater.checkForUpdate(this);
     }
 
     private void registerPermission() {

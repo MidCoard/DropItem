@@ -6,6 +6,7 @@ import com.focess.dropitem.item.CraftDropItem;
 import com.focess.dropitem.item.EntityDropItem;
 import com.focess.dropitem.util.DropItemConfiguration;
 import com.focess.dropitem.util.DropItemUtil;
+import com.focess.dropitem.util.VersionUpdater;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Hopper;
@@ -70,8 +71,17 @@ public class DropItemRunnable extends BukkitRunnable {
             DropItemUtil.fillHopperInventory((Hopper) location.getBlock().getState(), dropItem);
     }
 
+    private int versionCheck;
+
     @Override
     public void run() {
+        if (DropItemConfiguration.isVersionCheck() && DropItemConfiguration.isCheckCycle()) {
+            this.versionCheck++;
+            if (this.versionCheck >= DropItemConfiguration.getVersionCheckCycle() * 2) {
+                this.versionCheck = 0;
+                VersionUpdater.checkForUpdate(this.drop);
+            }
+        }
         for (final EntityDropItem dropItem : CraftDropItem.getDropItems()) {
             this.onCactusClean(dropItem);
             this.onHopperGotten(dropItem);

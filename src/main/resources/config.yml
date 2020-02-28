@@ -1,4 +1,6 @@
-Version: '8.0'
+Version: '8.1'
+VersionCheck: true
+VersionCheckCycle: 10800
 DropForm: normal
 PickForm: normal
 PitchX: 100
