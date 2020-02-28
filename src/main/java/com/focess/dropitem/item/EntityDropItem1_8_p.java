@@ -1,5 +1,6 @@
 package com.focess.dropitem.item;
 
+import com.focess.dropitem.util.NMSManager;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
@@ -45,7 +46,7 @@ public class EntityDropItem1_8_p extends EntityDropItem {
         this.getEntity().setRemoveWhenFarAway(false);
         this.getEntity().setCustomNameVisible(false);
         this.getEntity().setCanPickupItems(false);
-        this.getEntity().setGravity(false);
+        NMSManager.setGravity(this.getEntity(),false);
     }
 
 

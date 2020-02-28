@@ -2,6 +2,7 @@ package com.focess.dropitem.listener;
 
 import com.focess.dropitem.DropItem;
 import com.focess.dropitem.util.DropItemConfiguration;
+import com.focess.dropitem.util.VersionUpdater;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -19,6 +20,8 @@ public class DropItemPermissionListener implements Listener {
         final Player player = event.getPlayer();
         if (DropItemConfiguration.isAllowedPlayer() || DropItemConfiguration.checkAllowedPlayers(player.getName()) || DropItemConfiguration.isNaturalSpawn())
             player.addAttachment(this.drop).setPermission("dropitem.use", true);
+        if (player.isOp() && VersionUpdater.isNeedUpdated())
+            player.sendMessage(DropItemConfiguration.getMessage("LowVersion",VersionUpdater.getVersion()));
     }
 
 }

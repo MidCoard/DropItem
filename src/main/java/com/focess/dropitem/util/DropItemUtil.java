@@ -5,6 +5,9 @@ import com.focess.dropitem.event.HopperGottenEvent;
 import com.focess.dropitem.event.PlayerGottenEvent;
 import com.focess.dropitem.item.CraftDropItem;
 import com.focess.dropitem.item.EntityDropItem;
+import com.google.common.collect.Maps;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -14,11 +17,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.fusesource.jansi.Ansi;
+import org.json.simple.parser.ContainerFactory;
+import org.json.simple.parser.JSONParser;
 
 import java.io.File;
+import java.io.Reader;
 import java.lang.reflect.Field;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class DropItemUtil {
 
@@ -100,6 +106,8 @@ public class DropItemUtil {
         }
     }
 
+    private static final Map<ChatColor,String> replacements = Maps.newHashMap();
+
     public static void playSound(final Player player, final Block block) {
         try {
             final Object nmsblock = NMSManager.getMethod(NMSManager.getCraftClass("util.CraftMagicNumbers"), "getBlock",
@@ -148,6 +156,96 @@ public class DropItemUtil {
         return "1.12";
     }
 
+    static {
+        replacements.put(ChatColor.BLACK, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.BLACK).boldOff().toString());
+        replacements.put(ChatColor.DARK_BLUE, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.BLUE).boldOff().toString());
+        replacements.put(ChatColor.DARK_GREEN, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.GREEN).boldOff().toString());
+        replacements.put(ChatColor.DARK_AQUA, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.CYAN).boldOff().toString());
+        replacements.put(ChatColor.DARK_RED, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.RED).boldOff().toString());
+        replacements.put(ChatColor.DARK_PURPLE, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.MAGENTA).boldOff().toString());
+        replacements.put(ChatColor.GOLD, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.YELLOW).boldOff().toString());
+        replacements.put(ChatColor.GRAY, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.WHITE).boldOff().toString());
+        replacements.put(ChatColor.DARK_GRAY, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.BLACK).bold().toString());
+        replacements.put(ChatColor.BLUE, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.BLUE).bold().toString());
+        replacements.put(ChatColor.GREEN, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.GREEN).bold().toString());
+        replacements.put(ChatColor.AQUA, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.CYAN).bold().toString());
+        replacements.put(ChatColor.RED, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.RED).bold().toString());
+        replacements.put(ChatColor.LIGHT_PURPLE, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.MAGENTA).bold().toString());
+        replacements.put(ChatColor.YELLOW, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.YELLOW).bold().toString());
+        replacements.put(ChatColor.WHITE, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.WHITE).bold().toString());
+        replacements.put(ChatColor.MAGIC, Ansi.ansi().a(Ansi.Attribute.BLINK_SLOW).toString());
+        replacements.put(ChatColor.BOLD, Ansi.ansi().a(Ansi.Attribute.UNDERLINE_DOUBLE).toString());
+        replacements.put(ChatColor.STRIKETHROUGH, Ansi.ansi().a(Ansi.Attribute.STRIKETHROUGH_ON).toString());
+        replacements.put(ChatColor.UNDERLINE, Ansi.ansi().a(Ansi.Attribute.UNDERLINE).toString());
+        replacements.put(ChatColor.ITALIC, Ansi.ansi().a(Ansi.Attribute.ITALIC).toString());
+        replacements.put(ChatColor.RESET, Ansi.ansi().a(Ansi.Attribute.RESET).toString());
+    }
+    
+    public static Map<String,String> JSONtoMap(final Reader reader) {
+        if (NMSManager.getVersionInt() == 8) {
+            final JSONParser parser = new JSONParser();
+            final ContainerFactory containerFactory = new ContainerFactory(){
+                public List creatArrayContainer() {
+                    return new LinkedList();
+                }
+
+
+                public Map createObjectContainer() {
+                    return new LinkedHashMap();
+                }
+
+            };
+            try {
+                return (Map<String, String>) parser.parse(reader, containerFactory);
+//                Iterator iterator = json.entrySet().iterator();
+//                Map<String,String> ret = Maps.newHashMap();
+//                while (iterator.hasNext()) {
+//                    Map.Entry entry = (Map.Entry) iterator.next();
+//                    ret.put(entry.getKey(),entry.getValue());
+//                }
+            }
+            catch(final Exception e) {
+                e.printStackTrace();
+            }
+            return Maps.newHashMap();
+        }
+            else
+        return new GsonBuilder().create().fromJson(reader, new TypeToken<Map<String, String>>() {
+        }.getType());
+    }
+
+    public static void sendColouredMessageWithLabel(final String message) {
+        sendColouredMessage("[DropItem]" + message);
+    }
+
+    public static void sendColouredMessage(final String message) {
+        System.out.println(assembleColouredMessage(message));
+    }
+
+    private static String assembleColouredMessage(final String message) {
+        String result = message;
+        final ChatColor[] var6;
+        final int var5 = (var6 = ChatColor.values()).length;
+
+        for(int var4 = 0; var4 < var5; ++var4) {
+            final ChatColor color = var6[var4];
+            if (replacements.containsKey(color)) {
+                result = result.replaceAll("(?i)" + color.toString(), replacements.get(color));
+            } else {
+                result = result.replaceAll("(?i)" + color.toString(), "");
+            }
+        }
+        return result + Ansi.ansi().reset().toString();
+    }
+
+    public static void sendColouredErrorMessageWithLabel(final String message) {
+        sendColouredErrorMessage("[DropItem]" + message);
+    }
+
+    public static void sendColouredErrorMessage(final String message) {
+        System.err.println(assembleColouredMessage(message));
+    }
+
     public static java.lang.String formatName(final ItemStack itemStack) {
         try {
             final Object nmsItemStack = NMSManager.getMethod(NMSManager.getCraftClass("inventory.CraftItemStack"), "asNMSCopy",
@@ -182,7 +280,7 @@ public class DropItemUtil {
         private final int subVersion;
 
         public Version(final String version) {
-            final String[] temp = version.split(".");
+            final String[] temp = version.split("\\.");
             this.mainVersion = Integer.parseInt(temp[0]);
             this.subVersion = Integer.parseInt(temp[1]);
         }

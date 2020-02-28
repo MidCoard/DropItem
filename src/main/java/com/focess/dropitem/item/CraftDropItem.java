@@ -106,6 +106,8 @@ public class CraftDropItem {
 
     public static EntityDropItem spawnItem(final ItemStack itemStack, final Location location, final boolean isCalled,
                                            final boolean isRegistered) {
+        if (itemStack == null)
+            return null;
         location.setY(location.getBlockY() - 1 + DropItemConfiguration.getHeight());
         final EntityDropItem dropItem = EntityDropItem.createEntityDropItem(
                 (LivingEntity) location.getWorld().spawnEntity(location, EntityType.ARMOR_STAND), itemStack);

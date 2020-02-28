@@ -38,7 +38,9 @@ public class DropItem extends JavaPlugin {
 
     private final PluginManager pluginManager = this.getServer().getPluginManager();
 
-    private final DropItemUtil.Version version = new DropItemUtil.Version(this.getDescription().getVersion());
+    private DropItemUtil.Version version;
+
+    private boolean isLoaded;
 
     public CraftAIListener getCraftAIListener() {
         return this.craftAIListener;
@@ -56,16 +58,22 @@ public class DropItem extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        if (!this.isLoaded)
+            return;
         for (final BukkitTask bukkitTask : DropItem.bukkitTasks)
             bukkitTask.cancel();
         if (DropItemConfiguration.isDropItemAI())
             CraftAIListener.reload();
         CraftDropItem.uploadItems();
+        this.isLoaded = false;
     }
 
     @Override
     public void onEnable() {
+        if (NMSManager.getVersionInt() < 8)
+            this.getServer().getPluginManager().disablePlugin(this);
         DropItem.instance = this;
+        this.version = new DropItemUtil.Version(this.getDescription().getVersion());
         this.loadConfig();
         DropItemConfiguration.loadDefault(this);
         DropItemInfo.register(this);
@@ -83,7 +91,8 @@ public class DropItem extends JavaPlugin {
             this.craftAIListener = new CraftAIListener(this);
         Command.register(new DropItemCommand(this));
         if (DropItemConfiguration.isVersionCheck())
-            VersionUpdater.checkForUpdate(this);
+            this.bukkitScheduler.runTaskAsynchronously(this, () -> VersionUpdater.checkForUpdate(this));
+        this.isLoaded = true;
     }
 
     private void registerPermission() {
@@ -99,24 +108,34 @@ public class DropItem extends JavaPlugin {
             final List<World> worlds = Bukkit.getWorlds();
             for (final World world : worlds) {
                 final Collection<Entity> players = world.getEntitiesByClasses(Player.class);
-                for (final Entity player : players)
+                for (final Entity e : players) {
+                    final Player player = (Player) e;
                     player.addAttachment(this).setPermission("dropitem.use", true);
+                }
             }
         } else {
             final List<World> worlds = Bukkit.getWorlds();
             for (final World world : worlds) {
                 final Collection<Entity> players = world.getEntitiesByClasses(Player.class);
-                for (final Entity player : players)
+                for (final Entity e : players) {
+                    final Player player = (Player) e;
                     player.addAttachment(this).setPermission("dropitem.use", false);
+                }
             }
         }
         final List<String> allowedPlayers = Lists.newArrayList(this.getConfig().getString("AllowedPlayer").split(","));
         final List<World> worlds = Bukkit.getWorlds();
         for (final World world : worlds) {
             final Collection<Entity> players = world.getEntitiesByClasses(Player.class);
-            for (final Entity player : players)
+            for (final Entity e : players) {
+                final Player player = (Player) e;
                 if (allowedPlayers.contains(player.getName()))
                     player.addAttachment(this).setPermission("dropitem.use", true);
+            }
         }
+    }
+
+    public DropItemUtil.Version getVersion() {
+        return this.version;
     }
 }

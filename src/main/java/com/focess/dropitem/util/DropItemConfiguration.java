@@ -3,8 +3,6 @@ package com.focess.dropitem.util;
 import com.focess.dropitem.DropItem;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.util.EulerAngle;
@@ -74,7 +72,7 @@ public class DropItemConfiguration {
             final String[] temp = ret.split("%f%");
             final StringBuilder sb = new StringBuilder(temp[0]);
             for (int i = 1;i<temp.length && i-1<format.length;i++)
-                sb.append(temp[i]).append(format[i-1]);
+                sb.append(format[i-1]).append(temp[i]);
             return sb.toString();
         }
     }
@@ -132,10 +130,8 @@ public class DropItemConfiguration {
 
     private static void getLanguage(final DropItem drop) {
         if (checkLanguageMark(DropItemConfiguration.getLanguage())) {
-            originalLanguages = new GsonBuilder().create().fromJson(new InputStreamReader(drop.getResource(DropItemUtil.getLanguageVersion() + ".json")), new TypeToken<Map<String, String>>() {
-            }.getType());
-            languages = new GsonBuilder().create().fromJson(new InputStreamReader(drop.getResource(DropItemUtil.getLanguageVersion() + DropItemConfiguration.getLanguage() + ".json")), new TypeToken<Map<String, String>>() {
-            }.getType());
+            originalLanguages = DropItemUtil.JSONtoMap(new InputStreamReader(drop.getResource(DropItemUtil.getLanguageVersion() + ".json")));
+            languages = DropItemUtil.JSONtoMap(new InputStreamReader(drop.getResource(DropItemUtil.getLanguageVersion() + DropItemConfiguration.getLanguage() + ".json")));
         }
     }
 

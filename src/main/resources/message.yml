@@ -11,5 +11,5 @@ Welcome: §a§l Welcome to the DropItem plugin
 SenderNotPlayer: §c§l You are not a player
 VersionCheck: §b§l DropItem is checking for version update
 VersionCheckFail: §c§l Version update check error %f%, please report the problem to the author
-LowVersion: §b§lLatest version §a§l0%f% §b§lhas been released
-LatestVersion: §b§lYou are already at the latest version
+LowVersion: §b§l Latest version§a§l %f% §b§lhas been released
+LatestVersion: §b§l You are already at the latest version

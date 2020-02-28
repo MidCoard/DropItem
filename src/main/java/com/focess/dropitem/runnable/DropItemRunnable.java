@@ -6,6 +6,7 @@ import com.focess.dropitem.item.CraftDropItem;
 import com.focess.dropitem.item.EntityDropItem;
 import com.focess.dropitem.util.DropItemConfiguration;
 import com.focess.dropitem.util.DropItemUtil;
+import com.focess.dropitem.util.NMSManager;
 import com.focess.dropitem.util.VersionUpdater;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -53,10 +54,11 @@ public class DropItemRunnable extends BukkitRunnable {
             return;
         final Location location = dropItem.getLocation().clone();
         if (location.getBlock().getType().equals(Material.AIR)) {
-            if (location.add(0, -1, 0).getBlock().getType().equals(Material.AIR))
-                dropItem.getEntity().setGravity(true);
+            location.add(0,-1,0);
+            if (location.getBlock().getType().equals(Material.AIR))
+                NMSManager.setGravity(dropItem.getEntity(),true);
             else {
-                dropItem.getEntity().setGravity(false);
+                NMSManager.setGravity(dropItem.getEntity(),false);
                 location.setY(location.getBlockY() + DropItemConfiguration.getHeight());
                 dropItem.teleport(location);
             }
@@ -79,14 +81,23 @@ public class DropItemRunnable extends BukkitRunnable {
             this.versionCheck++;
             if (this.versionCheck >= DropItemConfiguration.getVersionCheckCycle() * 2) {
                 this.versionCheck = 0;
-                VersionUpdater.checkForUpdate(this.drop);
+                this.drop.getServer().getScheduler().runTaskAsynchronously(this.drop, ()-> VersionUpdater.checkForUpdate(this.drop));
             }
         }
         for (final EntityDropItem dropItem : CraftDropItem.getDropItems()) {
             this.onCactusClean(dropItem);
+            this.onFireClean(dropItem);
             this.onHopperGotten(dropItem);
             this.onCheckPosition(dropItem);
             this.onCheckCustomName(dropItem);
         }
+    }
+
+    private void onFireClean(final EntityDropItem dropItem) {
+        if (dropItem.isDead())
+            return;
+        final Location location = dropItem.getFixLocation();
+        if (location.getBlock().getType().equals(Material.FIRE))
+            CraftDropItem.remove(dropItem, DropItemDeathEvent.DeathCause.FIRE_TICK);
     }
 }

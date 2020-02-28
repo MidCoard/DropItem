@@ -1,9 +1,9 @@
 Version: '8.0'
 # Used to automatically update the configuration file when the version is updated, please do not modify this item.
 VersionCheck: true
-# Whether to enable version update checking. true: Enable version update check. false: Disable version update check. The default is true.
+# Whether to enable version update checking. The default is true.
 VersionCheckCycle: 10800
-#Set the version update check time. False if checked only at server startup. The default is 10800. (In seconds)
+# Set the version update check time. False if checked only at server startup. The default is 10800. (In seconds)
 DropForm: normal
 # Set item drop form. normal: Three-dimensional after falling to the ground. w-spawn: Three-dimensional after dropped. The default is normal.
 PickForm: normal
@@ -23,9 +23,9 @@ DropItemAI: true
 Language: en_US
 # Set the generated item display name language. zh_CN: The display name is Simplified Chinese. zh_TW: Chinese Traditional. en_Us: English The default is en_US.
 NaturalSpawn: true
-# whether items that are naturally generated (that is, all drop methods) are three-dimensional. true: Three-dimensional objects generated naturally (that is, all drop methods). false: Naturally generated (ie all drop methods) items are not three-dimensional. The default is true. When true, the latter item (ie AllowedPlayer) is disabled by default and allows all players to use the plugin.
+# whether items that are naturally generated (that is, all drop methods) are three-dimensional. The default is true. When true, the latter item (ie AllowedPlayer) is disabled by default and allows all players to use the plugin.
 AllowedPlayer: true
-# whether to allow all players to have permission to use the plugin. true: Allow all players to use this plugin. false: All players are not allowed to use this plugin. The default is true. When true, the latter item (that is, AllowedPlayers) will have no effect by default.
+# whether to allow all players to have permission to use the plugin. The default is true. When true, the latter item (that is, AllowedPlayers) will have no effect by default.
 AllowedPlayers: MidCoard
 # Set the whitelisted players when AllowedPlayer is false. The default is MidCoard (author Minecraft player name). Separate multiple players with ",".
 BanItem: AIR

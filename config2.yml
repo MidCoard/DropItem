@@ -1,7 +1,7 @@
 Version: '8.0'
 #用于版本更新时自动更新配置文件，该项请不要修改.
 VersionCheck: true
-#是否开启版本更新检查。true: 开启版本更新检查。false: 关闭版本更新检查。默认为true。
+#是否开启版本更新检查。默认为true。
 VersionCheckCycle: 10800
 #设置版本更新检查时间。如果只在服务器启动时检查，则为false。默认为10800。（单位为秒）
 DropForm: normal
@@ -23,9 +23,9 @@ DropItemAI: true
 Language: zh_CN
 #设置生成物品显示名字语言。zh_CN：显示名字为中文简体。zh_TW：显示为中文繁体。其他代码均显示英文。默认为zh_CN。
 NaturalSpawn: true
-#是否自然生成（即所有掉落方式）的物品立体化。true：自然生成（即所有掉落方式）的物品立体化。false：自然生成（即所有掉落方式）的物品不立体化。默认为true。为true时后面一项（即AllowedPlayer）默认将无效且允许所有玩家使用该插件。
+#是否自然生成（即所有掉落方式）的物品立体化。默认为true。为true时后面一项（即AllowedPlayer）默认将无效且允许所有玩家使用该插件。
 AllowedPlayer: true
-#是否允许所有玩家拥有使用该插件的权限。true：允许所有玩家使用该插件。false：不允许所有玩家使用该插件。默认为true。为true时后面一项（即AllowedPlayers）默认将无效。
+#是否允许所有玩家拥有使用该插件的权限。默认为true。为true时后面一项（即AllowedPlayers）默认将无效。
 AllowedPlayers: MidCoard
 #设置当AllowedPlayer为false时的白名单玩家。默认为MidCoard（作者Minecraft玩家名）。多个玩家请用“,”（即英文状态下的逗号）隔开。
 BanItem: AIR

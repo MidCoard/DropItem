@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -49,6 +50,11 @@ public class NMSManager {
 
     private static Method translateKey;
 
+    //set Gravity
+    private static final Class<?> CraftArmorStand;
+
+    private static final Method setGravity;
+
     static {
         World = NMSManager.getNMSClass("World");
         MinecraftServer = NMSManager.getNMSClass("MinecraftServer");
@@ -66,6 +72,8 @@ public class NMSManager {
         hasKey = NMSManager.getMethod(NMSManager.NBTTagCompound, "hasKey", String.class);
         getBoolean = NMSManager.getMethod(NMSManager.NBTTagCompound, "getBoolean", String.class);
         f = NMSManager.getMethod(NMSManager.Entity, "f", NMSManager.NBTTagCompound);
+        CraftArmorStand = NMSManager.getCraftClass("entity.CraftArmorStand");
+        setGravity = NMSManager.getMethod(CraftArmorStand,"setGravity",boolean.class);
         if (NMSManager.getVersionInt() < 12)
             e = NMSManager.getMethod(NMSManager.Entity, "e", NMSManager.NBTTagCompound);
         else {
@@ -264,5 +272,16 @@ public class NMSManager {
         }
         return "THIS IS AN ERROR";
     }
+
+    public static void setGravity(final LivingEntity armorStand, final boolean flag) {
+        try {
+            setGravity.invoke(armorStand,flag);
+        } catch (final IllegalAccessException ex) {
+            ex.printStackTrace();
+        } catch (final InvocationTargetException ex) {
+            ex.printStackTrace();
+        }
+    }
+
 
 }
