@@ -4,8 +4,9 @@ import com.focess.dropitem.event.DropItemDeathEvent.DeathCause;
 import com.focess.dropitem.event.PlayerGottenEvent;
 import com.focess.dropitem.item.CraftDropItem;
 import com.focess.dropitem.item.EntityDropItem;
-import com.focess.dropitem.util.DropItemConfiguration;
 import com.focess.dropitem.util.DropItemUtil;
+import com.focess.dropitem.util.NMSManager;
+import com.focess.dropitem.util.configuration.DropItemConfiguration;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -72,7 +73,7 @@ public class PlayerInteractListener implements Listener {
                 itemStack.setAmount(itemStack.getAmount() - 1);
         player.setItemInHand(itemStack);
         player.updateInventory();
-        DropItemUtil.playSound(player, last);
+        NMSManager.playSound(player, last);
         return true;
     }
 
@@ -111,7 +112,7 @@ public class PlayerInteractListener implements Listener {
                 itemStack.setAmount(itemStack.getAmount() - 1);
         player.setItemInHand(itemStack);
         player.updateInventory();
-        DropItemUtil.playSound(player, block);
+        NMSManager.playSound(player, block);
     }
 
 

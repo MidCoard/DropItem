@@ -1,6 +1,11 @@
-package com.focess.dropitem.util;
+package com.focess.dropitem.util.version;
 
 import com.focess.dropitem.DropItem;
+import com.focess.dropitem.util.DropItemUtil;
+import com.focess.dropitem.util.HttpUtil;
+import com.focess.dropitem.util.NMSManager;
+import com.focess.dropitem.util.Section;
+import com.focess.dropitem.util.configuration.DropItemConfiguration;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import org.bukkit.Bukkit;
@@ -61,7 +66,7 @@ public class VersionUpdater {
                     DropItemUtil.sendNoColouredErrorMessage(DropItemConfiguration.getMessage("VersionFail", 300));
                     return;
                 }
-                final DropItemUtil.Version latestVersion = new DropItemUtil.Version((String) object.get("tag_name"));
+                final Version latestVersion = new Version((String) object.get("tag_name"));
                 if (latestVersion.newerThan(drop.getVersion())) {
                     DropItemUtil.sendNoColouredMessage(DropItemConfiguration.getMessage("LowVersion", latestVersion.getVersion()));
                     needUpdated = true;
@@ -88,7 +93,7 @@ public class VersionUpdater {
                 DropItemUtil.sendNoColouredErrorMessage(DropItemConfiguration.getMessage("VersionFail", 300));
                 return;
             }
-            final DropItemUtil.Version latestVersion = new DropItemUtil.Version(object.get("tag_name").getAsString());
+            final Version latestVersion = new Version(object.get("tag_name").getAsString());
             if (latestVersion.newerThan(drop.getVersion())) {
                 DropItemUtil.sendNoColouredMessage(DropItemConfiguration.getMessage("LowVersion", latestVersion.getVersion()));
                 needUpdated = true;
@@ -117,7 +122,7 @@ public class VersionUpdater {
             downloaded = true;
             return;
         }
-        DropItemUtil.Section.getInstance().startSection("Download",task);
+        Section.getInstance().startSection("Download",task);
         DropItemUtil.sendNoColouredMessage(DropItemConfiguration.getMessage("DownloadStart",url));
         try {
             HttpUtil.downloadFile(url,target.getPath());
@@ -125,10 +130,10 @@ public class VersionUpdater {
         catch(final Exception e) {
             e.printStackTrace();
             DropItemUtil.sendNoColouredErrorMessage(DropItemConfiguration.getMessage("DownloadFail"));
-            DropItemUtil.Section.getInstance().endSection("download");
+            Section.getInstance().endSection("download");
             return;
         }
-        final long time = DropItemUtil.Section.getInstance().endSection("Download");
+        final long time = Section.getInstance().endSection("Download");
         DropItemUtil.sendNoColouredMessage(DropItemConfiguration.getMessage("DownloadSucceed",Double.toString(time/(double)1000)));
         downloaded = true;
         drop.setVersionUpdateReplacement(new VersionUpdateReplacement(drop,DropItemConfiguration.getMessage("ReplaceError",target.getPath()),DropItemConfiguration.getMessage("VersionFail",600)));

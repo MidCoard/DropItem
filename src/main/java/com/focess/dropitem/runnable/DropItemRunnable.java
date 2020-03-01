@@ -4,10 +4,11 @@ import com.focess.dropitem.DropItem;
 import com.focess.dropitem.event.DropItemDeathEvent;
 import com.focess.dropitem.item.CraftDropItem;
 import com.focess.dropitem.item.EntityDropItem;
-import com.focess.dropitem.util.DropItemConfiguration;
 import com.focess.dropitem.util.DropItemUtil;
 import com.focess.dropitem.util.NMSManager;
-import com.focess.dropitem.util.VersionUpdater;
+import com.focess.dropitem.util.Section;
+import com.focess.dropitem.util.configuration.DropItemConfiguration;
+import com.focess.dropitem.util.version.VersionUpdater;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Hopper;
@@ -90,7 +91,7 @@ public class DropItemRunnable extends BukkitRunnable {
                 }), 0);
             }
         }
-        DropItemUtil.Section.checkSection();
+        Section.checkSection();
         for (final EntityDropItem dropItem : CraftDropItem.getDropItems()) {
             this.onCactusClean(dropItem);
             this.onFireClean(dropItem);

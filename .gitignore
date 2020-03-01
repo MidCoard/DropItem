@@ -1,1 +1,5 @@
 /src2/
+/target/
+/.idea/
+/DropItem.iml
+/libs/

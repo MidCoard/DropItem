@@ -1,17 +1,18 @@
-package com.focess.dropitem.util;
+package com.focess.dropitem.util.version;
 
 import com.focess.dropitem.DropItem;
+import com.focess.dropitem.util.DropItemUtil;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.File;
 
 public class ConfigUpdater {
 
-    private static final DropItemUtil.Version _8_0VERSION = new DropItemUtil.Version("8.0");
-    private static final DropItemUtil.Version _8_1VERSION = new DropItemUtil.Version("8.1");
-    private static final DropItemUtil.Version _8_2VERSION = new DropItemUtil.Version("8.2");
+    private static final Version _8_0VERSION = new Version("8.0");
+    private static final Version _8_1VERSION = new Version("8.1");
+    private static final Version _8_2VERSION = new Version("8.2");
 
-    public static void updateConfig(final DropItem drop, final DropItemUtil.Version configVersion, final DropItemUtil.Version jarVersion) {
+    public static void updateConfig(final DropItem drop, final Version configVersion, final Version jarVersion) {
         final FileConfiguration config = drop.getConfig();
         config.set("Version", jarVersion.getVersion());
         if (!configVersion.isNew(_8_0VERSION)) {

@@ -5,9 +5,9 @@ import com.focess.dropitem.event.DropItemDeathEvent;
 import com.focess.dropitem.event.DropItemDeathEvent.DeathCause;
 import com.focess.dropitem.event.DropItemSpawnEvent;
 import com.focess.dropitem.runnable.SpawnDropItemRunnable;
-import com.focess.dropitem.util.DropItemConfiguration;
-import com.focess.dropitem.util.DropItemUtil;
+import com.focess.dropitem.util.NMSManager;
 import com.focess.dropitem.util.Pair;
+import com.focess.dropitem.util.configuration.DropItemConfiguration;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -125,7 +125,7 @@ public class CraftDropItem {
         if (itemStack.hasItemMeta() && itemStack.getItemMeta().hasDisplayName())
             dropItem.setCustomName(itemStack.getItemMeta().getDisplayName());
         else
-            dropItem.setCustomName(DropItemUtil.formatName(itemStack) + " × " + itemStack.getAmount());
+            dropItem.setCustomName(NMSManager.formatName(itemStack) + " × " + itemStack.getAmount());
         CraftDropItem.droppedItems.put(dropItem.getUniqueId(), dropItem);
         if (isCalled) {
             final DropItemSpawnEvent event = new DropItemSpawnEvent(dropItem);

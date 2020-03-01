@@ -1,7 +1,8 @@
-package com.focess.dropitem.util;
+package com.focess.dropitem.util.version;
 
 
 import com.focess.dropitem.DropItem;
+import com.focess.dropitem.util.configuration.DropItemConfiguration;
 import org.bukkit.util.FileUtil;
 
 import java.io.BufferedWriter;

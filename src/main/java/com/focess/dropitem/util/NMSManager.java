@@ -1,8 +1,12 @@
 package com.focess.dropitem.util;
 
+import com.focess.dropitem.util.configuration.DropItemConfiguration;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -284,4 +288,65 @@ public class NMSManager {
     }
 
 
+    public static String formatName(final ItemStack itemStack) {
+        try {
+            final Object nmsItemStack = getMethod(getCraftClass("inventory.CraftItemStack"), "asNMSCopy",
+                    new Class[]{ItemStack.class}).invoke(null, itemStack);
+            final Object name = getMethod(getNMSClass("ItemStack"), "getName").invoke(nmsItemStack);
+            if (getVersionInt() >= 13) {
+                if (getVersionInt() == 13)
+                    return DropItemConfiguration.translate(getField(getNMSClass("ChatMessage"), "f").get(name), true);
+                else
+                    return DropItemConfiguration.translate(getField(getNMSClass("ChatMessage"), "key").get(name), true);
+            } else {
+                final String str = (String) name;
+                if (str.startsWith("Spawn")) {
+                    final String temp = str.substring(6);
+                    return DropItemConfiguration.translate("Spawn", false) + " " + DropItemConfiguration.translate(temp, false);
+                }
+                return DropItemConfiguration.translate(name, false);
+            }
+        } catch (final Exception e) {
+            e.printStackTrace();
+            return "THIS IS AN ERROR.";
+        }
+    }
+
+    public static void playSound(final Player player, final Block block) {
+        try {
+            final Object nmsblock = getMethod(getCraftClass("util.CraftMagicNumbers"), "getBlock",
+                    new Class[]{Material.class}).invoke(null, block.getType());
+            final Field stepSound = getField(getNMSClass("Block"), "stepSound");
+            final Object sound = stepSound.get(nmsblock);
+            final int version = getVersionInt();
+            final Object nmsWorld = getMethod(CraftWorld, "getHandle", new Class[]{})
+                    .invoke(block.getWorld());
+            if (version == 8) {
+                final String sound_str = (String) getMethod(sound.getClass(), "getPlaceSound", new Class[]{}).invoke(sound, new Object[]{});
+                getMethod(World, "makeSound",
+                        new Class[]{double.class, double.class, double.class, String.class, float.class,
+                                float.class})
+                        .invoke(nmsWorld, block.getLocation().getX(), block.getLocation().getY(),
+                                block.getLocation().getZ(), sound_str, 1f, 0.8f);
+            } else {
+                final Object block_position = getConstructor(getNMSClass("BlockPosition"),
+                                new Class[]{double.class, double.class, double.class})
+                        .newInstance(block.getLocation().getX(), block.getLocation().getY(),
+                                block.getLocation().getZ());
+                final Object sound_effect = getMethod(getNMSClass("SoundEffectType"), "e", new Class[]{})
+                        .invoke(sound);
+                Object category = null;
+                for (final Object e : getNMSClass("SoundCategory").getEnumConstants())
+                    if (e.toString().equalsIgnoreCase("BLOCKS"))
+                        category = e;
+                getMethod(World, "a",
+                                new Class[]{getNMSClass("EntityHuman"),
+                                        getNMSClass("BlockPosition"), getNMSClass("SoundEffect"),
+                                        getNMSClass("SoundCategory"), float.class, float.class})
+                        .invoke(nmsWorld, null, block_position, sound_effect, category, 1.0f, 0.8f);
+            }
+        } catch (final Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

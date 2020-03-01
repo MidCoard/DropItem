@@ -3,19 +3,15 @@ package com.focess.dropitem.util;
 import com.focess.dropitem.event.DropItemDeathEvent;
 import com.focess.dropitem.event.HopperGottenEvent;
 import com.focess.dropitem.event.PlayerGottenEvent;
-import com.focess.dropitem.exception.TimeOutException;
 import com.focess.dropitem.item.CraftDropItem;
 import com.focess.dropitem.item.EntityDropItem;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import org.apache.commons.lang.NullArgumentException;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.block.Hopper;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
@@ -28,8 +24,10 @@ import org.json.simple.parser.JSONParser;
 
 import java.io.File;
 import java.io.Reader;
-import java.lang.reflect.Field;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public class DropItemUtil {
 
@@ -101,75 +99,6 @@ public class DropItemUtil {
         }
     }
 
-    private static final Map<ChatColor, String> replacements = Maps.newHashMap();
-
-    static {
-//        replacements.put(ChatColor.BLACK, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.BLACK).boldOff().toString());
-//        replacements.put(ChatColor.DARK_BLUE, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.BLUE).boldOff().toString());
-//        replacements.put(ChatColor.DARK_GREEN, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.GREEN).boldOff().toString());
-//        replacements.put(ChatColor.DARK_AQUA, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.CYAN).boldOff().toString());
-//        replacements.put(ChatColor.DARK_RED, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.RED).boldOff().toString());
-//        replacements.put(ChatColor.DARK_PURPLE, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.MAGENTA).boldOff().toString());
-//        replacements.put(ChatColor.GOLD, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.YELLOW).boldOff().toString());
-//        replacements.put(ChatColor.GRAY, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.WHITE).boldOff().toString());
-//        replacements.put(ChatColor.DARK_GRAY, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.BLACK).bold().toString());
-//        replacements.put(ChatColor.BLUE, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.BLUE).bold().toString());
-//        replacements.put(ChatColor.GREEN, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.GREEN).bold().toString());
-//        replacements.put(ChatColor.AQUA, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.CYAN).bold().toString());
-//        replacements.put(ChatColor.RED, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.RED).bold().toString());
-//        replacements.put(ChatColor.LIGHT_PURPLE, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.MAGENTA).bold().toString());
-//        replacements.put(ChatColor.YELLOW, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.YELLOW).bold().toString());
-//        replacements.put(ChatColor.WHITE, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.WHITE).bold().toString());
-//        replacements.put(ChatColor.MAGIC, Ansi.ansi().a(Ansi.Attribute.BLINK_SLOW).toString());
-//        replacements.put(ChatColor.BOLD, Ansi.ansi().a(Ansi.Attribute.UNDERLINE_DOUBLE).toString());
-//        replacements.put(ChatColor.STRIKETHROUGH, Ansi.ansi().a(Ansi.Attribute.STRIKETHROUGH_ON).toString());
-//        replacements.put(ChatColor.UNDERLINE, Ansi.ansi().a(Ansi.Attribute.UNDERLINE).toString());
-//        replacements.put(ChatColor.ITALIC, Ansi.ansi().a(Ansi.Attribute.ITALIC).toString());
-//        replacements.put(ChatColor.RESET, Ansi.ansi().a(Ansi.Attribute.RESET).toString());
-    }
-
-    public static void playSound(final Player player, final Block block) {
-        try {
-            final Object nmsblock = NMSManager.getMethod(NMSManager.getCraftClass("util.CraftMagicNumbers"), "getBlock",
-                    new Class[]{Material.class}).invoke(null, block.getType());
-            final Field stepSound = NMSManager.getField(NMSManager.getNMSClass("Block"), "stepSound");
-            final Object sound = stepSound.get(nmsblock);
-            final int version = NMSManager.getVersionInt();
-            final Object nmsWorld = NMSManager.getMethod(NMSManager.CraftWorld, "getHandle", new Class[]{})
-                    .invoke(block.getWorld());
-            if (version == 8) {
-                final String sound_str = (String) NMSManager
-                        .getMethod(sound.getClass(), "getPlaceSound", new Class[]{}).invoke(sound, new Object[]{});
-                NMSManager.getMethod(NMSManager.World, "makeSound",
-                        new Class[]{double.class, double.class, double.class, String.class, float.class,
-                                float.class})
-                        .invoke(nmsWorld, block.getLocation().getX(), block.getLocation().getY(),
-                                block.getLocation().getZ(), sound_str, 1f, 0.8f);
-            } else {
-                final Object block_position = NMSManager
-                        .getConstructor(NMSManager.getNMSClass("BlockPosition"),
-                                new Class[]{double.class, double.class, double.class})
-                        .newInstance(block.getLocation().getX(), block.getLocation().getY(),
-                                block.getLocation().getZ());
-                final Object sound_effect = NMSManager
-                        .getMethod(NMSManager.getNMSClass("SoundEffectType"), "e", new Class[]{})
-                        .invoke(sound);
-                Object category = null;
-                for (final Object e : NMSManager.getNMSClass("SoundCategory").getEnumConstants())
-                    if (e.toString().equalsIgnoreCase("BLOCKS"))
-                        category = e;
-                NMSManager
-                        .getMethod(NMSManager.World, "a",
-                                new Class[]{NMSManager.getNMSClass("EntityHuman"),
-                                        NMSManager.getNMSClass("BlockPosition"), NMSManager.getNMSClass("SoundEffect"),
-                                        NMSManager.getNMSClass("SoundCategory"), float.class, float.class})
-                        .invoke(nmsWorld, null, block_position, sound_effect, category, 1.0f, 0.8f);
-            }
-        } catch (final Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     public static String getLanguageVersion() {
         if (NMSManager.getVersionInt() >= 13)
             return "1.15";
@@ -177,13 +106,11 @@ public class DropItemUtil {
     }
 
     public static void forceDelete(final File file) {
-        if (file.isFile())
-            file.delete();
-        else {
+        if (!file.isFile())
             for (final File f : file.listFiles())
                 DropItemUtil.forceDelete(f);
-            file.delete();
-        }
+
+        file.delete();
     }
 
     public static Map<String, String> JSONtoMap(final Reader reader) {
@@ -222,19 +149,6 @@ public class DropItemUtil {
     }
 
     private static String assembleColouredMessage(final String message) {
-//        String result = message;
-////        final ChatColor[] var6;
-////        final int var5 = (var6 = ChatColor.values()).length;
-////
-////        for (int var4 = 0; var4 < var5; ++var4) {
-////            final ChatColor color = var6[var4];
-////            if (replacements.containsKey(color)) {
-////                result = result.replaceAll("(?i)" + color.toString(), replacements.get(color));
-////            } else {
-////                result = result.replaceAll("(?i)" + color.toString(), "");
-////            }
-////        }
-////        return result + Ansi.ansi().reset().toString();
         return message;
     }
 
@@ -244,35 +158,6 @@ public class DropItemUtil {
 
     public static void sendColouredErrorMessage(final String message) {
         System.err.println(assembleColouredMessage(message));
-    }
-
-    public static String formatName(final ItemStack itemStack) {
-        try {
-            final Object nmsItemStack = NMSManager.getMethod(NMSManager.getCraftClass("inventory.CraftItemStack"), "asNMSCopy",
-                    new Class[]{ItemStack.class}).invoke(null, itemStack);
-            final Object name = NMSManager.getMethod(NMSManager.getNMSClass("ItemStack"), "getName").invoke(nmsItemStack);
-            if (NMSManager.getVersionInt() >= 13) {
-                /*if (name.getClass().getName().equals(NMSManager.getNMSClass("ChatComponentText").getName()))
-                    //itemStack.getItemMeta().getDisplayName();
-                    return (String) NMSManager.getMethod(NMSManager.getNMSClass("ChatComponentText"), "getText").invoke(name);
-                else*/
-                if (NMSManager.getVersionInt() == 13)
-                    return DropItemConfiguration.translate(NMSManager.getField(NMSManager.getNMSClass("ChatMessage"), "f").get(name), true);
-                else
-                    return DropItemConfiguration.translate(NMSManager.getField(NMSManager.getNMSClass("ChatMessage"), "key").get(name), true);
-            } else {
-                //no
-                final String str = (String) name;
-                if (str.startsWith("Spawn")) {
-                    final String temp = str.substring(6);
-                    return DropItemConfiguration.translate("Spawn", false) + " " + DropItemConfiguration.translate(temp, false);
-                }
-                return DropItemConfiguration.translate(name, false);
-            }
-        } catch (final Exception e) {
-            e.printStackTrace();
-            return "THIS IS AN ERROR.";
-        }
     }
 
     public static String getDownloadUrl(final JsonObject obj) {
@@ -297,12 +182,10 @@ public class DropItemUtil {
                 if (element.containsKey("browser_download_url"))
                     return (String) element.get("browser_download_url");
                 else throw new NullPointerException(object.toString());
-            }
-            catch(final Exception e) {
+            } catch (final Exception e) {
                 throw new NullArgumentException(e.toString());
             }
-        }
-        else throw new NullPointerException(object.toString());
+        } else throw new NullPointerException(object.toString());
     }
 
     public static void sendNoColouredErrorMessageWithLabel(final String message) {
@@ -313,132 +196,8 @@ public class DropItemUtil {
         sendColouredMessage(ChatColor.stripColor(message));
     }
 
-    public static void sendNoColouredMessage(final String message){
+    public static void sendNoColouredMessage(final String message) {
         sendColouredMessage(ChatColor.stripColor(message));
-    }
-
-    public static class Version {
-        private final int mainVersion;
-        private final int subVersion;
-
-        public Version(final String version) {
-            final String[] temp = version.split("\\.");
-            this.mainVersion = Integer.parseInt(temp[0]);
-            this.subVersion = Integer.parseInt(temp[1]);
-        }
-
-        public int getMainVersion() {
-            return this.mainVersion;
-        }
-
-        public int getSubVersion() {
-            return this.subVersion;
-        }
-
-        public boolean newerThan(final Version version) {
-            return this.mainVersion > version.getMainVersion() || (this.mainVersion == version.getMainVersion() && this.subVersion > version.getSubVersion());
-        }
-
-        @Override
-        public boolean equals(final Object o) {
-            if (this == o) return true;
-            if (o == null || this.getClass() != o.getClass()) return false;
-            final Version version = (Version) o;
-            return this.mainVersion == version.mainVersion &&
-                    this.subVersion == version.subVersion;
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(this.mainVersion, this.subVersion);
-        }
-
-        public String getVersion() {
-            return this.mainVersion + "." + this.subVersion;
-        }
-
-        @Override
-        public String toString() {
-            return this.getVersion();
-        }
-
-        public boolean isNew(final Version version) {
-            return this.newerThan(version) || this.equals(version);
-        }
-    }
-
-    public static class Section {
-
-        private static final Section section = new Section();
-        private final Set<RunningSection> runningSections = Sets.newConcurrentHashSet();
-
-        private Section(){}
-
-        public static Section getInstance() {
-            return section;
-        }
-
-        public static void checkSection() {
-            final long now = System.currentTimeMillis();
-            for (final RunningSection runningSection:section.runningSections)
-                if (now - runningSection.getTime() > 60000) {
-                    section.runningSections.remove(runningSection);
-                    runningSection.getTask().cancel();
-                    throw new TimeOutException(runningSection.getName() + " have run more than 60s");
-                }
-        }
-
-        public void startSection(final String sectionName, final TimerTask task) {
-            this.runningSections.add(new RunningSection(sectionName,System.currentTimeMillis(),task));
-        }
-
-        public long endSection(final String sectionName) {
-            for (final RunningSection runningSection: this.runningSections)
-                if (runningSection.getName().equals(sectionName)) {
-                    this.runningSections.remove(runningSection);
-                    return System.currentTimeMillis() - runningSection.getTime();
-                }
-            return 0L;
-        }
-
-        private static class RunningSection {
-            private final String sectionName;
-            private final long start;
-            private final TimerTask task;
-
-            private RunningSection(final String sectionName, final long start, final TimerTask task) {
-                this.task = task;
-                this.sectionName = sectionName;
-                this.start = start;
-            }
-
-            public TimerTask getTask() {
-                return this.task;
-            }
-
-            @Override
-            public boolean equals(final Object o) {
-                if (this == o) return true;
-                if (o == null || this.getClass() != o.getClass()) return false;
-                final RunningSection that = (RunningSection) o;
-                return Objects.equals(this.sectionName, that.sectionName);
-            }
-
-            @Override
-            public int hashCode() {
-                return Objects.hash(this.sectionName);
-            }
-
-            public String getName() {
-                return this.sectionName;
-            }
-
-            public long getTime() {
-                return this.start;
-            }
-        }
-
-
     }
 
 }

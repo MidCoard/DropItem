@@ -1,6 +1,7 @@
-package com.focess.dropitem.util;
+package com.focess.dropitem.util.command;
 
 import com.focess.dropitem.DropItem;
+import com.focess.dropitem.util.configuration.DropItemConfiguration;
 import com.google.common.collect.Lists;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;

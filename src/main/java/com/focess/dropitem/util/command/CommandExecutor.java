@@ -1,4 +1,4 @@
-package com.focess.dropitem.util;
+package com.focess.dropitem.util.command;
 
 import org.bukkit.command.CommandSender;
 

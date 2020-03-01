@@ -1,8 +1,8 @@
 package com.focess.dropitem.listener;
 
 import com.focess.dropitem.DropItem;
-import com.focess.dropitem.util.DropItemConfiguration;
-import com.focess.dropitem.util.VersionUpdater;
+import com.focess.dropitem.util.configuration.DropItemConfiguration;
+import com.focess.dropitem.util.version.VersionUpdater;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

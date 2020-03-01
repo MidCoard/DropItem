@@ -7,7 +7,13 @@ import com.focess.dropitem.item.DropItemInfo;
 import com.focess.dropitem.listener.*;
 import com.focess.dropitem.runnable.DropItemRunnable;
 import com.focess.dropitem.runnable.SpawnDropItemRunnable;
-import com.focess.dropitem.util.*;
+import com.focess.dropitem.util.NMSManager;
+import com.focess.dropitem.util.command.Command;
+import com.focess.dropitem.util.configuration.DropItemConfiguration;
+import com.focess.dropitem.util.version.ConfigUpdater;
+import com.focess.dropitem.util.version.Version;
+import com.focess.dropitem.util.version.VersionUpdateReplacement;
+import com.focess.dropitem.util.version.VersionUpdater;
 import com.google.common.collect.Lists;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -58,7 +64,7 @@ public class DropItem extends JavaPlugin {
 
     private final PluginManager pluginManager = this.getServer().getPluginManager();
 
-    private DropItemUtil.Version version;
+    private Version version;
 
     private boolean isLoaded;
 
@@ -72,8 +78,8 @@ public class DropItem extends JavaPlugin {
         final File file = new File(this.getDataFolder(), "config.yml");
         if (!file.exists())
             this.saveDefaultConfig();
-        else if (!new DropItemUtil.Version(this.getConfig().getString("Version", "7.4")).isNew(this.version))
-            ConfigUpdater.updateConfig(this, new DropItemUtil.Version(this.getConfig().getString("Version", "7.4")), this.version);
+        else if (!new Version(this.getConfig().getString("Version", "7.4")).isNew(this.version))
+            ConfigUpdater.updateConfig(this, new Version(this.getConfig().getString("Version", "7.4")), this.version);
     }
 
     @Override
@@ -108,7 +114,7 @@ public class DropItem extends JavaPlugin {
         if (NMSManager.getVersionInt() < 8)
             this.getServer().getPluginManager().disablePlugin(this);
         DropItem.instance = this;
-        this.version = new DropItemUtil.Version(this.getDescription().getVersion());
+        this.version = new Version(this.getDescription().getVersion());
         this.loadConfig();
         DropItemConfiguration.loadDefault(this);
         CraftDropItem.loadItem(this);
@@ -176,7 +182,7 @@ public class DropItem extends JavaPlugin {
         }
     }
 
-    public DropItemUtil.Version getVersion() {
+    public Version getVersion() {
         return this.version;
     }
 

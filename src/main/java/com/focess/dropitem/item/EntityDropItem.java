@@ -1,6 +1,6 @@
 package com.focess.dropitem.item;
 
-import com.focess.dropitem.util.DropItemConfiguration;
+import com.focess.dropitem.util.configuration.DropItemConfiguration;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;

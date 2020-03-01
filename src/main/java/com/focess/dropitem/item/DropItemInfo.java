@@ -2,7 +2,7 @@ package com.focess.dropitem.item;
 
 import com.focess.dropitem.DropItem;
 import com.focess.dropitem.event.DropItemDeathEvent.DeathCause;
-import com.focess.dropitem.util.DropItemConfiguration;
+import com.focess.dropitem.util.configuration.DropItemConfiguration;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 

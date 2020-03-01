@@ -1,6 +1,8 @@
-package com.focess.dropitem.util;
+package com.focess.dropitem.util.configuration;
 
 import com.focess.dropitem.DropItem;
+import com.focess.dropitem.util.DropItemUtil;
+import com.focess.dropitem.util.NMSManager;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.bukkit.Material;

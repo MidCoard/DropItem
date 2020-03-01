@@ -1,8 +1,8 @@
 package com.focess.dropitem.listener;
 
 import com.focess.dropitem.item.CraftDropItem;
-import com.focess.dropitem.util.DropItemConfiguration;
 import com.focess.dropitem.util.DropItemUtil;
+import com.focess.dropitem.util.configuration.DropItemConfiguration;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;

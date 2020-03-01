@@ -1,5 +1,6 @@
-package com.focess.dropitem.util;
+package com.focess.dropitem.util.command;
 
+import com.focess.dropitem.util.configuration.DropItemConfiguration;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
