@@ -9,7 +9,13 @@ HaveNoPermission: §c§l你没有权限
 InvalidArg: §c§l无效的参数
 Welcome: §a§l欢迎使用DropItem插件
 SenderNotPlayer: §c§l你不是玩家
-VersionCheck: §b§l正在检查版本更新
-VersionCheckFail: §c§l版本更新检查错误%f%，请向作者报告问题
-LowVersion: §b§l最新版本 §a§l%f% §b§l已发布
-LatestVersion: §b§l你已是最新版本
+VersionCheck: §b§lDropItem >> 正在检查版本更新
+VersionFail: §c§lDropItem >> 版本更新错误%f%，请向作者报告该问题
+VersionFail2: §c§lDropItem >> 版本更新错误%f%，这是一个网络连接问题，请稍后重试
+LowVersion: §b§lDropItem >> 最新版本 §a§l%f% §b§l已发布
+LatestVersion: §b§lDropItem >> 你已是最新版本
+DownloadStart: §b§lDropItem >> 正在开始下载 §a§l%f% 文件
+DownloadFail: §c§lDropItem >> 下载失败...请稍后重试。若多次出现该错误，请向作者报告该问题
+DownloadSucceed: §b§lDropItem >> 成功完成下载，用时%f%秒
+HaveDownloaded: §b§lDropItem >> 已成功完成下载，关服时自动替换
+ReplaceError: §c§lDropItem >> 更新错误，请尝试手动替换 %f% 目标更新文件

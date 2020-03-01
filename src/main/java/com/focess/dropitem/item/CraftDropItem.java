@@ -47,8 +47,8 @@ public class CraftDropItem {
         return CraftDropItem.getDropItem(dropItem) != null;
     }
 
-    public static void loadItem(final DropItem dropItem) {
-        CraftDropItem.drop = dropItem;
+    public static void loadItem(final DropItem drop) {
+        CraftDropItem.drop = drop;
         for (final World world : Bukkit.getWorlds())
             for (final Item item : world.getEntitiesByClass(Item.class)) {
                 CraftDropItem.spawnItem(item.getItemStack(), item.getLocation(), false);

@@ -20,13 +20,33 @@ import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URLClassLoader;
 import java.util.Collection;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class DropItem extends JavaPlugin {
 
     private static final List<BukkitTask> bukkitTasks = Lists.newArrayList();
+
+    private final Timer timer = new Timer();
+
+    private TimerTask timerTask;
+
+    private VersionUpdateReplacement versionUpdateReplacement;
+
+    public TimerTask setTimerTask(final TimerTask timerTask) {
+        this.timerTask = timerTask;
+        return timerTask;
+    }
+
     private static DropItem instance;
+
+    public Timer getTimer() {
+        return this.timer;
+    }
 
     public static DropItem getInstance() {
         return DropItem.instance;
@@ -64,8 +84,23 @@ public class DropItem extends JavaPlugin {
             bukkitTask.cancel();
         if (DropItemConfiguration.isDropItemAI())
             CraftAIListener.reload();
+        DropItemInfo.reload();
         CraftDropItem.uploadItems();
+        if (this.timerTask != null)
+            this.timerTask.cancel();
+        this.timer.cancel();
         this.isLoaded = false;
+        this.closeResource();
+        VersionUpdater.update(this);
+    }
+
+    private void closeResource() {
+        final URLClassLoader loader = (URLClassLoader) this.getClassLoader();
+        try {
+            loader.close();
+        } catch (final IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -76,7 +111,6 @@ public class DropItem extends JavaPlugin {
         this.version = new DropItemUtil.Version(this.getDescription().getVersion());
         this.loadConfig();
         DropItemConfiguration.loadDefault(this);
-        DropItemInfo.register(this);
         CraftDropItem.loadItem(this);
         this.pluginManager.registerEvents(new RemoveDropItemListener(), this);
         this.pluginManager.registerEvents(new PlayerMoveListener(), this);
@@ -89,9 +123,16 @@ public class DropItem extends JavaPlugin {
                 .add(this.bukkitScheduler.runTaskTimer(this, (Runnable) new DropItemRunnable(this), 0L, 10L));
         if (DropItemConfiguration.isDropItemAI())
             this.craftAIListener = new CraftAIListener(this);
+        if (DropItemConfiguration.isRefresh())
+            DropItemInfo.loadDefault(this);
         Command.register(new DropItemCommand(this));
         if (DropItemConfiguration.isVersionCheck())
-            this.bukkitScheduler.runTaskAsynchronously(this, () -> VersionUpdater.checkForUpdate(this));
+            this.timer.schedule(this.setTimerTask(new TimerTask() {
+                @Override
+                public void run() {
+                    VersionUpdater.checkForUpdate(DropItem.this, this);
+                }
+            }), 0);
         this.isLoaded = true;
     }
 
@@ -137,5 +178,13 @@ public class DropItem extends JavaPlugin {
 
     public DropItemUtil.Version getVersion() {
         return this.version;
+    }
+
+    public VersionUpdateReplacement getVersionUpdateReplacement() {
+        return this.versionUpdateReplacement;
+    }
+
+    public void setVersionUpdateReplacement(final VersionUpdateReplacement versionUpdateReplacement) {
+        this.versionUpdateReplacement = versionUpdateReplacement;
     }
 }

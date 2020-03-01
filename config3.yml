@@ -1,9 +1,11 @@
-Version: '8.0'
+Version: '8.2'
 # Used to automatically update the configuration file when the version is updated, please do not modify this item.
 VersionCheck: true
 # Whether to enable version update checking. The default is true.
 VersionCheckCycle: 10800
 # Set the version update check time. False if checked only at server startup. The default is 10800. (In seconds)
+VersionDownload: true
+# Whether to enable automatic download of new version. The default is true.
 DropForm: normal
 # Set item drop form. normal: Three-dimensional after falling to the ground. w-spawn: Three-dimensional after dropped. The default is normal.
 PickForm: normal

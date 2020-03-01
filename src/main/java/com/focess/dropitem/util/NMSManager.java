@@ -80,11 +80,11 @@ public class NMSManager {
             e = NMSManager.getMethod(NMSManager.Entity, "save", NMSManager.NBTTagCompound);
             LocaleLanguage = NMSManager.getNMSClass("LocaleLanguage");
             try {
-                localeLanguage = NMSManager.getMethod(LocaleLanguage, "getInstance").invoke(null);
+                localeLanguage = NMSManager.getMethod(LocaleLanguage, "a").invoke(null);
             } catch (final Exception e) {
                 e.printStackTrace();
             }
-            translateKey = NMSManager.getMethod(LocaleLanguage, "translateKey", String.class);
+            translateKey = NMSManager.getMethod(LocaleLanguage, "a", String.class);
         }
     }
 

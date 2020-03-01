@@ -16,6 +16,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
+import java.util.TimerTask;
 
 public class DropItemRunnable extends BukkitRunnable {
     private final DropItem drop;
@@ -81,9 +82,15 @@ public class DropItemRunnable extends BukkitRunnable {
             this.versionCheck++;
             if (this.versionCheck >= DropItemConfiguration.getVersionCheckCycle() * 2) {
                 this.versionCheck = 0;
-                this.drop.getServer().getScheduler().runTaskAsynchronously(this.drop, ()-> VersionUpdater.checkForUpdate(this.drop));
+                this.drop.getTimer().schedule(this.drop.setTimerTask(new TimerTask() {
+                    @Override
+                    public void run() {
+                        VersionUpdater.checkForUpdate(DropItemRunnable.this.drop,this);
+                    }
+                }), 0);
             }
         }
+        DropItemUtil.Section.checkSection();
         for (final EntityDropItem dropItem : CraftDropItem.getDropItems()) {
             this.onCactusClean(dropItem);
             this.onFireClean(dropItem);

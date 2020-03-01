@@ -4,6 +4,7 @@ import com.focess.dropitem.DropItem;
 import com.focess.dropitem.event.DropItemDeathEvent.DeathCause;
 import com.focess.dropitem.util.DropItemConfiguration;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.Map;
 import java.util.Objects;
@@ -12,19 +13,24 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class DropItemInfo {
 
+    private static BukkitTask live;
+
     public static void clear() {
         DropItemInfo.dropItemInfos.clear();
     }
 
     private static final Map<UUID, DropItemInfo> dropItemInfos = new ConcurrentHashMap<>();
 
-    public static void register(final DropItem drop) {
-        if (DropItemConfiguration.isRefresh())
-            drop.getServer().getScheduler().runTaskTimer(drop, (Runnable) new DropItemLive(), 0, 20);
-    }
-
     protected static DropItemInfo getDropItemInfo(final UUID uuid) {
         return DropItemInfo.dropItemInfos.get(uuid);
+    }
+
+    public static void reload() {
+        live.cancel();
+    }
+
+    public static void loadDefault(final DropItem drop) {
+        live = drop.getServer().getScheduler().runTaskTimer(drop, (Runnable) new DropItemLive(), 0, 20);
     }
 
     @Override

@@ -1,9 +1,11 @@
-Version: '8.0'
+Version: '8.2'
 #用于版本更新时自动更新配置文件，该项请不要修改.
 VersionCheck: true
 #是否开启版本更新检查。默认为true。
 VersionCheckCycle: 10800
 #设置版本更新检查时间。如果只在服务器启动时检查，则为false。默认为10800。（单位为秒）
+VersionDownload: true
+#是否开启新版本自动下载。默认为true。
 DropForm: normal
 #设置物品掉落形式。normal: 掉落在地上后立体化。w-spawn: 掉落立即立体化。默认为normal。
 PickForm: normal

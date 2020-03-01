@@ -74,9 +74,6 @@ public class DropItemCommand extends Command {
             final Collection<EntityDropItem> dropItems = CraftDropItem.getDropItems();
             for (final EntityDropItem dropItem : dropItems)
                 CraftDropItem.remove(dropItem, DropItemDeathEvent.DeathCause.SYSTEM_CLEAN);
-            final File drops = new File(this.drop.getDataFolder(), "drops");
-            for (final File file : drops.listFiles())
-                file.delete();
             if (DropItemConfiguration.isDropItemAI())
                 this.drop.getCraftAIListener().clear();
             final List<World> worlds = Bukkit.getWorlds();

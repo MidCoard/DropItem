@@ -3,11 +3,15 @@ package com.focess.dropitem.util;
 import com.focess.dropitem.event.DropItemDeathEvent;
 import com.focess.dropitem.event.HopperGottenEvent;
 import com.focess.dropitem.event.PlayerGottenEvent;
+import com.focess.dropitem.exception.TimeOutException;
 import com.focess.dropitem.item.CraftDropItem;
 import com.focess.dropitem.item.EntityDropItem;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import org.apache.commons.lang.NullArgumentException;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -17,7 +21,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.fusesource.jansi.Ansi;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.json.simple.parser.ContainerFactory;
 import org.json.simple.parser.JSONParser;
 
@@ -96,17 +101,32 @@ public class DropItemUtil {
         }
     }
 
-    public static void forceDelete(final File file) {
-        if (file.isFile())
-            file.delete();
-        else {
-            for (final File f : file.listFiles())
-                DropItemUtil.forceDelete(f);
-            file.delete(); 
-        }
-    }
+    private static final Map<ChatColor, String> replacements = Maps.newHashMap();
 
-    private static final Map<ChatColor,String> replacements = Maps.newHashMap();
+    static {
+//        replacements.put(ChatColor.BLACK, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.BLACK).boldOff().toString());
+//        replacements.put(ChatColor.DARK_BLUE, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.BLUE).boldOff().toString());
+//        replacements.put(ChatColor.DARK_GREEN, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.GREEN).boldOff().toString());
+//        replacements.put(ChatColor.DARK_AQUA, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.CYAN).boldOff().toString());
+//        replacements.put(ChatColor.DARK_RED, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.RED).boldOff().toString());
+//        replacements.put(ChatColor.DARK_PURPLE, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.MAGENTA).boldOff().toString());
+//        replacements.put(ChatColor.GOLD, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.YELLOW).boldOff().toString());
+//        replacements.put(ChatColor.GRAY, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.WHITE).boldOff().toString());
+//        replacements.put(ChatColor.DARK_GRAY, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.BLACK).bold().toString());
+//        replacements.put(ChatColor.BLUE, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.BLUE).bold().toString());
+//        replacements.put(ChatColor.GREEN, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.GREEN).bold().toString());
+//        replacements.put(ChatColor.AQUA, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.CYAN).bold().toString());
+//        replacements.put(ChatColor.RED, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.RED).bold().toString());
+//        replacements.put(ChatColor.LIGHT_PURPLE, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.MAGENTA).bold().toString());
+//        replacements.put(ChatColor.YELLOW, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.YELLOW).bold().toString());
+//        replacements.put(ChatColor.WHITE, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.WHITE).bold().toString());
+//        replacements.put(ChatColor.MAGIC, Ansi.ansi().a(Ansi.Attribute.BLINK_SLOW).toString());
+//        replacements.put(ChatColor.BOLD, Ansi.ansi().a(Ansi.Attribute.UNDERLINE_DOUBLE).toString());
+//        replacements.put(ChatColor.STRIKETHROUGH, Ansi.ansi().a(Ansi.Attribute.STRIKETHROUGH_ON).toString());
+//        replacements.put(ChatColor.UNDERLINE, Ansi.ansi().a(Ansi.Attribute.UNDERLINE).toString());
+//        replacements.put(ChatColor.ITALIC, Ansi.ansi().a(Ansi.Attribute.ITALIC).toString());
+//        replacements.put(ChatColor.RESET, Ansi.ansi().a(Ansi.Attribute.RESET).toString());
+    }
 
     public static void playSound(final Player player, final Block block) {
         try {
@@ -156,66 +176,45 @@ public class DropItemUtil {
         return "1.12";
     }
 
-    static {
-        replacements.put(ChatColor.BLACK, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.BLACK).boldOff().toString());
-        replacements.put(ChatColor.DARK_BLUE, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.BLUE).boldOff().toString());
-        replacements.put(ChatColor.DARK_GREEN, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.GREEN).boldOff().toString());
-        replacements.put(ChatColor.DARK_AQUA, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.CYAN).boldOff().toString());
-        replacements.put(ChatColor.DARK_RED, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.RED).boldOff().toString());
-        replacements.put(ChatColor.DARK_PURPLE, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.MAGENTA).boldOff().toString());
-        replacements.put(ChatColor.GOLD, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.YELLOW).boldOff().toString());
-        replacements.put(ChatColor.GRAY, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.WHITE).boldOff().toString());
-        replacements.put(ChatColor.DARK_GRAY, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.BLACK).bold().toString());
-        replacements.put(ChatColor.BLUE, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.BLUE).bold().toString());
-        replacements.put(ChatColor.GREEN, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.GREEN).bold().toString());
-        replacements.put(ChatColor.AQUA, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.CYAN).bold().toString());
-        replacements.put(ChatColor.RED, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.RED).bold().toString());
-        replacements.put(ChatColor.LIGHT_PURPLE, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.MAGENTA).bold().toString());
-        replacements.put(ChatColor.YELLOW, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.YELLOW).bold().toString());
-        replacements.put(ChatColor.WHITE, Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.WHITE).bold().toString());
-        replacements.put(ChatColor.MAGIC, Ansi.ansi().a(Ansi.Attribute.BLINK_SLOW).toString());
-        replacements.put(ChatColor.BOLD, Ansi.ansi().a(Ansi.Attribute.UNDERLINE_DOUBLE).toString());
-        replacements.put(ChatColor.STRIKETHROUGH, Ansi.ansi().a(Ansi.Attribute.STRIKETHROUGH_ON).toString());
-        replacements.put(ChatColor.UNDERLINE, Ansi.ansi().a(Ansi.Attribute.UNDERLINE).toString());
-        replacements.put(ChatColor.ITALIC, Ansi.ansi().a(Ansi.Attribute.ITALIC).toString());
-        replacements.put(ChatColor.RESET, Ansi.ansi().a(Ansi.Attribute.RESET).toString());
+    public static void forceDelete(final File file) {
+        if (file.isFile())
+            file.delete();
+        else {
+            for (final File f : file.listFiles())
+                DropItemUtil.forceDelete(f);
+            file.delete();
+        }
     }
-    
-    public static Map<String,String> JSONtoMap(final Reader reader) {
+
+    public static Map<String, String> JSONtoMap(final Reader reader) {
         if (NMSManager.getVersionInt() == 8) {
             final JSONParser parser = new JSONParser();
-            final ContainerFactory containerFactory = new ContainerFactory(){
+            final ContainerFactory containerFactory = new ContainerFactory() {
                 public List creatArrayContainer() {
                     return new LinkedList();
                 }
 
-
                 public Map createObjectContainer() {
                     return new LinkedHashMap();
                 }
-
             };
             try {
                 return (Map<String, String>) parser.parse(reader, containerFactory);
-//                Iterator iterator = json.entrySet().iterator();
-//                Map<String,String> ret = Maps.newHashMap();
-//                while (iterator.hasNext()) {
-//                    Map.Entry entry = (Map.Entry) iterator.next();
-//                    ret.put(entry.getKey(),entry.getValue());
-//                }
-            }
-            catch(final Exception e) {
+            } catch (final Exception e) {
                 e.printStackTrace();
             }
             return Maps.newHashMap();
-        }
-            else
-        return new GsonBuilder().create().fromJson(reader, new TypeToken<Map<String, String>>() {
-        }.getType());
+        } else
+            return new GsonBuilder().create().fromJson(reader, new TypeToken<Map<String, String>>() {
+            }.getType());
     }
 
     public static void sendColouredMessageWithLabel(final String message) {
         sendColouredMessage("[DropItem]" + message);
+    }
+
+    public static void sendNoColouredMessageWithLabel(final String message) {
+        sendColouredMessageWithLabel(ChatColor.stripColor(message));
     }
 
     public static void sendColouredMessage(final String message) {
@@ -223,19 +222,20 @@ public class DropItemUtil {
     }
 
     private static String assembleColouredMessage(final String message) {
-        String result = message;
-        final ChatColor[] var6;
-        final int var5 = (var6 = ChatColor.values()).length;
-
-        for(int var4 = 0; var4 < var5; ++var4) {
-            final ChatColor color = var6[var4];
-            if (replacements.containsKey(color)) {
-                result = result.replaceAll("(?i)" + color.toString(), replacements.get(color));
-            } else {
-                result = result.replaceAll("(?i)" + color.toString(), "");
-            }
-        }
-        return result + Ansi.ansi().reset().toString();
+//        String result = message;
+////        final ChatColor[] var6;
+////        final int var5 = (var6 = ChatColor.values()).length;
+////
+////        for (int var4 = 0; var4 < var5; ++var4) {
+////            final ChatColor color = var6[var4];
+////            if (replacements.containsKey(color)) {
+////                result = result.replaceAll("(?i)" + color.toString(), replacements.get(color));
+////            } else {
+////                result = result.replaceAll("(?i)" + color.toString(), "");
+////            }
+////        }
+////        return result + Ansi.ansi().reset().toString();
+        return message;
     }
 
     public static void sendColouredErrorMessageWithLabel(final String message) {
@@ -246,7 +246,7 @@ public class DropItemUtil {
         System.err.println(assembleColouredMessage(message));
     }
 
-    public static java.lang.String formatName(final ItemStack itemStack) {
+    public static String formatName(final ItemStack itemStack) {
         try {
             final Object nmsItemStack = NMSManager.getMethod(NMSManager.getCraftClass("inventory.CraftItemStack"), "asNMSCopy",
                     new Class[]{ItemStack.class}).invoke(null, itemStack);
@@ -273,6 +273,48 @@ public class DropItemUtil {
             e.printStackTrace();
             return "THIS IS AN ERROR.";
         }
+    }
+
+    public static String getDownloadUrl(final JsonObject obj) {
+        if (obj.has("assets")) {
+            try {
+                final JsonObject element = obj.getAsJsonArray("assets").get(0).getAsJsonObject();
+                if (element.has("browser_download_url"))
+                    return element.get("browser_download_url").getAsString();
+                else throw new NullPointerException(obj.toString());
+            } catch (final Exception e) {
+                throw new NullPointerException(e.toString());
+            }
+
+        } else
+            throw new NullPointerException(obj.toString());
+    }
+
+    public static String getDownloadUrl(final JSONObject object) {
+        if (object.containsKey("assets")) {
+            try {
+                final JSONObject element = (JSONObject) ((JSONArray) object.get("assets")).get(0);
+                if (element.containsKey("browser_download_url"))
+                    return (String) element.get("browser_download_url");
+                else throw new NullPointerException(object.toString());
+            }
+            catch(final Exception e) {
+                throw new NullArgumentException(e.toString());
+            }
+        }
+        else throw new NullPointerException(object.toString());
+    }
+
+    public static void sendNoColouredErrorMessageWithLabel(final String message) {
+        sendColouredErrorMessageWithLabel(ChatColor.stripColor(message));
+    }
+
+    public static void sendNoColouredErrorMessage(final String message) {
+        sendColouredMessage(ChatColor.stripColor(message));
+    }
+
+    public static void sendNoColouredMessage(final String message){
+        sendColouredMessage(ChatColor.stripColor(message));
     }
 
     public static class Version {
@@ -323,6 +365,80 @@ public class DropItemUtil {
         public boolean isNew(final Version version) {
             return this.newerThan(version) || this.equals(version);
         }
+    }
+
+    public static class Section {
+
+        private static final Section section = new Section();
+        private final Set<RunningSection> runningSections = Sets.newConcurrentHashSet();
+
+        private Section(){}
+
+        public static Section getInstance() {
+            return section;
+        }
+
+        public static void checkSection() {
+            final long now = System.currentTimeMillis();
+            for (final RunningSection runningSection:section.runningSections)
+                if (now - runningSection.getTime() > 60000) {
+                    section.runningSections.remove(runningSection);
+                    runningSection.getTask().cancel();
+                    throw new TimeOutException(runningSection.getName() + " have run more than 60s");
+                }
+        }
+
+        public void startSection(final String sectionName, final TimerTask task) {
+            this.runningSections.add(new RunningSection(sectionName,System.currentTimeMillis(),task));
+        }
+
+        public long endSection(final String sectionName) {
+            for (final RunningSection runningSection: this.runningSections)
+                if (runningSection.getName().equals(sectionName)) {
+                    this.runningSections.remove(runningSection);
+                    return System.currentTimeMillis() - runningSection.getTime();
+                }
+            return 0L;
+        }
+
+        private static class RunningSection {
+            private final String sectionName;
+            private final long start;
+            private final TimerTask task;
+
+            private RunningSection(final String sectionName, final long start, final TimerTask task) {
+                this.task = task;
+                this.sectionName = sectionName;
+                this.start = start;
+            }
+
+            public TimerTask getTask() {
+                return this.task;
+            }
+
+            @Override
+            public boolean equals(final Object o) {
+                if (this == o) return true;
+                if (o == null || this.getClass() != o.getClass()) return false;
+                final RunningSection that = (RunningSection) o;
+                return Objects.equals(this.sectionName, that.sectionName);
+            }
+
+            @Override
+            public int hashCode() {
+                return Objects.hash(this.sectionName);
+            }
+
+            public String getName() {
+                return this.sectionName;
+            }
+
+            public long getTime() {
+                return this.start;
+            }
+        }
+
+
     }
 
 }

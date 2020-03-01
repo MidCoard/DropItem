@@ -9,7 +9,13 @@ HaveNoPermission: §c§l You have no permissions
 InvalidArg: §c§l Invalid argument
 Welcome: §a§l Welcome to the DropItem plugin
 SenderNotPlayer: §c§l You are not a player
-VersionCheck: §b§l DropItem is checking for version update
-VersionCheckFail: §c§l Version update check error %f%, please report the problem to the author
-LowVersion: §b§l Latest version§a§l %f% §b§lhas been released
-LatestVersion: §b§l You are already at the latest version
+VersionCheck: §b§lDropItem >> DropItem is checking for version update
+VersionFail: §c§lDropItem >> Version update error %f%. Please report the problem to the author
+VersionFail2: §c§lDropItem >> Version update error %f%. This is a network connection problem, please try again later.
+LowVersion: §b§lDropItem >> Latest version§a§l %f% §b§lhas been released
+LatestVersion: §b§lDropItem >> You are already at the latest version
+DownloadStart: §b§lDropItem >> Start downloading §a§l%f% file
+DownloadFail: §c§lDropItem >> Download failed ... Please try again later. If this error occurs repeatedly, please report the problem to the author
+DownloadSucceed: §b§lDropItem >> Successfully complete the download in %f%s
+HaveDownloaded: §b§lDropItem >> Have successfully completed the download, which will automatically replace the lower version when server is closed
+ReplaceError: §c§lDropItem >> Update error, try manually replacing the %f% target update file

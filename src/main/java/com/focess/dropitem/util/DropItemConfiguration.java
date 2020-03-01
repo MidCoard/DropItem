@@ -46,6 +46,12 @@ public class DropItemConfiguration {
     private static int versionCheckCycle;
     private static boolean checkCycle;
 
+    private static boolean versionDownload;
+
+    public static boolean isVersionDownload() {
+        return versionDownload;
+    }
+
     public static boolean isVersionCheck() {
         return versionCheck;
     }
@@ -80,6 +86,7 @@ public class DropItemConfiguration {
     public static void loadDefault(final DropItem drop) {
         versionCheck = drop.getConfig().getBoolean("VersionCheck",true);
         getVersionCheckCycle(drop);
+        versionDownload = drop.getConfig().getBoolean("VersionDownload",true);
         dropForm = drop.getConfig().getString("DropForm", "normal");
         pickForm = drop.getConfig().getString("PickForm", "normal");
         pitchX = drop.getConfig().getInt("PitchX", 100);

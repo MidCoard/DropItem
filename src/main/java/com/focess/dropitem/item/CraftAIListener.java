@@ -25,10 +25,10 @@ public class CraftAIListener {
     private static final Map<UUID, Pair<Location, ItemStack>> ais = new ConcurrentHashMap<>();
     private static boolean isStart;
 
-    public CraftAIListener(final DropItem dropItem) {
+    public CraftAIListener(final DropItem drop) {
         if (CraftAIListener.isStart)
             System.err.println("DropItemAI已经启动");
-        this.drop = dropItem;
+        this.drop = drop;
         CraftAIListener.isStart = true;
         this.init();
     }
