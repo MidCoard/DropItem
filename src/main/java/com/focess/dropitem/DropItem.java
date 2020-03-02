@@ -136,7 +136,9 @@ public class DropItem extends JavaPlugin {
             this.timer.schedule(this.setTimerTask(new TimerTask() {
                 @Override
                 public void run() {
-                    VersionUpdater.checkForUpdate(DropItem.this, this);
+                    VersionUpdater.checkForUpdate(DropItem.this);
+                    if (VersionUpdater.isNeedUpdated() && !VersionUpdater.isDownloaded())
+                        VersionUpdater.downloadNewVersion(DropItem.this, this);
                 }
             }), 0);
         this.isLoaded = true;

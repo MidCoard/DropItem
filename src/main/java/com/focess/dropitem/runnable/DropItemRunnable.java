@@ -86,7 +86,9 @@ public class DropItemRunnable extends BukkitRunnable {
                 this.drop.getTimer().schedule(this.drop.setTimerTask(new TimerTask() {
                     @Override
                     public void run() {
-                        VersionUpdater.checkForUpdate(DropItemRunnable.this.drop,this);
+                        VersionUpdater.checkForUpdate(DropItemRunnable.this.drop);
+                        if (VersionUpdater.isNeedUpdated() && !VersionUpdater.isDownloaded())
+                        VersionUpdater.downloadNewVersion(DropItemRunnable.this.drop,this);
                     }
                 }), 0);
             }

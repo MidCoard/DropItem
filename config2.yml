@@ -1,7 +1,7 @@
 Version: '8.2'
 #用于版本更新时自动更新配置文件，该项请不要修改.
 VersionCheck: true
-#是否开启版本更新检查。默认为true。
+#是否开启版本更新检查。默认为true。为true时“VersionDownload”默认将无效。
 VersionCheckCycle: 10800
 #设置版本更新检查时间。如果只在服务器启动时检查，则为false。默认为10800。（单位为秒）
 VersionDownload: true

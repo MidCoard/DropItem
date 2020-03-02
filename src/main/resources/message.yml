@@ -1,10 +1,14 @@
 AfterClean: §b§l Finished clearing drops
 AfterCleanAll: §b§l Finished clearing drops
-CommandClean: §a§l Use / DropItem clean or / di clean to clear known drops
-CommandCleanAll: §a§l Use / DropItem cleanall or / di cleanall to clear all drops that are similar to drops (unsafe, only used when items are loaded incorrectly)
-CommandDisable: §a§l Use / DropItem disable or / di disable to safely uninstall the DropItem plugin
+CommandClean: §a§l Use /DropItem clean or /di clean to clear known drops
+CommandCleanAll: §a§l Use /DropItem cleanall or /di cleanall to clear all drops that are similar to drops (unsafe, only used when items are loaded incorrectly)
+CommandDisable: §a§l Use /DropItem disable or /di disable to safely uninstall the DropItem plugin
+CommandUpdate: §a§l Use /DropItem update or /di update to check for updates
+CommandDownload: §a§l Use /DropItem download or /di download to download the update and update when the plugin is reloaded
+CommandUpdateNow: §a§l Use /DropItem updatenow or /di updatenow to update immediately
+CommandReload: §a§l Use /DropItem reload or /di reload to reload the DropItem plugin
 CommandUnregister: §c§l Unknown instruction
-Disabling: §b§l Uninstall DropItem plugin ...
+Disabling: §b§l Disable DropItem plugin ...
 HaveNoPermission: §c§l You have no permissions
 InvalidArg: §c§l Invalid argument
 Welcome: §a§l Welcome to the DropItem plugin
@@ -16,6 +20,11 @@ LowVersion: §b§lDropItem >> Latest version§a§l %f% §b§lhas been released
 LatestVersion: §b§lDropItem >> You are already at the latest version
 DownloadStart: §b§lDropItem >> Start downloading §a§l%f% file
 DownloadFail: §c§lDropItem >> Download failed ... Please try again later. If this error occurs repeatedly, please report the problem to the author
-DownloadSucceed: §b§lDropItem >> Successfully complete the download in %f%s
-HaveDownloaded: §b§lDropItem >> Have successfully completed the download, which will automatically replace the lower version when server is closed
+DownloadSucceed: §b§lDropItem >> Successfully complete the download in %f%s. which will be updated when the plugin is reloaded
+HaveDownloaded: §b§lDropItem >> Have successfully completed the download, which will be updated when the plugin is reloaded
 ReplaceError: §c§lDropItem >> Update error, try manually replacing the %f% target update file
+UpdateMessage: §b§lDropItem >> Update content,
+NoDownload: §c§l Local update information exists, but the update file is not downloaded, please enter /dropitem download or /di download to download the update
+NoUpdateCheck: §c§l There is no update information locally, please use /dropitem update or /di update to check for updates
+Updating: Update DropItem plugin ...
+Reloading: Reload DropItem plugin ...

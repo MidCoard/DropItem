@@ -84,17 +84,18 @@ public abstract class Command extends org.bukkit.command.Command {
     }
 
     public final void unregister() {
-        final SimpleCommandMap commandMap = (SimpleCommandMap) Command.commandMap;
-        this.unregister(Command.commandMap);
         try {
             final Field field = SimpleCommandMap.class.getDeclaredField("knownCommands");
             field.setAccessible(true);
             final Map<String, org.bukkit.command.Command> commands = (Map<String, org.bukkit.command.Command>) field.get(commandMap);
-            commands.remove(this.getName());
+            commands.remove(this.getName().toLowerCase());
+            for (final String alias : this.getAliases())
+                commands.remove(alias.toLowerCase());
             field.set(commandMap, commands);
         } catch (final Exception e) {
             e.printStackTrace();
         }
+        this.unregister(Command.commandMap);
         this.registered = false;
     }
 

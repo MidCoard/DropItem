@@ -24,6 +24,7 @@ public class VersionUpdater {
     private static String version;
     private static String url;
     private static boolean downloaded;
+    private static String body;
 
     public static String getVersion() {
         return version;
@@ -33,14 +34,18 @@ public class VersionUpdater {
         return needUpdated;
     }
 
-    public static void checkForUpdate(final DropItem drop, final TimerTask task) {
+    public static void checkForUpdate(final DropItem drop) {
         if (needUpdated) {
-            for (final OfflinePlayer player: Bukkit.getOperators())
+            for (final OfflinePlayer player : Bukkit.getOperators())
                 if (player.isOnline())
-                    ((Player) player).sendMessage(DropItemConfiguration.getMessage("LowVersion",VersionUpdater.getVersion()));
+                    ((Player) player).sendMessage(DropItemConfiguration.getMessage("LowVersion", VersionUpdater.getVersion()));
             if (downloaded)
                 DropItemUtil.sendNoColouredMessage(DropItemConfiguration.getMessage("HaveDownloaded"));
-            else downloadNewVersion(drop,url,version,task);
+            else {
+                DropItemUtil.sendNoColouredMessage(DropItemConfiguration.getMessage("LowVersion", version));
+                DropItemUtil.sendNoColouredMessage(DropItemConfiguration.getMessage("UpdateMessage"));
+                DropItemUtil.sendNoColouredMessage(body);
+            }
             return;
         }
         DropItemUtil.sendNoColouredMessage(DropItemConfiguration.getMessage("VersionCheck"));
@@ -66,20 +71,22 @@ public class VersionUpdater {
                     DropItemUtil.sendNoColouredErrorMessage(DropItemConfiguration.getMessage("VersionFail", 300));
                     return;
                 }
-                final Version latestVersion = new Version((String) object.get("tag_name"));
-                if (latestVersion.newerThan(drop.getVersion())) {
+                final Version latestVersion = new Version( object.get("tag_name").toString());
+                final String name = object.get("name").toString();
+                if (latestVersion.newerThan(drop.getVersion()) && !name.equals("Test")) {
                     DropItemUtil.sendNoColouredMessage(DropItemConfiguration.getMessage("LowVersion", latestVersion.getVersion()));
+                    DropItemUtil.sendNoColouredMessage(DropItemConfiguration.getMessage("UpdateMessage"));
+                    body = object.get("body").toString();
+                    DropItemUtil.sendNoColouredMessage(body);
                     needUpdated = true;
                     version = latestVersion.toString();
                     try {
                         url = DropItemUtil.getDownloadUrl(object);
-                    }
-                    catch (final NullPointerException e) {
+                    } catch (final NullPointerException e) {
                         //500 for fixing download url fail
                         e.printStackTrace();
-                        DropItemUtil.sendNoColouredErrorMessage(DropItemConfiguration.getMessage("VersionFail",500));
+                        DropItemUtil.sendNoColouredErrorMessage(DropItemConfiguration.getMessage("VersionFail", 500));
                     }
-                    downloadNewVersion(drop,url,version,task);
                 } else DropItemUtil.sendNoColouredMessage(DropItemConfiguration.getMessage("LatestVersion"));
             } catch (final ParseException e) {
                 e.printStackTrace();
@@ -94,18 +101,19 @@ public class VersionUpdater {
                 return;
             }
             final Version latestVersion = new Version(object.get("tag_name").getAsString());
-            if (latestVersion.newerThan(drop.getVersion())) {
+            final String name = object.get("name").getAsString();
+            if (latestVersion.newerThan(drop.getVersion()) && !name.equals("Test")) {
                 DropItemUtil.sendNoColouredMessage(DropItemConfiguration.getMessage("LowVersion", latestVersion.getVersion()));
+                DropItemUtil.sendNoColouredMessage(DropItemConfiguration.getMessage("UpdateMessage"));
+                DropItemUtil.sendNoColouredMessage(object.get("body").getAsString());
                 needUpdated = true;
                 try {
                     url = DropItemUtil.getDownloadUrl(object);
-                }
-                catch (final NullPointerException e) {
+                } catch (final NullPointerException e) {
                     //500 for fixing download url fail
                     e.printStackTrace();
-                    DropItemUtil.sendNoColouredErrorMessage(DropItemConfiguration.getMessage("VersionFail",500));
+                    DropItemUtil.sendNoColouredErrorMessage(DropItemConfiguration.getMessage("VersionFail", 500));
                 }
-                downloadNewVersion(drop,url,version,task);
             } else DropItemUtil.sendNoColouredMessage(DropItemConfiguration.getMessage("LatestVersion"));
         }
     }
@@ -114,34 +122,37 @@ public class VersionUpdater {
         return downloaded;
     }
 
-    private static void downloadNewVersion(final DropItem drop, final String url, final String version, final TimerTask task) {
+    public static void downloadNewVersion(final DropItem drop, final TimerTask task) {
         final File target = new File(drop.getDataFolder(), "DropItem-" + version + ".jar");
         if (target.exists()) {
-            DropItemUtil.sendNoColouredErrorMessage(DropItemConfiguration.getMessage("ReplaceError",target.getPath()));
-            drop.setVersionUpdateReplacement(new VersionUpdateReplacement(drop,DropItemConfiguration.getMessage("ReplaceError",target.getPath()),DropItemConfiguration.getMessage("VersionFail",600)));
+            DropItemUtil.sendNoColouredErrorMessage(DropItemConfiguration.getMessage("ReplaceError", target.getPath()));
+            drop.setVersionUpdateReplacement(new VersionUpdateReplacement(drop, DropItemConfiguration.getMessage("ReplaceError", target.getPath()), DropItemConfiguration.getMessage("VersionFail", 600)));
             downloaded = true;
             return;
         }
-        Section.getInstance().startSection("Download",task);
-        DropItemUtil.sendNoColouredMessage(DropItemConfiguration.getMessage("DownloadStart",url));
+        Section.getInstance().startSection("Download", task);
+        DropItemUtil.sendNoColouredMessage(DropItemConfiguration.getMessage("DownloadStart", url));
         try {
-            HttpUtil.downloadFile(url,target.getPath());
-        }
-        catch(final Exception e) {
+            HttpUtil.downloadFile(url, target.getPath());
+        } catch (final Exception e) {
             e.printStackTrace();
             DropItemUtil.sendNoColouredErrorMessage(DropItemConfiguration.getMessage("DownloadFail"));
-            Section.getInstance().endSection("download");
+            Section.getInstance().endSection("Download");
             return;
         }
         final long time = Section.getInstance().endSection("Download");
-        DropItemUtil.sendNoColouredMessage(DropItemConfiguration.getMessage("DownloadSucceed",Double.toString(time/(double)1000)));
+        DropItemUtil.sendNoColouredMessage(DropItemConfiguration.getMessage("DownloadSucceed", Double.toString(time / (double) 1000)));
         downloaded = true;
-        drop.setVersionUpdateReplacement(new VersionUpdateReplacement(drop,DropItemConfiguration.getMessage("ReplaceError",target.getPath()),DropItemConfiguration.getMessage("VersionFail",600)));
+        drop.setVersionUpdateReplacement(new VersionUpdateReplacement(drop, DropItemConfiguration.getMessage("ReplaceError", target.getPath()), DropItemConfiguration.getMessage("VersionFail", 600)));
     }
 
 
     public static void update(final DropItem drop) {
         if (drop.getVersionUpdateReplacement() != null)
             drop.getVersionUpdateReplacement().run();
+    }
+
+    public static File getUpdatedFile(final DropItem drop) {
+        return drop.getVersionUpdateReplacement().getUpdatedFile();
     }
 }

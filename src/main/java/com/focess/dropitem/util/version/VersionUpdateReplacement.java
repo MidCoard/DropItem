@@ -2,6 +2,7 @@ package com.focess.dropitem.util.version;
 
 
 import com.focess.dropitem.DropItem;
+import com.focess.dropitem.util.DropItemUtil;
 import com.focess.dropitem.util.configuration.DropItemConfiguration;
 import org.bukkit.util.FileUtil;
 
@@ -9,7 +10,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
-import java.net.URISyntaxException;
 
 
 public class VersionUpdateReplacement {
@@ -17,36 +17,26 @@ public class VersionUpdateReplacement {
     private final String err;
     private final DropItem drop;
     private final File latest;
-    private String fail;
-    private File now;
-    private boolean isFail;
+    private final String fail;
+    private final File now;
 
     public VersionUpdateReplacement(final DropItem drop, final String err, final String fail) {
         this.err = err;
         this.fail = fail;
         this.drop = drop;
         this.latest = new File(this.drop.getDataFolder(), "DropItem-" + VersionUpdater.getVersion() + ".jar");
-        try {
-            this.now = new File(DropItem.class.getProtectionDomain().getCodeSource().getLocation().toURI());
-        } catch (final URISyntaxException e) {
-            this.isFail = true;
-            //700 for local jar file is not found
-            this.fail = DropItemConfiguration.getMessage("VersionFail", 700);
-        }
+        this.now = DropItemUtil.getPluginFile(drop);
+
     }
 
     public void run() {
         try {
-            // 'if' is not necessary
             final File file = new File("plugins/DropItem/update.txt");
             if (file.exists())
                 file.delete();
             final FileOutputStream fos = new FileOutputStream(file);
             final BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(fos));
-            if (this.isFail) {
-                writer.write(this.fail + "\r\n");
-                return;
-            }
+            // 'if' is not necessary
             if (VersionUpdater.isNeedUpdated() && DropItemConfiguration.isVersionDownload() && VersionUpdater.isDownloaded()) {
                 try {
                     if (!this.latest.exists()) {
@@ -79,5 +69,9 @@ public class VersionUpdateReplacement {
         } catch (final Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public File getUpdatedFile() {
+        return new File("plugins",this.latest.getName());
     }
 }

@@ -3,6 +3,10 @@ AfterCleanAll: §b§l清理掉落物完毕
 CommandClean: §a§l使用/DropItem clean or /di clean 清理已知的掉落物
 CommandCleanAll: §a§l使用/DropItem cleanall or /di cleanall 清理类似于掉落物的所有掉落物（不安全，仅在物品加载错误时使用）
 CommandDisable: §a§l使用/DropItem disable or /di disable 安全无遗留卸载DropItem插件
+CommandUpdate: §a§l使用/DropItem update or /di update 检查更新
+CommandDownload: §a§l使用/DropItem download or /di download 下载更新，并在插件重载时更新
+CommandUpdateNow: §a§l使用/DropItem updatenow or /di updatenow 立即更新
+CommandReload: §a§l使用/DropItem reload or /di reload 重载DropItem插件
 CommandUnregister: §c§l未知指令
 Disabling: §b§l卸载DropItem插件...
 HaveNoPermission: §c§l你没有权限
@@ -16,6 +20,11 @@ LowVersion: §b§lDropItem >> 最新版本 §a§l%f% §b§l已发布
 LatestVersion: §b§lDropItem >> 你已是最新版本
 DownloadStart: §b§lDropItem >> 正在开始下载 §a§l%f% 文件
 DownloadFail: §c§lDropItem >> 下载失败...请稍后重试。若多次出现该错误，请向作者报告该问题
-DownloadSucceed: §b§lDropItem >> 成功完成下载，用时%f%秒
-HaveDownloaded: §b§lDropItem >> 已成功完成下载，关服时自动替换
+DownloadSucceed: §b§lDropItem >> 成功完成下载，用时%f%秒，将在插件重载时更新
+HaveDownloaded: §b§lDropItem >> 已成功完成下载，将在插件重载时更新
 ReplaceError: §c§lDropItem >> 更新错误，请尝试手动替换 %f% 目标更新文件
+UpdateMessage: §b§lDropItem >> 更新内容：
+NoDownload: §c§l本地存在更新信息，但未下载更新文件，请输入/dropitem download or /di download 下载更新
+NoUpdateCheck: §c§l本地没有更新信息，请输入/dropitem update or /di update 检查更新
+Updating: 更新DropItem插件...
+Reloading: 重载DropItem插件...

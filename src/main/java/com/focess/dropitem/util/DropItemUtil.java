@@ -17,6 +17,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ContainerFactory;
@@ -24,6 +25,7 @@ import org.json.simple.parser.JSONParser;
 
 import java.io.File;
 import java.io.Reader;
+import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -198,6 +200,19 @@ public class DropItemUtil {
 
     public static void sendNoColouredMessage(final String message) {
         sendColouredMessage(ChatColor.stripColor(message));
+    }
+
+    public static File getPluginFile(final JavaPlugin plugin) {
+        try {
+            return (File) JavaPlugin.class.getDeclaredMethod("getFile").invoke(plugin);
+        } catch (final IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (final InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (final NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }
