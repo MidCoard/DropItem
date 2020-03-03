@@ -10,6 +10,7 @@ public class HttpUtil {
         final HttpURLConnection httpURLConnection = (HttpURLConnection) new URL(url).openConnection();
         httpURLConnection.setRequestMethod("GET");
         httpURLConnection.setRequestProperty("accept", "application/vnd.github.v3+json");
+        httpURLConnection.setRequestProperty("User-Agent", "DropItem Updater");
 //        httpURLConnection.setRequestProperty("Content-Type", "application/json");
 //            httpURLConnection.setRequestProperty("Content-Language", "en-US");
         httpURLConnection.setDoInput(true);
@@ -38,7 +39,7 @@ public class HttpUtil {
     public static void downloadFile(final String urlPath, final String targetPath) throws Exception {
         final File file = new File(targetPath);
         file.delete();
-        int byteRead = 0;
+        int byteRead;
         final URL url = new URL(urlPath);
         final URLConnection connection = url.openConnection();
         final InputStream inStream = connection.getInputStream();
