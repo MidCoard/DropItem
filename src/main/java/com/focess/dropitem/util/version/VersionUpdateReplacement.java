@@ -68,6 +68,7 @@ public class VersionUpdateReplacement {
         } catch (final Exception e) {
             e.printStackTrace();
         }
+        this.drop.setVersionUpdateReplacement(null);
     }
 
     public File getUpdatedFile() {

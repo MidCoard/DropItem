@@ -1,12 +1,12 @@
 AfterClean: §b§l Finished clearing drops
 AfterCleanAll: §b§l Finished clearing drops
-CommandClean: §a§l Use /DropItem clean or /di clean to clear known drops
-CommandCleanAll: §a§l Use /DropItem cleanall or /di cleanall to clear all drops that are similar to drops (unsafe, only used when items are loaded incorrectly)
-CommandDisable: §a§l Use /DropItem disable or /di disable to safely uninstall the DropItem plugin
-CommandUpdate: §a§l Use /DropItem update or /di update to check for updates
-CommandDownload: §a§l Use /DropItem download or /di download to download the update and update when the plugin is reloaded
-CommandUpdateNow: §a§l Use /DropItem updatenow or /di updatenow to update immediately
-CommandReload: §a§l Use /DropItem reload or /di reload to reload the DropItem plugin
+CommandClean: §a§l Use /dropitem clean or /di clean to clear known drops
+CommandCleanAll: §a§l Use /dropitem cleanall or /di cleanall to clear all drops that are similar to drops (unsafe, only used when items are loaded incorrectly)
+CommandDisable: §a§l Use /dropitem disable or /di disable to safely uninstall the dropitem plugin
+CommandUpdate: §a§l Use /dropitem update or /di update to check for updates
+CommandDownload: §a§l Use /dropitem download or /di download to download the update and update when the plugin is reloaded
+CommandUpdateNow: §a§l Use /dropitem updatenow or /di updatenow to update immediately
+CommandReload: §a§l Use /dropitem reload or /di reload to reload the dropitem plugin
 CommandUnregister: §c§l Unknown instruction
 Disabling: §b§l Disable DropItem plugin ...
 HaveNoPermission: §c§l You have no permissions

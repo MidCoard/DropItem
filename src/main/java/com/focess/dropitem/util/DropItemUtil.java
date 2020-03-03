@@ -205,9 +205,9 @@ public class DropItemUtil {
 
     public static File getPluginFile(final JavaPlugin plugin) {
         try {
-            final Method method =  JavaPlugin.class.getDeclaredMethod("getFile");
+            final Method method = JavaPlugin.class.getDeclaredMethod("getFile");
             method.setAccessible(true);
-            return (File)method.invoke(plugin);
+            return (File) method.invoke(plugin);
         } catch (final IllegalAccessException e) {
             e.printStackTrace();
         } catch (final InvocationTargetException e) {
@@ -216,6 +216,46 @@ public class DropItemUtil {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static boolean isChinese(final char c) {
+        final Character.UnicodeBlock ub = Character.UnicodeBlock.of(c);
+        return ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS
+                || ub == Character.UnicodeBlock.CJK_COMPATIBILITY_IDEOGRAPHS
+                || ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS_EXTENSION_A
+                || ub == Character.UnicodeBlock.GENERAL_PUNCTUATION
+                || ub == Character.UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION
+                || ub == Character.UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS;
+    }
+
+    public static String decodeUnicode(final String unicode) {
+        final StringBuffer string = new StringBuffer();
+        final String[] hex = unicode.split("\\\\u");
+        for (int i = 0; i < hex.length; i++) {
+            try {
+                if (hex[i].length() >= 4) {//取前四个，判断是否是汉字
+                    final String chinese = hex[i].substring(0, 4);
+                    try {
+                        final int chr = Integer.parseInt(chinese, 16);
+                        final boolean isChinese = isChinese((char) chr);
+                        if (isChinese) {//在汉字范围内
+                            string.append((char) chr);
+                            final String behindString = hex[i].substring(4);
+                            string.append(behindString);
+                        } else {
+                            string.append(hex[i]);
+                        }
+                    } catch (final NumberFormatException e1) {
+                        string.append(hex[i]);
+                    }
+                } else {
+                    string.append(hex[i]);
+                }
+            } catch (final NumberFormatException e) {
+                string.append(hex[i]);
+            }
+        }
+        return string.toString();
     }
 
 }

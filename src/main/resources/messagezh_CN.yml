@@ -1,12 +1,12 @@
 AfterClean: §b§l清理掉落物完毕
 AfterCleanAll: §b§l清理掉落物完毕
-CommandClean: §a§l使用/DropItem clean or /di clean 清理已知的掉落物
-CommandCleanAll: §a§l使用/DropItem cleanall or /di cleanall 清理类似于掉落物的所有掉落物（不安全，仅在物品加载错误时使用）
-CommandDisable: §a§l使用/DropItem disable or /di disable 安全无遗留卸载DropItem插件
-CommandUpdate: §a§l使用/DropItem update or /di update 检查更新
-CommandDownload: §a§l使用/DropItem download or /di download 下载更新，并在插件重载时更新
-CommandUpdateNow: §a§l使用/DropItem updatenow or /di updatenow 立即更新
-CommandReload: §a§l使用/DropItem reload or /di reload 重载DropItem插件
+CommandClean: §a§l使用/dropitem clean or /di clean 清理已知的掉落物
+CommandCleanAll: §a§l使用/dropitem cleanall or /di cleanall 清理类似于掉落物的所有掉落物（不安全，仅在物品加载错误时使用）
+CommandDisable: §a§l使用/dropitem disable or /di disable 安全无遗留卸载dropitem插件
+CommandUpdate: §a§l使用/dropitem update or /di update 检查更新
+CommandDownload: §a§l使用/dropitem download or /di download 下载更新，并在插件重载时更新
+CommandUpdateNow: §a§l使用/dropitem updatenow or /di updatenow 立即更新
+CommandReload: §a§l使用/dropitem reload or /di reload 重载dropitem插件
 CommandUnregister: §c§l未知指令
 Disabling: §b§l卸载DropItem插件...
 HaveNoPermission: §c§l你没有权限

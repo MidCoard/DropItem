@@ -69,7 +69,7 @@ public class VersionUpdater {
                 if (latestVersion.newerThan(drop.getVersion()) && !name.equals("Test")) {
                     DropItemUtil.sendNoColouredMessage(DropItemConfiguration.getMessage("LowVersion", latestVersion.getVersion()));
                     DropItemUtil.sendNoColouredMessage(DropItemConfiguration.getMessage("UpdateMessage"));
-                    body = object.get("body").toString();
+                    body = DropItemUtil.decodeUnicode(object.get("body").toString());
                     DropItemUtil.sendNoColouredMessage(body);
                     needUpdated = true;
                     version = latestVersion.toString();
@@ -98,7 +98,7 @@ public class VersionUpdater {
             if (latestVersion.newerThan(drop.getVersion()) && !name.equals("Test")) {
                 DropItemUtil.sendNoColouredMessage(DropItemConfiguration.getMessage("LowVersion", latestVersion.getVersion()));
                 DropItemUtil.sendNoColouredMessage(DropItemConfiguration.getMessage("UpdateMessage"));
-                body = object.get("body").getAsString();
+                body = DropItemUtil.decodeUnicode(object.get("body").getAsString());
                 DropItemUtil.sendNoColouredMessage(body);
                 needUpdated = true;
                 version = latestVersion.toString();
