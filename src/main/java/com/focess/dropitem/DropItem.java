@@ -30,29 +30,21 @@ import java.io.IOException;
 import java.net.URLClassLoader;
 import java.util.Collection;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class DropItem extends JavaPlugin {
 
     private static final List<BukkitTask> bukkitTasks = Lists.newArrayList();
 
-    private final Timer timer = new Timer();
-
-    private final List<TimerTask> timerTasks = Lists.newArrayList();
+    private final List<Thread> threads = Lists.newArrayList();
 
     private VersionUpdateReplacement versionUpdateReplacement;
 
-    public TimerTask addTimerTask(final TimerTask timerTask) {
-        this.timerTasks.add(timerTask);
-        return timerTask;
+    public Thread addThread(final Thread thread) {
+        this.threads.add(thread);
+        return thread;
     }
 
     private static DropItem instance;
-
-    public Timer getTimer() {
-        return this.timer;
-    }
 
     public static DropItem getInstance() {
         return DropItem.instance;
@@ -92,9 +84,8 @@ public class DropItem extends JavaPlugin {
             CraftAIListener.reload();
         DropItemInfo.reload();
         CraftDropItem.uploadItems();
-        for (final TimerTask timerTask: this.timerTasks)
-            timerTask.cancel();
-        this.timer.cancel();
+        for (final Thread thread : this.threads)
+            thread.stop();
         this.isLoaded = false;
         this.closeResource();
         VersionUpdater.update(this);
@@ -104,6 +95,7 @@ public class DropItem extends JavaPlugin {
         final URLClassLoader loader = (URLClassLoader) this.getClassLoader();
         try {
             loader.close();
+            System.gc();
         } catch (final IOException e) {
             e.printStackTrace();
         }
@@ -133,14 +125,13 @@ public class DropItem extends JavaPlugin {
             DropItemInfo.loadDefault(this);
         Command.register(new DropItemCommand(this));
         if (DropItemConfiguration.isVersionCheck())
-            this.timer.schedule(this.addTimerTask(new TimerTask() {
-                @Override
+            DropItem.this.addThread(new Thread() {
                 public void run() {
                     VersionUpdater.checkForUpdate(DropItem.this);
                     if (VersionUpdater.isNeedUpdated() && !VersionUpdater.isDownloaded() && DropItemConfiguration.isVersionDownload())
                         VersionUpdater.downloadNewVersion(DropItem.this, this);
                 }
-            }), 0);
+            }).start();
         this.isLoaded = true;
     }
 

@@ -23,7 +23,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.TimerTask;
 
 public class DropItemCommand extends Command {
 
@@ -88,7 +87,7 @@ public class DropItemCommand extends Command {
             sender.sendMessage(DropItemConfiguration.getMessage("AfterCleanAll"));
         }, "cleanall");
         this.addExecutor(0, (sender, args) -> {
-            this.drop.getTimer().schedule(this.drop.addTimerTask(new TimerTask() {
+            this.drop.addThread(new Thread() {
                 @Override
                 public void run() {
                     VersionUpdater.checkForUpdate(DropItemCommand.this.drop);
@@ -96,11 +95,10 @@ public class DropItemCommand extends Command {
                         sender.sendMessage(DropItemConfiguration.getMessage("LowVersion", VersionUpdater.getVersion()));
                     else sender.sendMessage(DropItemConfiguration.getMessage("LatestVersion"));
                 }
-            }), 0L);
+            }).start();
         }, "update");
         this.addExecutor(0, (sender, args) -> {
-            this.drop.getTimer().schedule(
-                    this.drop.addTimerTask(new TimerTask() {
+                    this.drop.addThread(new Thread() {
                         @Override
                         public void run() {
                             VersionUpdater.checkForUpdate(DropItemCommand.this.drop);
@@ -113,7 +111,7 @@ public class DropItemCommand extends Command {
                                     sender.sendMessage(DropItemConfiguration.getMessage("DownloadFail"));
                             } else sender.sendMessage(DropItemConfiguration.getMessage("LatestVersion"));
                         }
-                    }), 0L);
+                    }).start();
         }, "download");
         this.addExecutor(0, (sender, args) -> {
             if (VersionUpdater.isNeedUpdated())

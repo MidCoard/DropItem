@@ -14,7 +14,6 @@ import org.json.simple.parser.ParseException;
 
 import java.io.File;
 import java.net.HttpURLConnection;
-import java.util.TimerTask;
 
 public class VersionUpdater {
     private static boolean needUpdated;
@@ -118,11 +117,11 @@ public class VersionUpdater {
         return downloaded;
     }
 
-    public static void downloadNewVersion(final DropItem drop, final TimerTask task) {
+    public static void downloadNewVersion(final DropItem drop, final Thread task) {
         downloadNewVersion(drop,task,false);
     }
 
-    public static void downloadNewVersion(final DropItem drop, final TimerTask task, final boolean flag) {
+    public static void downloadNewVersion(final DropItem drop, final Thread task, final boolean flag) {
         final File target = new File(drop.getDataFolder(), "DropItem-" + version + ".jar");
         if (target.exists() && !flag) {
             DropItemUtil.sendNoColouredErrorMessage(DropItemConfiguration.getMessage("ReplaceError", target.getPath()));

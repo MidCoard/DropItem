@@ -5,7 +5,6 @@ import com.google.common.collect.Sets;
 
 import java.util.Objects;
 import java.util.Set;
-import java.util.TimerTask;
 
 public class Section {
 
@@ -23,12 +22,12 @@ public class Section {
         for (final RunningSection runningSection:section.runningSections)
             if (now - runningSection.getTime() > 60000) {
                 section.runningSections.remove(runningSection);
-                runningSection.getTask().cancel();
+                runningSection.getTask().stop();
                 throw new TimeOutException(runningSection.getName() + " have run more than 60s");
             }
     }
 
-    public void startSection(final String sectionName, final TimerTask task) {
+    public void startSection(final String sectionName, final Thread task) {
         this.runningSections.add(new RunningSection(sectionName,System.currentTimeMillis(),task));
     }
 
@@ -44,15 +43,15 @@ public class Section {
     private static class RunningSection {
         private final String sectionName;
         private final long start;
-        private final TimerTask task;
+        private final Thread task;
 
-        private RunningSection(final String sectionName, final long start, final TimerTask task) {
+        private RunningSection(final String sectionName, final long start, final Thread task) {
             this.task = task;
             this.sectionName = sectionName;
             this.start = start;
         }
 
-        public TimerTask getTask() {
+        public Thread getTask() {
             return this.task;
         }
 

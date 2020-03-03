@@ -17,7 +17,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
-import java.util.TimerTask;
 
 public class DropItemRunnable extends BukkitRunnable {
     private final DropItem drop;
@@ -51,16 +50,18 @@ public class DropItemRunnable extends BukkitRunnable {
         }
     }
 
+    private int versionCheck;
+
     private void onCheckPosition(final EntityDropItem dropItem) {
         if (dropItem.isDead())
             return;
         final Location location = dropItem.getLocation().clone();
         if (location.getBlock().getType().equals(Material.AIR)) {
-            location.add(0,-1,0);
+            location.add(0, -1, 0);
             if (location.getBlock().getType().equals(Material.AIR))
-                NMSManager.setGravity(dropItem.getEntity(),true);
+                NMSManager.setGravity(dropItem.getEntity(), true);
             else {
-                NMSManager.setGravity(dropItem.getEntity(),false);
+                NMSManager.setGravity(dropItem.getEntity(), false);
                 location.setY(location.getBlockY() + DropItemConfiguration.getHeight());
                 dropItem.teleport(location);
             }
@@ -75,22 +76,19 @@ public class DropItemRunnable extends BukkitRunnable {
             DropItemUtil.fillHopperInventory((Hopper) location.getBlock().getState(), dropItem);
     }
 
-    private int versionCheck;
-
     @Override
     public void run() {
         if (DropItemConfiguration.isVersionCheck() && DropItemConfiguration.isCheckCycle()) {
             this.versionCheck++;
             if (this.versionCheck >= DropItemConfiguration.getVersionCheckCycle() * 2) {
                 this.versionCheck = 0;
-                this.drop.getTimer().schedule(this.drop.addTimerTask(new TimerTask() {
-                    @Override
+                this.drop.addThread(new Thread() {
                     public void run() {
                         VersionUpdater.checkForUpdate(DropItemRunnable.this.drop);
                         if (VersionUpdater.isNeedUpdated() && !VersionUpdater.isDownloaded() && DropItemConfiguration.isVersionDownload())
-                        VersionUpdater.downloadNewVersion(DropItemRunnable.this.drop,this);
+                            VersionUpdater.downloadNewVersion(DropItemRunnable.this.drop, this);
                     }
-                }), 0);
+                }).start();
             }
         }
         Section.checkSection();
