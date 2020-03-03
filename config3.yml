@@ -1,7 +1,7 @@
 Version: '8.5'
 # Used to automatically update the configuration file when the version is updated, please do not modify this item.
 VersionCheck: true
-# Whether to enable version update checking. The default is true. When true, "VersionDownload" will be disabled by default.
+# Whether to enable version update checking. The default is true. When true, VersionDownload will be disabled by default.
 VersionCheckCycle: 10800
 # Set the version update check time. False if checked only at server startup. The default is 10800. (In seconds)
 VersionDownload: true
