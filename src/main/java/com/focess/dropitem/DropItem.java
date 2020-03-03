@@ -39,12 +39,12 @@ public class DropItem extends JavaPlugin {
 
     private final Timer timer = new Timer();
 
-    private TimerTask timerTask;
+    private final List<TimerTask> timerTasks = Lists.newArrayList();
 
     private VersionUpdateReplacement versionUpdateReplacement;
 
-    public TimerTask setTimerTask(final TimerTask timerTask) {
-        this.timerTask = timerTask;
+    public TimerTask addTimerTask(final TimerTask timerTask) {
+        this.timerTasks.add(timerTask);
         return timerTask;
     }
 
@@ -92,8 +92,8 @@ public class DropItem extends JavaPlugin {
             CraftAIListener.reload();
         DropItemInfo.reload();
         CraftDropItem.uploadItems();
-        if (this.timerTask != null)
-            this.timerTask.cancel();
+        for (final TimerTask timerTask: this.timerTasks)
+            timerTask.cancel();
         this.timer.cancel();
         this.isLoaded = false;
         this.closeResource();
@@ -133,7 +133,7 @@ public class DropItem extends JavaPlugin {
             DropItemInfo.loadDefault(this);
         Command.register(new DropItemCommand(this));
         if (DropItemConfiguration.isVersionCheck())
-            this.timer.schedule(this.setTimerTask(new TimerTask() {
+            this.timer.schedule(this.addTimerTask(new TimerTask() {
                 @Override
                 public void run() {
                     VersionUpdater.checkForUpdate(DropItem.this);

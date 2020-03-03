@@ -72,7 +72,6 @@ public class DropItemCommand extends Command {
                 CraftDropItem.remove(dropItem, false);
                 dropItem.getLocation().getWorld().dropItem(dropItem.getLocation().add(0, 1 - DropItemConfiguration.getHeight(), 0), dropItem.getItemStack());
             }
-            DropItemUtil.forceDelete(this.drop.getDataFolder());
             this.unregister();
         }, "disable");
         this.addExecutor(0, (sender, args) -> {
@@ -89,10 +88,10 @@ public class DropItemCommand extends Command {
             sender.sendMessage(DropItemConfiguration.getMessage("AfterCleanAll"));
         }, "cleanall");
         this.addExecutor(0, (sender, args) -> {
-            this.drop.getTimer().schedule(this.drop.setTimerTask(new TimerTask() {
+            this.drop.getTimer().schedule(this.drop.addTimerTask(new TimerTask() {
                 @Override
                 public void run() {
-                    VersionUpdater.update(DropItemCommand.this.drop);
+                    VersionUpdater.checkForUpdate(DropItemCommand.this.drop);
                     if (VersionUpdater.isNeedUpdated())
                         sender.sendMessage(DropItemConfiguration.getMessage("LowVersion", VersionUpdater.getVersion()));
                     else sender.sendMessage(DropItemConfiguration.getMessage("LatestVersion"));
@@ -101,10 +100,10 @@ public class DropItemCommand extends Command {
         }, "update");
         this.addExecutor(0, (sender, args) -> {
             this.drop.getTimer().schedule(
-                    this.drop.setTimerTask(new TimerTask() {
+                    this.drop.addTimerTask(new TimerTask() {
                         @Override
                         public void run() {
-                            VersionUpdater.update(DropItemCommand.this.drop);
+                            VersionUpdater.checkForUpdate(DropItemCommand.this.drop);
                             if (VersionUpdater.isNeedUpdated()) {
                                 sender.sendMessage(DropItemConfiguration.getMessage("LowVersion", VersionUpdater.getVersion()));
                                 VersionUpdater.downloadNewVersion(DropItemCommand.this.drop, this,true);

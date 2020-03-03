@@ -26,6 +26,7 @@ import org.json.simple.parser.JSONParser;
 import java.io.File;
 import java.io.Reader;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -204,7 +205,9 @@ public class DropItemUtil {
 
     public static File getPluginFile(final JavaPlugin plugin) {
         try {
-            return (File) JavaPlugin.class.getDeclaredMethod("getFile").invoke(plugin);
+            final Method method =  JavaPlugin.class.getDeclaredMethod("getFile");
+            method.setAccessible(true);
+            return (File)method.invoke(plugin);
         } catch (final IllegalAccessException e) {
             e.printStackTrace();
         } catch (final InvocationTargetException e) {

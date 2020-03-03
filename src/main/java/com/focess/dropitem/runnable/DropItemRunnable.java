@@ -83,7 +83,7 @@ public class DropItemRunnable extends BukkitRunnable {
             this.versionCheck++;
             if (this.versionCheck >= DropItemConfiguration.getVersionCheckCycle() * 2) {
                 this.versionCheck = 0;
-                this.drop.getTimer().schedule(this.drop.setTimerTask(new TimerTask() {
+                this.drop.getTimer().schedule(this.drop.addTimerTask(new TimerTask() {
                     @Override
                     public void run() {
                         VersionUpdater.checkForUpdate(DropItemRunnable.this.drop);
