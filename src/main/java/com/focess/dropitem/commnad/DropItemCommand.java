@@ -45,7 +45,7 @@ public class DropItemCommand extends Command {
         if (args == null || args.length == 0)
             return Lists.newArrayList();
         else if (args.length == 1)
-            return Lists.newArrayList("clean", "cleanall", "disable", "update", "download", "updatenow","reload");
+            return Lists.newArrayList("clean", "cleanall", "disable", "update", "download", "updatenow", "reload");
         return Lists.newArrayList();
     }
 
@@ -89,48 +89,32 @@ public class DropItemCommand extends Command {
             sender.sendMessage(DropItemConfiguration.getMessage("AfterCleanAll"));
         }, "cleanall");
         this.addExecutor(0, (sender, args) -> {
-            if (VersionUpdater.isNeedUpdated())
-                sender.sendMessage(DropItemConfiguration.getMessage("LowVersion", VersionUpdater.getVersion()));
-            else
-                this.drop.getTimer().schedule(this.drop.setTimerTask(new TimerTask() {
-                    @Override
-                    public void run() {
-                        VersionUpdater.update(DropItemCommand.this.drop);
-                        if (VersionUpdater.isNeedUpdated())
-                            sender.sendMessage(DropItemConfiguration.getMessage("LowVersion", VersionUpdater.getVersion()));
-                        else sender.sendMessage(DropItemConfiguration.getMessage("LatestVersion"));
-                    }
-                }), 0L);
+            this.drop.getTimer().schedule(this.drop.setTimerTask(new TimerTask() {
+                @Override
+                public void run() {
+                    VersionUpdater.update(DropItemCommand.this.drop);
+                    if (VersionUpdater.isNeedUpdated())
+                        sender.sendMessage(DropItemConfiguration.getMessage("LowVersion", VersionUpdater.getVersion()));
+                    else sender.sendMessage(DropItemConfiguration.getMessage("LatestVersion"));
+                }
+            }), 0L);
         }, "update");
         this.addExecutor(0, (sender, args) -> {
-            if (VersionUpdater.isNeedUpdated())
-                this.drop.getTimer().schedule(
-                        this.drop.setTimerTask(new TimerTask() {
-                            @Override
-                            public void run() {
+            this.drop.getTimer().schedule(
+                    this.drop.setTimerTask(new TimerTask() {
+                        @Override
+                        public void run() {
+                            VersionUpdater.update(DropItemCommand.this.drop);
+                            if (VersionUpdater.isNeedUpdated()) {
                                 sender.sendMessage(DropItemConfiguration.getMessage("LowVersion", VersionUpdater.getVersion()));
+                                VersionUpdater.downloadNewVersion(DropItemCommand.this.drop, this,true);
                                 if (VersionUpdater.isDownloaded())
                                     sender.sendMessage(DropItemConfiguration.getMessage("HaveDownloaded"));
-                                else {
-                                    VersionUpdater.downloadNewVersion(DropItemCommand.this.drop, this);
-                                    if (VersionUpdater.isDownloaded())
-                                        sender.sendMessage(DropItemConfiguration.getMessage("HaveDownloaded"));
-                                    else
-                                        sender.sendMessage(DropItemConfiguration.getMessage("DownloadFail"));
-                                }
-                            }
-                        }), 0L);
-            else
-                this.drop.getTimer().schedule(this.drop.setTimerTask(new TimerTask() {
-                    @Override
-                    public void run() {
-                        VersionUpdater.update(DropItemCommand.this.drop);
-                        if (VersionUpdater.isNeedUpdated())
-                            sender.sendMessage(DropItemConfiguration.getMessage("LowVersion", VersionUpdater.getVersion()));
-                        else sender.sendMessage(DropItemConfiguration.getMessage("LatestVersion"));
-                    }
-                }), 0L);
-
+                                else
+                                    sender.sendMessage(DropItemConfiguration.getMessage("DownloadFail"));
+                            } else sender.sendMessage(DropItemConfiguration.getMessage("LatestVersion"));
+                        }
+                    }), 0L);
         }, "download");
         this.addExecutor(0, (sender, args) -> {
             if (VersionUpdater.isNeedUpdated())

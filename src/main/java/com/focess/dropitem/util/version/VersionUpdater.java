@@ -8,9 +8,6 @@ import com.focess.dropitem.util.Section;
 import com.focess.dropitem.util.configuration.DropItemConfiguration;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -36,9 +33,6 @@ public class VersionUpdater {
 
     public static void checkForUpdate(final DropItem drop) {
         if (needUpdated) {
-            for (final OfflinePlayer player : Bukkit.getOperators())
-                if (player.isOnline())
-                    ((Player) player).sendMessage(DropItemConfiguration.getMessage("LowVersion", VersionUpdater.getVersion()));
             if (downloaded)
                 DropItemUtil.sendNoColouredMessage(DropItemConfiguration.getMessage("HaveDownloaded"));
             else {
@@ -123,8 +117,12 @@ public class VersionUpdater {
     }
 
     public static void downloadNewVersion(final DropItem drop, final TimerTask task) {
+        downloadNewVersion(drop,task,false);
+    }
+
+    public static void downloadNewVersion(final DropItem drop, final TimerTask task, final boolean flag) {
         final File target = new File(drop.getDataFolder(), "DropItem-" + version + ".jar");
-        if (target.exists()) {
+        if (target.exists() && !flag) {
             DropItemUtil.sendNoColouredErrorMessage(DropItemConfiguration.getMessage("ReplaceError", target.getPath()));
             drop.setVersionUpdateReplacement(new VersionUpdateReplacement(drop, DropItemConfiguration.getMessage("ReplaceError", target.getPath()), DropItemConfiguration.getMessage("VersionFail", 600)));
             downloaded = true;
@@ -138,6 +136,7 @@ public class VersionUpdater {
             e.printStackTrace();
             DropItemUtil.sendNoColouredErrorMessage(DropItemConfiguration.getMessage("DownloadFail"));
             Section.getInstance().endSection("Download");
+            downloaded = false;
             return;
         }
         final long time = Section.getInstance().endSection("Download");

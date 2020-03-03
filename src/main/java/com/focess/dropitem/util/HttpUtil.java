@@ -1,9 +1,6 @@
 package com.focess.dropitem.util;
 
-import java.io.BufferedReader;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -39,11 +36,13 @@ public class HttpUtil {
     }
 
     public static void downloadFile(final String urlPath, final String targetPath) throws Exception {
+        final File file = new File(targetPath);
+        file.delete();
         int byteRead = 0;
         final URL url = new URL(urlPath);
         final URLConnection connection = url.openConnection();
         final InputStream inStream = connection.getInputStream();
-        final FileOutputStream fs = new FileOutputStream(targetPath);
+        final FileOutputStream fs = new FileOutputStream(file);
         final byte[] buffer = new byte[1204];
         while ((byteRead = inStream.read(buffer)) != -1)
             fs.write(buffer, 0, byteRead);
