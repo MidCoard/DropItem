@@ -99,8 +99,10 @@ public class VersionUpdater {
             if (latestVersion.newerThan(drop.getVersion()) && !name.equals("Test")) {
                 DropItemUtil.sendNoColouredMessage(DropItemConfiguration.getMessage("LowVersion", latestVersion.getVersion()));
                 DropItemUtil.sendNoColouredMessage(DropItemConfiguration.getMessage("UpdateMessage"));
-                DropItemUtil.sendNoColouredMessage(object.get("body").getAsString());
+                body = object.get("body").getAsString();
+                DropItemUtil.sendNoColouredMessage(body);
                 needUpdated = true;
+                version = latestVersion.toString();
                 try {
                     url = DropItemUtil.getDownloadUrl(object);
                 } catch (final NullPointerException e) {
