@@ -1,4 +1,4 @@
-Version: '8.4'
+Version: '8.5'
 VersionCheck: true
 VersionCheckCycle: 10800
 VersionDownload: true
