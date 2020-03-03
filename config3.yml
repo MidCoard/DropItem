@@ -1,4 +1,4 @@
-Version: '8.2'
+Version: '8.3'
 # Used to automatically update the configuration file when the version is updated, please do not modify this item.
 VersionCheck: true
 # Whether to enable version update checking. The default is true. When true, "VersionDownload" will be disabled by default.
