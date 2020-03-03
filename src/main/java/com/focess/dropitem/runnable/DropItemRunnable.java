@@ -87,7 +87,7 @@ public class DropItemRunnable extends BukkitRunnable {
                     @Override
                     public void run() {
                         VersionUpdater.checkForUpdate(DropItemRunnable.this.drop);
-                        if (VersionUpdater.isNeedUpdated() && !VersionUpdater.isDownloaded())
+                        if (VersionUpdater.isNeedUpdated() && !VersionUpdater.isDownloaded() && DropItemConfiguration.isVersionDownload())
                         VersionUpdater.downloadNewVersion(DropItemRunnable.this.drop,this);
                     }
                 }), 0);

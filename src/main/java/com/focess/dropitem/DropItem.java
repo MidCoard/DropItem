@@ -137,7 +137,7 @@ public class DropItem extends JavaPlugin {
                 @Override
                 public void run() {
                     VersionUpdater.checkForUpdate(DropItem.this);
-                    if (VersionUpdater.isNeedUpdated() && !VersionUpdater.isDownloaded())
+                    if (VersionUpdater.isNeedUpdated() && !VersionUpdater.isDownloaded() && DropItemConfiguration.isVersionDownload())
                         VersionUpdater.downloadNewVersion(DropItem.this, this);
                 }
             }), 0);

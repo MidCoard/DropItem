@@ -3,7 +3,6 @@ package com.focess.dropitem.util.version;
 
 import com.focess.dropitem.DropItem;
 import com.focess.dropitem.util.DropItemUtil;
-import com.focess.dropitem.util.configuration.DropItemConfiguration;
 import org.bukkit.util.FileUtil;
 
 import java.io.BufferedWriter;
@@ -37,7 +36,7 @@ public class VersionUpdateReplacement {
             final FileOutputStream fos = new FileOutputStream(file);
             final BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(fos));
             // 'if' is not necessary
-            if (VersionUpdater.isNeedUpdated() && DropItemConfiguration.isVersionDownload() && VersionUpdater.isDownloaded()) {
+            if (VersionUpdater.isNeedUpdated() && VersionUpdater.isDownloaded()) {
                 try {
                     if (!this.latest.exists()) {
                         writer.write("File is not exists...\r\n");
