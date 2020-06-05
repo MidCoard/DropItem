@@ -1,4 +1,4 @@
-Version: '8.5'
+Version: '8.6'
 #用于版本更新时自动更新配置文件，该项请不要修改.
 VersionCheck: true
 #是否开启版本更新检查。默认为true。为true时VersionDownload默认将无效。
