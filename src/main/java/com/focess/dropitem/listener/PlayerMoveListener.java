@@ -25,7 +25,7 @@ public class PlayerMoveListener implements Listener {
             return;
         final List<Entity> entities = player.getNearbyEntities(0.75D, 0.75D, 0.75D);
         for (final Entity entity : entities)
-            if (CraftDropItem.include(entity) && player.isSneaking() && (DropItemConfiguration.checkPickForm("w-move") || DropItemConfiguration.checkPickForm("normal"))
+            if (CraftDropItem.include(entity) &&  (DropItemConfiguration.checkPickForm("w-move") || (player.isSneaking() &&DropItemConfiguration.checkPickForm("normal")))
                     && DropItemUtil.checkPlayerPermission(player))
                 DropItemUtil.fillPlayerInventory(player, CraftDropItem.getDropItem(entity));
 
