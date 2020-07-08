@@ -31,6 +31,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.IntStream;
 
 public class DropItemUtil {
 
@@ -79,13 +80,11 @@ public class DropItemUtil {
                 && player.getInventory().firstEmpty() == -1)
             return;
         final Inventory inventory = Bukkit.createInventory(null, InventoryType.PLAYER);
-        for (int i = 0; i < player.getInventory().getContents().length; i++) {
-            if (player.getInventory().getItem(i) == null)
-                continue;
+        IntStream.range(0, player.getInventory().getContents().length).filter(i -> player.getInventory().getItem(i) != null).forEachOrdered(i -> {
             final ItemStack itemStack = player.getInventory().getItem(i).clone();
             if (itemStack != null)
                 inventory.setItem(i, itemStack);
-        }
+        });
         final Map<Integer, ItemStack> itemStacks = inventory.addItem(entityDropItem.getItemStack().clone());
         final ItemStack item = entityDropItem.getItemStack().clone();
         if (!itemStacks.isEmpty())

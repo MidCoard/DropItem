@@ -1,13 +1,10 @@
 package com.focess.dropitem.listener;
 
-import com.focess.dropitem.event.DropItemDeathEvent.DeathCause;
-import com.focess.dropitem.event.PlayerGottenEvent;
 import com.focess.dropitem.item.CraftDropItem;
 import com.focess.dropitem.item.EntityDropItem;
 import com.focess.dropitem.util.DropItemUtil;
 import com.focess.dropitem.util.NMSManager;
 import com.focess.dropitem.util.configuration.DropItemConfiguration;
-import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -92,12 +89,7 @@ public class PlayerInteractListener implements Listener {
                 event.setCancelled(true);
             if (DropItemUtil.checkPlayerPermission(event.getPlayer()) && (DropItemConfiguration.checkPickForm("normal") || DropItemConfiguration.checkPickForm("right-click"))) {
                 final EntityDropItem dropItem = CraftDropItem.getDropItem(event.getRightClicked());
-                final PlayerGottenEvent e = new PlayerGottenEvent(dropItem.getItemStack(), event.getPlayer());
-                Bukkit.getServer().getPluginManager().callEvent(e);
-                if (e.isCancelled())
-                    return;
                 DropItemUtil.fillPlayerInventory(event.getPlayer(), dropItem);
-                CraftDropItem.remove(dropItem, DeathCause.PLAYER_GOTTEN);
             }
             }
     }
