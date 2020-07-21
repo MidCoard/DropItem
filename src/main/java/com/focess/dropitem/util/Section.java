@@ -23,12 +23,13 @@ public class Section {
             if (now - runningSection.getTime() > 60000) {
                 section.runningSections.remove(runningSection);
                 runningSection.getTask().stop();
+                runningSection.getRunnable().run();
                 throw new TimeOutException(runningSection.getName() + " have run more than 60s");
             }
     }
 
-    public void startSection(final String sectionName, final Thread task) {
-        this.runningSections.add(new RunningSection(sectionName,System.currentTimeMillis(),task));
+    public void startSection(final String sectionName, final Thread task, final Runnable runnable) {
+        this.runningSections.add(new RunningSection(sectionName,System.currentTimeMillis(),task,runnable));
     }
 
     public long endSection(final String sectionName) {
@@ -44,11 +45,13 @@ public class Section {
         private final String sectionName;
         private final long start;
         private final Thread task;
+        private final Runnable runnable;
 
-        private RunningSection(final String sectionName, final long start, final Thread task) {
+        private RunningSection(final String sectionName, final long start, final Thread task,final Runnable runnable) {
             this.task = task;
             this.sectionName = sectionName;
             this.start = start;
+            this.runnable = runnable;
         }
 
         public Thread getTask() {
@@ -74,6 +77,10 @@ public class Section {
 
         public long getTime() {
             return this.start;
+        }
+
+        public Runnable getRunnable() {
+            return this.runnable;
         }
     }
 

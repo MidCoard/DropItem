@@ -129,7 +129,7 @@ public class VersionUpdater {
             downloaded = true;
             return;
         }
-        Section.getInstance().startSection("Download", task);
+        Section.getInstance().startSection("Download", task,()->target.delete());
         DropItemUtil.sendNoColouredMessage(DropItemConfiguration.getMessage("DownloadStart", url));
         try {
             HttpUtil.downloadFile(url, target.getPath());
