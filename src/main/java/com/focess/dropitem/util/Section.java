@@ -24,7 +24,7 @@ public class Section {
                 section.runningSections.remove(runningSection);
                 runningSection.getTask().stop();
                 runningSection.getRunnable().run();
-                throw new TimeOutException(runningSection.getName() + " have run more than 60s");
+                throw new TimeOutException(runningSection.getName() + " has run more than 60s");
             }
     }
 

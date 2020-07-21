@@ -91,9 +91,6 @@ public class DropItemCommand extends Command {
                 @Override
                 public void run() {
                     VersionUpdater.checkForUpdate(DropItemCommand.this.drop);
-                    if (VersionUpdater.isNeedUpdated())
-                        sender.sendMessage(DropItemConfiguration.getMessage("LowVersion", VersionUpdater.getVersion()));
-                    else sender.sendMessage(DropItemConfiguration.getMessage("LatestVersion"));
                 }
             }).start();
         }, "update");
@@ -103,13 +100,12 @@ public class DropItemCommand extends Command {
                         public void run() {
                             VersionUpdater.checkForUpdate(DropItemCommand.this.drop);
                             if (VersionUpdater.isNeedUpdated()) {
-                                sender.sendMessage(DropItemConfiguration.getMessage("LowVersion", VersionUpdater.getVersion()));
                                 VersionUpdater.downloadNewVersion(DropItemCommand.this.drop, this,true);
                                 if (VersionUpdater.isDownloaded())
                                     sender.sendMessage(DropItemConfiguration.getMessage("HaveDownloaded"));
                                 else
                                     sender.sendMessage(DropItemConfiguration.getMessage("DownloadFail"));
-                            } else sender.sendMessage(DropItemConfiguration.getMessage("LatestVersion"));
+                            }
                         }
                     }).start();
         }, "download");

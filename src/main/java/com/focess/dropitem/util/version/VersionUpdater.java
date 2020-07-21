@@ -31,16 +31,6 @@ public class VersionUpdater {
     }
 
     public static void checkForUpdate(final DropItem drop) {
-        if (needUpdated) {
-            if (downloaded)
-                DropItemUtil.sendNoColouredMessage(DropItemConfiguration.getMessage("HaveDownloaded"));
-            else {
-                DropItemUtil.sendNoColouredMessage(DropItemConfiguration.getMessage("LowVersion", version));
-                DropItemUtil.sendNoColouredMessage(DropItemConfiguration.getMessage("UpdateMessage"));
-                DropItemUtil.sendNoColouredMessage(body);
-            }
-            return;
-        }
         DropItemUtil.sendNoColouredMessage(DropItemConfiguration.getMessage("VersionCheck"));
         final HttpUtil.HttpResponse response;
         try {
