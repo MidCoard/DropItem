@@ -5,6 +5,7 @@ import com.focess.dropitem.event.DropItemDeathEvent;
 import com.focess.dropitem.event.DropItemDeathEvent.DeathCause;
 import com.focess.dropitem.event.DropItemSpawnEvent;
 import com.focess.dropitem.runnable.SpawnDropItemRunnable;
+import com.focess.dropitem.runnable.WaitingRunnable;
 import com.focess.dropitem.util.NMSManager;
 import com.focess.dropitem.util.Pair;
 import com.focess.dropitem.util.configuration.DropItemConfiguration;
@@ -137,7 +138,7 @@ public class CraftDropItem {
             }
         }
         if (isRegistered)
-            DropItemInfo.registerInfo(dropItem);
+            WaitingRunnable.addWaitingItem(DropItemInfo.registerInfo(dropItem),DropItemConfiguration.getWaitingTime());
         return dropItem;
     }
 

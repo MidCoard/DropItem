@@ -1,6 +1,8 @@
 package com.focess.dropitem.listener;
 
 import com.focess.dropitem.item.CraftDropItem;
+import com.focess.dropitem.item.DropItemInfo;
+import com.focess.dropitem.runnable.WaitingRunnable;
 import com.focess.dropitem.util.DropItemUtil;
 import com.focess.dropitem.util.configuration.DropItemConfiguration;
 import org.bukkit.GameMode;
@@ -26,7 +28,7 @@ public class PlayerMoveListener implements Listener {
         final List<Entity> entities = player.getNearbyEntities(0.75D, 0.75D, 0.75D);
         for (final Entity entity : entities)
             if (CraftDropItem.include(entity) &&  (DropItemConfiguration.checkPickForm("w-move") || (player.isSneaking() &&DropItemConfiguration.checkPickForm("normal")))
-                    && DropItemUtil.checkPlayerPermission(player))
+                    && DropItemUtil.checkPlayerPermission(player) && WaitingRunnable.check(DropItemInfo.getDropItemInfo(entity.getUniqueId())))
                 DropItemUtil.fillPlayerInventory(player, CraftDropItem.getDropItem(entity));
 
     }

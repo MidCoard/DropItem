@@ -21,7 +21,7 @@ public class DropItemInfo {
 
     private static final Map<UUID, DropItemInfo> dropItemInfos = new ConcurrentHashMap<>();
 
-    protected static DropItemInfo getDropItemInfo(final UUID uuid) {
+    public static DropItemInfo getDropItemInfo(final UUID uuid) {
         return DropItemInfo.dropItemInfos.get(uuid);
     }
 
@@ -41,8 +41,8 @@ public class DropItemInfo {
         return Objects.equals(this.uuid, that.uuid);
     }
 
-    protected static void registerInfo(final EntityDropItem dropItem) {
-        new DropItemInfo(dropItem);
+    protected static DropItemInfo registerInfo(final EntityDropItem dropItem) {
+        return new DropItemInfo(dropItem);
     }
 
     public static void remove(final UUID uuid) {

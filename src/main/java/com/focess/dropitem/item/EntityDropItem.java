@@ -9,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.EulerAngle;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 public abstract class EntityDropItem {
@@ -32,6 +33,18 @@ public abstract class EntityDropItem {
     EntityDropItem(final LivingEntity entity, final ItemStack itemStack) {
         this.dropitem = entity;
         this.itemStack = itemStack;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || this.getClass() != o.getClass()) return false;
+        return this.getUniqueId().equals(((EntityDropItem) o).getUniqueId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.getUniqueId());
     }
 
     protected String getCustomName() {

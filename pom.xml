@@ -6,7 +6,7 @@
 
     <groupId>com.focess.dropitem</groupId>
     <artifactId>DropItem</artifactId>
-    <version>8.7</version>
+    <version>8.8</version>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>

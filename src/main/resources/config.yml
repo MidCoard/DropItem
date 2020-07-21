@@ -1,4 +1,4 @@
-Version: '8.7'
+Version: '8.8'
 VersionCheck: true
 VersionCheckCycle: 10800
 VersionDownload: true
@@ -11,6 +11,7 @@ EnableCoverBlock: false
 EnableAliases: true
 ShowItemInfo: true
 DropItemAI: true
+WaitingTime: 20
 Language: en_US
 NaturalSpawn: true
 AllowedPlayer: true

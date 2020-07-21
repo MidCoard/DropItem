@@ -7,6 +7,7 @@ import com.focess.dropitem.item.DropItemInfo;
 import com.focess.dropitem.listener.*;
 import com.focess.dropitem.runnable.DropItemRunnable;
 import com.focess.dropitem.runnable.SpawnDropItemRunnable;
+import com.focess.dropitem.runnable.WaitingRunnable;
 import com.focess.dropitem.util.NMSManager;
 import com.focess.dropitem.util.command.Command;
 import com.focess.dropitem.util.configuration.DropItemConfiguration;
@@ -119,6 +120,7 @@ public class DropItem extends JavaPlugin {
         DropItem.bukkitTasks.add(this.bukkitScheduler.runTaskTimer(this, new SpawnDropItemRunnable(), 0, 10L));
         DropItem.bukkitTasks
                 .add(this.bukkitScheduler.runTaskTimer(this, (Runnable) new DropItemRunnable(this), 0L, 10L));
+        DropItem.bukkitTasks.add(this.bukkitScheduler.runTaskTimer(this,new WaitingRunnable(),0L,1L));
         if (DropItemConfiguration.isDropItemAI())
             this.craftAIListener = new CraftAIListener(this);
         if (DropItemConfiguration.isRefresh())

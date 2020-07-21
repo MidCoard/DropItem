@@ -41,6 +41,7 @@ public class DropItemConfiguration {
     private static int refreshTime;
     private static boolean refresh;
     private static Map<String, String> originalLanguages = Maps.newHashMap();
+    private static int waitingTime;
 
     private static final Map<String, String> messages = Maps.newHashMap();
 
@@ -98,6 +99,7 @@ public class DropItemConfiguration {
         enableAliases = drop.getConfig().getBoolean("EnableAliases", true);
         showItemInfo = drop.getConfig().getBoolean("ShowItemInfo", true);
         dropItemAI = drop.getConfig().getBoolean("DropItemAI", true);
+        waitingTime = drop.getConfig().getInt("WaitingTime",20);
         language = drop.getConfig().getString("Language", "zh_CN");
         getLanguage(drop);
         naturalSpawn = drop.getConfig().getBoolean("NaturalSpawn", true);
@@ -161,6 +163,10 @@ public class DropItemConfiguration {
             refresh = drop.getConfig().getBoolean("RefreshTime");
             refreshTime = 300;
         }
+    }
+
+    public static int getWaitingTime(){
+        return waitingTime;
     }
 
     public static boolean checkPickForm(final String form) {

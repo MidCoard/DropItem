@@ -11,6 +11,7 @@ public class ConfigUpdater {
     private static final Version _8_0VERSION = new Version("8.0");
     private static final Version _8_1VERSION = new Version("8.1");
     private static final Version _8_2VERSION = new Version("8.2");
+    private static final Version _8_8VERSION = new Version("8.8");
 
     public static void updateConfig(final DropItem drop, final Version configVersion, final Version jarVersion) {
         final FileConfiguration config = drop.getConfig();
@@ -53,6 +54,9 @@ public class ConfigUpdater {
         }
         if (!configVersion.isNew(_8_2VERSION)) {
             drop.getConfig().set("VersionDownload",true);
+        }
+        if (!configVersion.isNew(_8_8VERSION)) {
+            drop.getConfig().set("WaitingTime",20);
         }
         drop.saveConfig();
     }
