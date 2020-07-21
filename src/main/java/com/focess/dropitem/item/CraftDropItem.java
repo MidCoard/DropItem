@@ -19,7 +19,6 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.EulerAngle;
 
-import java.io.File;
 import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
@@ -76,10 +75,7 @@ public class CraftDropItem {
             CraftDropItem.drop.getServer().getPluginManager().callEvent(event);
             if (event.isCancelled())
                 return;
-            final File uuidFile = new File(
-                    CraftDropItem.drop.getDataFolder() + "/drops/" + dropItem.getUniqueId().toString());
             DropItemInfo.remove(dropItem.getUniqueId());
-            uuidFile.delete();
             if (!dropItem.isDead())
                 dropItem.remove();
             CraftDropItem.droppedItems.remove(dropItem.getUniqueId());

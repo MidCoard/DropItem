@@ -3,7 +3,6 @@ package com.focess.dropitem.commnad;
 import com.focess.dropitem.DropItem;
 import com.focess.dropitem.event.DropItemDeathEvent;
 import com.focess.dropitem.item.CraftDropItem;
-import com.focess.dropitem.item.DropItemInfo;
 import com.focess.dropitem.item.EntityDropItem;
 import com.focess.dropitem.util.DropItemUtil;
 import com.focess.dropitem.util.command.Command;
@@ -54,14 +53,9 @@ public class DropItemCommand extends Command {
             final Collection<EntityDropItem> dropItems = CraftDropItem.getDropItems();
             for (final EntityDropItem dropItem : dropItems)
                 CraftDropItem.remove(dropItem, DropItemDeathEvent.DeathCause.SYSTEM_CLEAN);
-            final File drops = new File(this.drop.getDataFolder(), "drops");
-            for (final File file : drops.listFiles())
-                file.delete();
             if (DropItemConfiguration.isDropItemAI())
                 this.drop.getCraftAIListener().clear();
-            DropItemInfo.clear();
             sender.sendMessage(DropItemConfiguration.getMessage("AfterClean"));
-
         }, "clean");
         this.addExecutor(0, (sender, args) -> {
             sender.sendMessage(DropItemConfiguration.getMessage("Disabling"));
