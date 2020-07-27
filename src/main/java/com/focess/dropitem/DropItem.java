@@ -16,6 +16,8 @@ import com.focess.dropitem.util.version.Version;
 import com.focess.dropitem.util.version.VersionUpdateReplacement;
 import com.focess.dropitem.util.version.VersionUpdater;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
@@ -31,6 +33,8 @@ import java.io.IOException;
 import java.net.URLClassLoader;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Callable;
 
 public class DropItem extends JavaPlugin {
 
@@ -104,8 +108,10 @@ public class DropItem extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        if (NMSManager.getVersionInt() < 8)
+        if (NMSManager.getVersionInt() < 8) {
             this.getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
         DropItem.instance = this;
         this.version = new Version(this.getDescription().getVersion());
         this.loadConfig();
@@ -135,6 +141,50 @@ public class DropItem extends JavaPlugin {
                 }
             }).start();
         this.isLoaded = true;
+        if (DropItemConfiguration.isEnableStatus())
+            this.registerStatus();
+    }
+
+    private void registerStatus() {
+        final Metrics metrics = new Metrics(this, 8324);
+        metrics.addCustomChart(new Metrics.SingleLineChart("玩家数", new Callable<Integer>() {
+
+            public int getOnlinePlayersSize(){
+                int count = 0;
+                for (final World world:Bukkit.getWorlds())
+                    count += world.getPlayers().size();
+                return count;
+            }
+
+            @Override
+            public Integer call() throws Exception {
+                return this.getOnlinePlayersSize();
+            }
+        }));
+        metrics.addCustomChart(new Metrics.SingleLineChart("服务器数", new Callable<Integer>() {
+            @Override
+            public Integer call() throws Exception {
+                return 1;
+            }
+        }));
+        metrics.addCustomChart(new Metrics.DrilldownPie("特征", new Callable<Map<String, Map<String, Integer>>>() {
+            @Override
+            public Map<String, Map<String, Integer>> call() throws Exception {
+                final Map<String,Map<String,Integer>> data = Maps.newHashMap();
+                final Map<String,Integer> versionData = Maps.newHashMap();
+                versionData.put(DropItem.this.getVersion().getVersion(),1);
+                data.put("版本",versionData);
+                final Map<String,Integer> languageData = Maps.newHashMap();
+                languageData.put(this.getCurrentLanguage(),1);
+                data.put("语言",languageData);
+                return data;
+            }
+
+            public String getCurrentLanguage(){
+                return DropItemConfiguration.getLanguage().equals("zh_CN") ? "中文简体" :
+                        DropItemConfiguration.getLanguage().equals("zh_TW") ? "中文繁体" : "英语";
+            }
+        }));
     }
 
     private void registerPermission() {

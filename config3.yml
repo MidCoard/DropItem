@@ -1,4 +1,4 @@
-Version: '8.8'
+Version: '9.0'
 # Used to automatically update the configuration file when the version is updated, please do not modify this item.
 VersionCheck: true
 # Whether to enable version update checking. The default is true. When true, VersionDownload will be disabled by default.
@@ -18,6 +18,8 @@ EnableCoverBlock: false
 # Whether cover blocks are enabled (fixes the bug that blocks can no longer be placed on drops). The default is false.
 EnableAliases: true
 # Whether to enable sub-commands. The default is true.
+EnableStatus: true
+# Whether to start data statistics (only used for overall data statistics, no data will be stored separately). The default is true.
 ShowItemInfo: true
 # Whether to display item information. The default is true.
 DropItemAI: true
