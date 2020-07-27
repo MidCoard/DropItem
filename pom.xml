@@ -34,12 +34,6 @@
             <systemPath>${project.basedir}/libs/spigot-1.13-R0.1-SNAPSHOT.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>org.jetbrains</groupId>
-            <artifactId>annotations</artifactId>
-            <version>18.0.0</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>org.bstats</groupId>
             <artifactId>bstats-bukkit</artifactId>
             <version>1.7</version>
