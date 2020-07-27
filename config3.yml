@@ -18,7 +18,7 @@ EnableCoverBlock: false
 # Whether cover blocks are enabled (fixes the bug that blocks can no longer be placed on drops). The default is false.
 EnableAliases: true
 # Whether to enable sub-commands. The default is true.
-EnableStatus: true
+EnableStats: true
 # Whether to start data statistics (only used for overall data statistics, no data will be stored separately). The default is true.
 ShowItemInfo: true
 # Whether to display item information. The default is true.

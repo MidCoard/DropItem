@@ -51,10 +51,10 @@ public class DropItemConfiguration {
 
     private static boolean versionDownload;
 
-    private static boolean enableStatus;
+    private static boolean enableStats;
 
-    public static boolean isEnableStatus() {
-        return enableStatus;
+    public static boolean isEnableStats() {
+        return enableStats;
     }
 
     public static boolean isVersionDownload() {
@@ -103,7 +103,7 @@ public class DropItemConfiguration {
         pitchZ = drop.getConfig().getInt("PitchZ", 100);
         enableCoverBlock = drop.getConfig().getBoolean("EnableCoverBlock", false);
         enableAliases = drop.getConfig().getBoolean("EnableAliases", true);
-        enableStatus = drop.getConfig().getBoolean("EnableStatus", true);
+        enableStats = drop.getConfig().getBoolean("EnableStats", true);
         showItemInfo = drop.getConfig().getBoolean("ShowItemInfo", true);
         dropItemAI = drop.getConfig().getBoolean("DropItemAI", true);
         waitingTime = drop.getConfig().getInt("WaitingTime",20);

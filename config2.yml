@@ -18,7 +18,7 @@ EnableCoverBlock: false
 #是否启用覆盖方块（修复不能再掉落物上面放方块的bug）。默认为false。
 EnableAliases: true
 #是否启用子指令。默认为true。
-EnableStatus: true
+EnableStats: true
 #是否启动数据统计（只用于总体数据统计，不会单独储存任何数据）。默认为true。
 ShowItemInfo: true
 #是否显示物品信息。默认为true。

@@ -9,7 +9,7 @@ PitchY: 135
 PitchZ: 100
 EnableCoverBlock: false
 EnableAliases: true
-EnableStatus: true
+EnableStats: true
 ShowItemInfo: true
 DropItemAI: true
 WaitingTime: 20

@@ -141,33 +141,13 @@ public class DropItem extends JavaPlugin {
                 }
             }).start();
         this.isLoaded = true;
-        if (DropItemConfiguration.isEnableStatus())
-            this.registerStatus();
+        if (DropItemConfiguration.isEnableStats())
+            this.registerStats();
     }
 
-    private void registerStatus() {
+    private void registerStats() {
         final Metrics metrics = new Metrics(this, 8324);
-        metrics.addCustomChart(new Metrics.SingleLineChart("玩家数", new Callable<Integer>() {
-
-            public int getOnlinePlayersSize(){
-                int count = 0;
-                for (final World world:Bukkit.getWorlds())
-                    count += world.getPlayers().size();
-                return count;
-            }
-
-            @Override
-            public Integer call() throws Exception {
-                return this.getOnlinePlayersSize();
-            }
-        }));
-        metrics.addCustomChart(new Metrics.SingleLineChart("服务器数", new Callable<Integer>() {
-            @Override
-            public Integer call() throws Exception {
-                return 1;
-            }
-        }));
-        metrics.addCustomChart(new Metrics.DrilldownPie("特征", new Callable<Map<String, Map<String, Integer>>>() {
+        metrics.addCustomChart(new Metrics.DrilldownPie("features", new Callable<Map<String, Map<String, Integer>>>() {
             @Override
             public Map<String, Map<String, Integer>> call() throws Exception {
                 final Map<String,Map<String,Integer>> data = Maps.newHashMap();
@@ -177,6 +157,9 @@ public class DropItem extends JavaPlugin {
                 final Map<String,Integer> languageData = Maps.newHashMap();
                 languageData.put(this.getCurrentLanguage(),1);
                 data.put("语言",languageData);
+                final Map<String,Integer> minecraftVersionData = Maps.newHashMap();
+                minecraftVersionData.put(NMSManager.getVersionString() ,1);
+                data.put("游戏版本",minecraftVersionData);
                 return data;
             }
 

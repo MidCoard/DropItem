@@ -60,7 +60,7 @@ public class ConfigUpdater {
             drop.getConfig().set("WaitingTime",20);
         }
         if (!configVersion.isNew(_9_0VERSION)) {
-            drop.getConfig().set("EnableStatus",true);
+            drop.getConfig().set("EnableStats",true);
         }
         drop.saveConfig();
     }
