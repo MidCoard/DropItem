@@ -165,6 +165,12 @@ public class DropItem extends JavaPlugin {
                         DropItemConfiguration.getLanguage().equals("zh_TW") ? "中文繁体" : "英语";
             }
         }));
+        metrics.addCustomChart(new Metrics.SingleLineChart("drops", new Callable<Integer>() {
+            @Override
+            public Integer call() throws Exception {
+                return DropItemInfo.getDropItemInfos().size();
+            }
+        }));
     }
 
     private void registerPermission() {

@@ -33,6 +33,10 @@ public class DropItemInfo {
         live = drop.getServer().getScheduler().runTaskTimer(drop, (Runnable) new DropItemLive(), 0, 20);
     }
 
+    public static Map<UUID, DropItemInfo> getDropItemInfos() {
+        return dropItemInfos;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
