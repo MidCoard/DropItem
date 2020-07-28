@@ -151,9 +151,6 @@ public class DropItem extends JavaPlugin {
             @Override
             public Map<String, Map<String, Integer>> call() throws Exception {
                 final Map<String,Map<String,Integer>> data = Maps.newHashMap();
-                final Map<String,Integer> versionData = Maps.newHashMap();
-                versionData.put(DropItem.this.getVersion().getVersion(),1);
-                data.put("版本",versionData);
                 final Map<String,Integer> languageData = Maps.newHashMap();
                 languageData.put(this.getCurrentLanguage(),1);
                 data.put("语言",languageData);
