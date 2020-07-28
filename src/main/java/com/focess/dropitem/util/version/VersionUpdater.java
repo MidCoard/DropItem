@@ -59,7 +59,7 @@ public class VersionUpdater {
                 if (latestVersion.newerThan(drop.getVersion()) && !name.equals("Test")) {
                     DropItemUtil.sendNoColouredMessage(DropItemConfiguration.getMessage("LowVersion", latestVersion.getVersion()));
                     DropItemUtil.sendNoColouredMessage(DropItemConfiguration.getMessage("UpdateMessage"));
-                    body = DropItemUtil.decodeUnicode(object.get("body").toString());
+                    body = object.get("body").toString();
                     DropItemUtil.sendNoColouredMessage(body);
                     needUpdated = true;
                     version = latestVersion.toString();
@@ -88,7 +88,7 @@ public class VersionUpdater {
             if (latestVersion.newerThan(drop.getVersion()) && !name.equals("Test")) {
                 DropItemUtil.sendNoColouredMessage(DropItemConfiguration.getMessage("LowVersion", latestVersion.getVersion()));
                 DropItemUtil.sendNoColouredMessage(DropItemConfiguration.getMessage("UpdateMessage"));
-                body = DropItemUtil.decodeUnicode(object.get("body").getAsString());
+                body = object.get("body").toString();
                 DropItemUtil.sendNoColouredMessage(body);
                 needUpdated = true;
                 version = latestVersion.toString();
@@ -101,6 +101,41 @@ public class VersionUpdater {
                 }
             } else DropItemUtil.sendNoColouredMessage(DropItemConfiguration.getMessage("LatestVersion"));
         }
+    }
+    public static String getEncoding(final String str) {
+        String encode = "GB2312";
+        try {
+            if (str.equals(new String(str.getBytes(encode), encode))) {
+                final String s = encode;
+                return s;
+            }
+        } catch (final Exception exception) {
+        }
+        encode = "ISO-8859-1";
+        try {
+            if (str.equals(new String(str.getBytes(encode), encode))) {
+                final String s1 = encode;
+                return s1;
+            }
+        } catch (final Exception exception1) {
+        }
+        encode = "UTF-8";
+        try {
+            if (str.equals(new String(str.getBytes(encode), encode))) {
+                final String s2 = encode;
+                return s2;
+            }
+        } catch (final Exception exception2) {
+        }
+        encode = "GBK";
+        try {
+            if (str.equals(new String(str.getBytes(encode), encode))) {
+                final String s3 = encode;
+                return s3;
+            }
+        } catch (final Exception exception3) {
+        }
+        return "";
     }
 
     public static boolean isDownloaded() {

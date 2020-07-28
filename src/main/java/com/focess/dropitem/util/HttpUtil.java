@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 
 public class HttpUtil {
     public static HttpResponse getFrom(final String url) throws Exception {
@@ -21,7 +22,8 @@ public class HttpUtil {
 //            dataOutputStream.writeBytes(paramString);
 //            dataOutputStream.flush();
 //            dataOutputStream.close();
-        final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
+        final BufferedReader bufferedReader =
+                new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream(), StandardCharsets.UTF_8));
         final int responseCode = httpURLConnection.getResponseCode();
         if (responseCode == HttpURLConnection.HTTP_OK) {
             final StringBuffer stringBuffer = new StringBuffer();
